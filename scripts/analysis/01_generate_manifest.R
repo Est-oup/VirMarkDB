@@ -13,7 +13,11 @@ dir.create("output", showWarnings = FALSE)
 
 
 # Load ICTV data
-ictv <- readxl::read_excel(ictv_xlsx, sheet = 2) %>%
+url <- str_c("https://ictv.global/sites/default/files/VMR/",ictv_xlsx)
+dest <- tempfile(fileext = ".xlsx")
+download.file(url, destfile = dest, mode = "wb")
+
+ictv <- readxl::read_excel(dest, sheet = 2) %>%
   filter(Kingdom == "Bamfordvirae") %>%
   rename(
     virus_id = `Virus GENBANK accession`,
