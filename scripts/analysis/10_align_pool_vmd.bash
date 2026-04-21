@@ -15,8 +15,9 @@ pool_dir="output/benchmark/pool_protein/pool_protein_filt"
 out_dir="output/benchmark/alignment_vmd_pool/alignment"
 
 for ref in "$vmd_db"/*/*/*_protein.fasta; do
-    name=$(basename "$ref" _protein.fasta)
-    marker="${name##*__}"
+    full_name=$(basename "$ref" _protein.fasta)
+    name="${full_name##*_}"
+    marker="${full_name%_*}"
     query="${pool_dir}/${marker}.fasta"
 
     echo "Running marker_group_id: $name"
@@ -25,7 +26,8 @@ for ref in "$vmd_db"/*/*/*_protein.fasta; do
     mmseqs easy-search \
         "$query" \
         "$ref" \
-        "${out_dir}/${name}.m8" \
+        "${out_dir}/${marker}_${name}.m8" \
         output/benchmark/alignment_vmd_pool/alignment/tmp \
         --threads 50
 done
+

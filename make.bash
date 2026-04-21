@@ -33,4 +33,4 @@
     module load r/4.4.1
     Rscript scripts/analysis/11_analyse_results_align_pool_vmd.R
     # Clusterise missing protein 
-    sbatch scripts/analysis/12_cluterise_missing_prot.bash
+    bash scripts/analysis/12_cluterise_missing_prot.bash
