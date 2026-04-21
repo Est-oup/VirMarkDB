@@ -1,69 +1,131 @@
 library(tidyverse)
 library(fs)
 
-outdir <- "output/VMD-database/export_format/"
+outdir <- "output/VMD-database/export_format"
+virus_compo_taxo_path <- "output/VMD-database/virus_informations/virus_compo_taxo.tsv"
+map_tsv <- "output/config/marker_taxo_map.tsv"
 
-# Build taxonomy file for vearch
+taxonomy_all <- c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species")
 
-taxonomy_all <- c("Kingdom","Phylum","Class","Order","Family","Genus","Species")
+dir_create(file.path(outdir, "vsearch"))
+dir_create(file.path(outdir, "dada2"))
 
+# Read input tables
+virus_compo_taxo <- read_tsv(virus_compo_taxo_path, show_col_types = FALSE)
+
+marker_map <- read_tsv(map_tsv, show_col_types = FALSE) %>%
+  mutate(
+    marker_group_id = if_else(
+      is.na(marker_group_id) | marker_group_id == "",
+      str_c(group_id, "__", marker),
+      marker_group_id
+    )
+  ) %>%
+  distinct(group_id, marker, marker_group_id)
+
+# Build taxonomy file for vsearch
 taxo_vsearch <- virus_compo_taxo %>%
   select(virus_id, any_of(taxonomy_all)) %>%
   mutate(reference_id = virus_id) %>%
-  unite(taxonomy, any_of(taxonomy_all), sep = ";") %>%
+  unite(taxonomy, any_of(taxonomy_all), sep = ";", remove = TRUE, na.rm = FALSE) %>%
   select(reference_id, taxonomy)
 
-# export taxonomy
-dir_create(str_c(outdir,"/vsearch"))
-write_tsv(taxo_vsearch, str_c(outdir,"/vsearch/taxonomy.tsv"))
+write_tsv(taxo_vsearch, file.path(outdir, "vsearch", "taxonomy.tsv"))
 
-# export sequences for dada2 and vsearch 
-dir_create(str_c(outdir,"/dada2"))
-
-for (m in markers){
-    AA <- Biostrings::readAAStringSet(str_c("output/VMD-database/markers/",m,"/",m,"_protein.fasta"))
-    DNA <- Biostrings::readDNAStringSet(str_c("output/VMD-database/markers/",m,"/",m,"_nucleotid.fasta"))
-
-    #vsearch
-    AA_vs <- AA
-    DNA_vs <- DNA
-
-    names(AA_vs) <- sapply(str_split(names(AA_vs)," "), `[`, 1)
-    names(DNA_vs) <- sapply(str_split(names(DNA_vs)," "), `[`, 1)
-
-    Biostrings::writeXStringSet(AA_vs, str_c(outdir,"/vsearch/",m,"_protein.fasta.gz"))
-    Biostrings::writeXStringSet(DNA_vs, str_c(outdir,"/vsearch/",m,"_nucleotid.fasta.gz"))
-    
-    # dada2 : assignTaxonomy
-    AA_dada_gen  <- AA
-    DNA_dada_gen <- DNA
-
-    taxo_AA  <- sapply(str_split(names(AA_dada_gen),  " "), `[`, 2)   
-    taxo_DNA <- sapply(str_split(names(DNA_dada_gen), " "), `[`, 2)
-
-    names(AA_dada_gen)  <- str_c("tax=", taxo_AA)
-    names(DNA_dada_gen) <- str_c("tax=", taxo_DNA)
-
-    # dada2 : toSpecies
-    AA_species  <- AA
-    DNA_species <- DNA
-
-    split_AA  <- str_split(taxo_AA,  ";")
-    split_DNA <- str_split(taxo_DNA, ";")
-
-    genus_AA   <- sapply(split_AA,  `[`, 6)
-    species_AA <- sapply(split_AA,  `[`, 7)
-
-    genus_DNA   <- sapply(split_DNA, `[`, 6)
-    species_DNA <- sapply(split_DNA, `[`, 7)
-
-    names(AA_species)  <- str_c(sapply(str_split(names(AA_species)," "), `[`, 1),genus_AA,  species_AA,  sep = " ")
-    names(DNA_species) <- str_c(sapply(str_split(names(DNA_species)," "), `[`, 1),genus_DNA, species_DNA, sep = " ")
-
-    Biostrings::writeXStringSet(AA_dada_gen,  str_c(outdir, "/dada2/", m, "_train_protein.fasta.gz"))
-    Biostrings::writeXStringSet(DNA_dada_gen, str_c(outdir, "/dada2/", m, "_train_nucleotid.fasta.gz"))
-    Biostrings::writeXStringSet(AA_species,  str_c(outdir, "/dada2/", m, "_species_protein.fasta.gz"))
-    Biostrings::writeXStringSet(DNA_species, str_c(outdir, "/dada2/", m, "_species_nucleotid.fasta.gz"))
+# Extract taxonomy from FASTA headers: "virus_id Kingdom;Phylum;...;Species"
+get_taxo_from_names <- function(x) {
+  parts <- str_split_fixed(names(x), " ", 2)
+  taxo <- parts[, 2]
+  taxo[taxo == ""] <- "NA;NA;NA;NA;NA;NA;NA"
+  taxo
 }
 
+for (i in seq_len(nrow(marker_map))) {
+  g  <- marker_map$group_id[i]
+  m  <- marker_map$marker[i]
+  mg <- marker_map$marker_group_id[i]
 
+  aa_path <- file.path("output/VMD-database/markers", g, m, str_c(mg, "_protein.fasta"))
+  nt_path <- file.path("output/VMD-database/markers", g, m, str_c(mg, "_nucleotid.fasta"))
+
+  if (!file.exists(aa_path) || !file.exists(nt_path)) {
+    next
+  }
+
+  AA <- Biostrings::readAAStringSet(aa_path)
+  DNA <- Biostrings::readDNAStringSet(nt_path)
+
+  # vsearch
+  AA_vs <- AA
+  DNA_vs <- DNA
+
+  names(AA_vs) <- sapply(str_split(names(AA_vs), " "), `[`, 1)
+  names(DNA_vs) <- sapply(str_split(names(DNA_vs), " "), `[`, 1)
+
+  Biostrings::writeXStringSet(
+    AA_vs,
+    file.path(outdir, "vsearch", str_c(mg, "_protein.fasta.gz"))
+  )
+
+  Biostrings::writeXStringSet(
+    DNA_vs,
+    file.path(outdir, "vsearch", str_c(mg, "_nucleotid.fasta.gz"))
+  )
+
+  # dada2 assignTaxonomy
+  AA_dada_gen <- AA
+  DNA_dada_gen <- DNA
+
+  taxo_AA <- get_taxo_from_names(AA_dada_gen)
+  taxo_DNA <- get_taxo_from_names(DNA_dada_gen)
+
+  names(AA_dada_gen) <- str_c("tax=", taxo_AA)
+  names(DNA_dada_gen) <- str_c("tax=", taxo_DNA)
+
+  Biostrings::writeXStringSet(
+    AA_dada_gen,
+    file.path(outdir, "dada2", str_c(mg, "_train_protein.fasta.gz"))
+  )
+
+  Biostrings::writeXStringSet(
+    DNA_dada_gen,
+    file.path(outdir, "dada2", str_c(mg, "_train_nucleotid.fasta.gz"))
+  )
+
+  # dada2 addSpecies
+  AA_species <- AA
+  DNA_species <- DNA
+
+  split_AA <- str_split(taxo_AA, ";")
+  split_DNA <- str_split(taxo_DNA, ";")
+
+  genus_AA <- sapply(split_AA, function(x) ifelse(length(x) >= 6, x[6], "NA"))
+  species_AA <- sapply(split_AA, function(x) ifelse(length(x) >= 7, x[7], "NA"))
+
+  genus_DNA <- sapply(split_DNA, function(x) ifelse(length(x) >= 6, x[6], "NA"))
+  species_DNA <- sapply(split_DNA, function(x) ifelse(length(x) >= 7, x[7], "NA"))
+
+  names(AA_species) <- str_c(
+    sapply(str_split(names(AA_species), " "), `[`, 1),
+    genus_AA,
+    species_AA,
+    sep = " "
+  )
+
+  names(DNA_species) <- str_c(
+    sapply(str_split(names(DNA_species), " "), `[`, 1),
+    genus_DNA,
+    species_DNA,
+    sep = " "
+  )
+
+  Biostrings::writeXStringSet(
+    AA_species,
+    file.path(outdir, "dada2", str_c(mg, "_species_protein.fasta.gz"))
+  )
+
+  Biostrings::writeXStringSet(
+    DNA_species,
+    file.path(outdir, "dada2", str_c(mg, "_species_nucleotid.fasta.gz"))
+  )
+}

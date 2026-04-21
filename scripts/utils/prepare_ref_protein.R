@@ -17,22 +17,17 @@ download.file(zip_url, destfile = zip_dest, mode = "wb", quiet = FALSE)
 unzip(zip_dest, exdir = zenodo_dir)
 
 # Load Zenodo protein references
-majorcapsid_zenodo <- c(
-  Biostrings::readAAStringSet(file.path(zenodo_files_path, "capsid-polinto.prt")),
-  Biostrings::readAAStringSet(file.path(zenodo_files_path, "capsid.prt"))
-)
+majorcapsid_nucletocytoviricota_zenodo <- Biostrings::readAAStringSet(file.path(zenodo_files_path, "capsid.prt"))
+atpase_nucleocytoviricota_zenodo       <- Biostrings::readAAStringSet(file.path(zenodo_files_path, "pATPase.prt"))
+dnapol_nucleocytoviricota_zenodo       <- Biostrings::readAAStringSet(file.path(zenodo_files_path, "dnapol.prt"))
+primase_nucleocytoviricota_zenodo      <- Biostrings::readAAStringSet(file.path(zenodo_files_path, "primase.prt"))
+rnapol1_nucleocytoviricota_zenodo      <- Biostrings::readAAStringSet(file.path(zenodo_files_path, "rnapol1.prt"))
+rnapol2_nucleocytoviricota_zenodo      <- Biostrings::readAAStringSet(file.path(zenodo_files_path, "rnapol2.prt"))
+tf2s_nucleocytoviricota_zenodo         <- Biostrings::readAAStringSet(file.path(zenodo_files_path, "tf2s.prt"))
+vltf3_nucleocytoviricota_zenodo        <- Biostrings::readAAStringSet(file.path(zenodo_files_path, "vltf3.prt"))
 
-atpase_zenodo <- c(
-  Biostrings::readAAStringSet(file.path(zenodo_files_path, "pATPase-polinto.prt")),
-  Biostrings::readAAStringSet(file.path(zenodo_files_path, "pATPase.prt"))
-)
-
-dnapol_zenodo  <- Biostrings::readAAStringSet(file.path(zenodo_files_path, "dnapol.prt"))
-primase_zenodo <- Biostrings::readAAStringSet(file.path(zenodo_files_path, "primase.prt"))
-rnapol1_zenodo <- Biostrings::readAAStringSet(file.path(zenodo_files_path, "rnapol1.prt"))
-rnapol2_zenodo <- Biostrings::readAAStringSet(file.path(zenodo_files_path, "rnapol2.prt"))
-tf2s_zenodo    <- Biostrings::readAAStringSet(file.path(zenodo_files_path, "tf2s.prt"))
-vltf3_zenodo   <- Biostrings::readAAStringSet(file.path(zenodo_files_path, "vltf3.prt"))
+atpase_polinto_zenodo                  <- Biostrings::readAAStringSet(file.path(zenodo_files_path, "pATPase-polinto.prt"))
+majorcapsid_polinto_zenodo             <- Biostrings::readAAStringSet(file.path(zenodo_files_path, "capsid-polinto.prt"))
 
 # Load manual accessions and fetch NCBI protein sequences
 manual_markers <- list.files(
@@ -53,7 +48,7 @@ for (marker in manual_markers) {
   assign(str_c(marker, "_manual"), x)
 
   if (!"accession" %in% names(x)) {
-    assign(paste0(marker, "_seq"), Biostrings::AAStringSet())
+    assign(str_c(marker, "_seq"), Biostrings::AAStringSet())
   }else {
     fasta_txt <- entrez_fetch(
     db = "protein",
@@ -70,29 +65,27 @@ for (marker in manual_markers) {
   
   seq_obj <- Biostrings::readAAStringSet(tmp_fasta)
   
-  assign(paste0(marker, "_seq"), seq_obj)
+  assign(str_c(marker, "_seq"), seq_obj)
 }
 
 # Merge Zenodo + manual sequences, remove duplicates, write FASTA
 
-all_markers <- c(
-  "majorcapsid",
-  "atpase",
-  "dnapol",
-  "primase",
-  "rnapol1",
-  "rnapol2",
-  "tf2s",
-  "vltf3"
-)
+all_markers <- c("majorcapsid_nucletocytoviricota",
+"atpase_nucleocytoviricota",      
+"dnapol_nucleocytoviricota",
+"primase_nucleocytoviricota",
+"rnapol1_nucleocytoviricota",
+"rnapol2_nucleocytoviricota",
+"tf2s_nucleocytoviricota",
+"vltf3_nucleocytoviricota") 
 
 for (marker in all_markers) {
   
   zenodo_name <- str_c(marker, "_zenodo")
   manual_name <- str_c(marker, "_seq")
   
-  zenodo_seq <- if (exists(zenodo_name, inherits = FALSE)) get(zenodo_name) else AAStringSet()
-  manual_seq <- if (exists(manual_name, inherits = FALSE)) get(manual_name) else AAStringSet()
+  zenodo_seq <- if (exists(zenodo_name, inherits = FALSE)) get(zenodo_name) else Biostrings::AAStringSet()
+  manual_seq <- if (exists(manual_name, inherits = FALSE)) get(manual_name) else Biostrings::AAStringSet()
   
   merged_seq <- c(zenodo_seq, manual_seq)
   merged_seq <- merged_seq[!duplicated(as.character(merged_seq))]
