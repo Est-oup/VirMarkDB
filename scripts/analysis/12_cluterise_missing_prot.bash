@@ -1,19 +1,15 @@
 #!/usr/bin/env bash
-#SBATCH --job-name=cdhit_missing_prot
-#SBATCH --partition=fast
-#SBATCH --cpus-per-task=16
-#SBATCH --output=cdhit_missing_prot.out
 
 module load cd-hit/4.8.1
 
 in_dir="output/benchmark/alignment_vmd_pool/missing_prot"
 out_dir="output/benchmark/alignment_vmd_pool/missing_prot/clustering"
 
-mkdir -p "${out_dir}"
-
 for fasta in "${in_dir}"/*.fasta; do
 
     marker=$(basename "${fasta}" .fasta)
+
+    mkdir -p "${out_dir}/${marker}"
 
     echo "Input : ${fasta}"
     echo "Marker: ${marker}"
@@ -29,3 +25,4 @@ for fasta in "${in_dir}"/*.fasta; do
         > "${out_dir}/${marker}/${marker}_cdhit95.log" 2>&1
 
 done
+

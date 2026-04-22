@@ -5,3 +5,5 @@ private_genomes
 input/ncbi_nr
 *out
 input
+*.json
+*.vscode
