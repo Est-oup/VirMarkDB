@@ -174,7 +174,7 @@ for (i in seq_len(nrow(targets))) {
     orfs <- get_orfs(r$virus_id)
 
     hdr <- str_c(
-      r$virus_id,
+      r$orf_name,
       " ",
       df_m[j, ] %>%
         unite("Taxonomy", Kingdom, Phylum, Class, Order, Family, Genus, Species, sep = ";") %>%
