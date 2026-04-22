@@ -30,4 +30,3 @@ for faa in "$FAA_DIR"/*.faa; do
     hmmsearch -E 0.00001 --tblout "$OUT/${genome_id}__${marker_group_id}.tbl" "$hmm" "$faa" > /dev/null
   done
 done
-
