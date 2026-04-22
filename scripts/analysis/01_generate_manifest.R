@@ -120,23 +120,8 @@ write_tsv(genome_marker_map, "output/config/genome_marker_map.tsv")
 
 # Manage DNA files 
 
-# Merge private genomes
-private_files <- list.files(genomes_private_path, full.names = TRUE)
-
-if (length(private_files) > 0) {
-  for (file in private_files) {
-    file_name <- basename(file)
-    file.copy(
-      from = file,
-      to = file.path(out_genomes, file_name),
-      overwrite = FALSE
-    )
-  }
-}
-
-
 # Download genomes by accession
-# source("scripts/utils/down_ncbi.R") 
+source("scripts/utils/down_ncbi.R") 
 
 # Merge genomes sources
 private_files <- list.files(genomes_private_path, full.names = TRUE)

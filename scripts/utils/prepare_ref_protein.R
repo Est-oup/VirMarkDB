@@ -17,7 +17,7 @@ download.file(zip_url, destfile = zip_dest, mode = "wb", quiet = FALSE)
 unzip(zip_dest, exdir = zenodo_dir)
 
 # Load Zenodo protein references
-majorcapsid_nucletocytoviricota_zenodo <- Biostrings::readAAStringSet(file.path(zenodo_files_path, "capsid.prt"))
+majorcapsid_nucleocytoviricota_zenodo <- Biostrings::readAAStringSet(file.path(zenodo_files_path, "capsid.prt"))
 atpase_nucleocytoviricota_zenodo       <- Biostrings::readAAStringSet(file.path(zenodo_files_path, "pATPase.prt"))
 dnapol_nucleocytoviricota_zenodo       <- Biostrings::readAAStringSet(file.path(zenodo_files_path, "dnapol.prt"))
 primase_nucleocytoviricota_zenodo      <- Biostrings::readAAStringSet(file.path(zenodo_files_path, "primase.prt"))
@@ -37,28 +37,38 @@ manual_markers <- list.files(
 ) %>%
   tools::file_path_sans_ext()
 
+
+
+
 for (marker in manual_markers) {
   print(marker)
+  manual_file <- str_c(manual_ids_protein_path, "/", marker, ".tsv")
+
+  if (file.info(manual_file)$size == 0) {
+    assign(str_c(marker, "_manual"), tibble(
+      accession = character(),
+      description = character()
+    ))
+    assign(str_c(marker, "_seq"), Biostrings::AAStringSet())
+    next
+  }
   
-  x <- str_c(manual_ids_protein_path, "/", marker, ".tsv") |>
-  read_table(
-    col_names = c("accession", "description")
-  )
+  x <- manual_file |>
+    read_table(col_names = c("accession", "description"))
   
   assign(str_c(marker, "_manual"), x)
-
-  if (!"accession" %in% names(x)) {
+  
+  if (nrow(x) == 0) {
     assign(str_c(marker, "_seq"), Biostrings::AAStringSet())
-  }else {
-    fasta_txt <- entrez_fetch(
+    next
+  }
+  
+  fasta_txt <- entrez_fetch(
     db = "protein",
     id = x$accession,
     rettype = "fasta",
     retmode = "text"
   )
-  
-  }
-  
   
   tmp_fasta <- tempfile(fileext = ".fasta")
   writeLines(fasta_txt, tmp_fasta)
@@ -70,7 +80,7 @@ for (marker in manual_markers) {
 
 # Merge Zenodo + manual sequences, remove duplicates, write FASTA
 
-all_markers <- c("majorcapsid_nucletocytoviricota",
+all_markers <- c("majorcapsid_nucleocytoviricota",
 "atpase_nucleocytoviricota",      
 "dnapol_nucleocytoviricota",
 "primase_nucleocytoviricota",
