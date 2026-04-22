@@ -2,7 +2,7 @@ library(tidyverse)
 library(rentrez)
 
 # Config
-manifest <- "output/manifest_genomes.tsv"
+manifest <- "output/config/manifest_genomes.tsv"
 outdir   <- "output/genomes"
 
 dir.create(outdir, showWarnings = FALSE, recursive = TRUE)
