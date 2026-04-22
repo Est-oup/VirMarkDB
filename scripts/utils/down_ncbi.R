@@ -14,7 +14,7 @@ options(entrez_key   = creds[2])
 
 # Load manifest and filter out private genomes
 genomes <- read_tsv(manifest, show_col_types = FALSE) %>%
-  filter(source != "PRIVATE")
+  filter(Source != "PRIVATE")
 
 # Function to download genomes
 download_genome <- function(virus_id) {
