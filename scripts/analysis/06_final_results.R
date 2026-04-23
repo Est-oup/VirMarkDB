@@ -60,7 +60,7 @@ tblout <- map_dfr(tbl_files, read_tblout)
 
 # Selection of ORF
 
-default_threshold_score  <- 0.90
+default_threshold_score  <- 0.80
 default_threshold_length <- 0.80
 
 # EXTRACT PRODIGAL START / END
