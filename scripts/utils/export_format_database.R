@@ -17,18 +17,35 @@ marker_map <- read_tsv(map_tsv, show_col_types = FALSE) %>%
   mutate(
     marker_group_id = if_else(
       is.na(marker_group_id) | marker_group_id == "",
-      str_c(group_id, "__", marker),
+      str_c(group_id, "_", marker),
       marker_group_id
     )
   ) %>%
   distinct(group_id, marker, marker_group_id)
 
 # Build taxonomy file for vsearch
+orf_cols <- grep("_orf_names$", names(virus_compo_taxo), value = TRUE)
+
 taxo_vsearch <- virus_compo_taxo %>%
-  select(virus_id, any_of(taxonomy_all)) %>%
-  mutate(reference_id = virus_id) %>%
-  unite(taxonomy, any_of(taxonomy_all), sep = ";", remove = TRUE, na.rm = FALSE) %>%
-  select(reference_id, taxonomy)
+  select(any_of(c("virus_id", taxonomy_all, orf_cols))) %>%
+  pivot_longer(
+    cols = all_of(orf_cols),
+    names_to = "marker_group_col",
+    values_to = "orf_names",
+    values_drop_na = TRUE
+  ) %>%
+  separate_rows(orf_names, sep = ";") %>%
+  filter(!is.na(orf_names), orf_names != "") %>%
+  mutate(reference_id = orf_names) %>%
+  unite(
+    taxonomy,
+    any_of(taxonomy_all),
+    sep = ";",
+    remove = TRUE,
+    na.rm = FALSE
+  ) %>%
+  select(reference_id, taxonomy) %>%
+  distinct()
 
 write_tsv(taxo_vsearch, file.path(outdir, "vsearch", "taxonomy.tsv"))
 

@@ -58,39 +58,78 @@ read_tblout <- function(tbl) {
 
 tblout <- map_dfr(tbl_files, read_tblout)
 
-# BEST HIT BY GENOME x MARKER_GROUP
-best_hits <- tblout %>%
-  group_by(virus_id, marker_group_id) %>%
-  arrange(evalue, desc(score)) %>%
-  slice(1) %>%
-  ungroup()
+# Selection of ORF
+
+default_threshold_score  <- 0.80
+default_threshold_length <- 0.80
 
 # EXTRACT PRODIGAL START / END
-parts <- strsplit(best_hits$description, "#", fixed = TRUE)
+parts <- strsplit(tblout$description, "#", fixed = TRUE)
 
-best_hits <- best_hits %>%
+tblout <- tblout %>%
   mutate(
     prodigal_start = as.integer(trimws(sapply(parts, `[`, 2))),
-    prodigal_end   = as.integer(trimws(sapply(parts, `[`, 3)))
+    prodigal_end   = as.integer(trimws(sapply(parts, `[`, 3))),
+    orf_length     = abs(prodigal_end - prodigal_start) + 1
+  )
+
+# Rank hits inside each virus x marker_group
+tblout_ranked <- tblout %>%
+  group_by(virus_id, marker_group_id) %>%
+  arrange(evalue, desc(score), .by_group = TRUE) %>%
+  mutate(
+    copy_rank = row_number(),
+    best_score = first(score),
+    best_orf_length = first(orf_length),
+    score_ratio = score / best_score,
+    length_ratio = orf_length / best_orf_length
+  ) %>%
+  ungroup()
+
+# Keep best hit + probable extra copies
+selected_orfs <- tblout_ranked %>%
+  filter(
+    copy_rank == 1 |
+      (
+        score_ratio >= default_threshold_score &
+        length_ratio >= default_threshold_length
+      )
   ) %>%
   left_join(marker_map, by = "marker_group_id") %>%
   left_join(manifest, by = "virus_id")
 
 # EXPORT TABLES
-marker_group_ids <- sort(unique(best_hits$marker_group_id))
+marker_group_ids <- sort(unique(selected_orfs$marker_group_id))
 
-virus_compo_taxo <- best_hits %>%
-  select(virus_id, Virus_names, marker_group_id, orf_name) %>%
+virus_compo_taxo <- selected_orfs %>%
+  group_by(virus_id, Virus_names, marker_group_id) %>%
+  summarise(
+    orf_names = str_c(sort(unique(orf_name)), collapse = ";"),
+    n_copies = n(),
+    .groups = "drop"
+  ) %>%
   pivot_wider(
     names_from = marker_group_id,
-    values_from = orf_name
+    values_from = c(orf_names, n_copies),
+    names_glue = "{marker_group_id}_{.value}",
+    values_fill = list(orf_names = NA_character_, n_copies = 0)
   ) %>%
   left_join(
     manifest %>%
       select(virus_id, ICTV_ID, all_of(taxonomy_all)),
     by = "virus_id"
-  ) %>%
-  select(virus_id, Virus_names, ICTV_ID, all_of(marker_group_ids), all_of(taxonomy_all))
+  )
+
+orf_cols <- str_c(marker_group_ids, "_orf_names")
+copy_cols <- str_c(marker_group_ids, "_n_copies")
+
+virus_compo_taxo <- virus_compo_taxo %>%
+  select(
+    virus_id, Virus_names, ICTV_ID,
+    all_of(orf_cols),
+    all_of(copy_cols),
+    all_of(taxonomy_all)
+  )
 
 write_tsv(virus_compo_taxo, file.path(OUT_TABLES, "virus_compo_taxo.tsv"))
 
@@ -103,7 +142,6 @@ virus_metadata <- manifest %>%
   filter(virus_id %in% virus_compo_taxo$virus_id)
 
 write_tsv(virus_metadata, file.path(OUT_TABLES, "virus_metadata.tsv"))
-write_tsv(best_hits, file.path(OUT_TABLES, "best_hits.tsv"))
 
 # LOAD ORFS
 load_orfs <- function(virus_id) {
@@ -137,7 +175,7 @@ strip_terminal_star <- function(x) {
 }
 
 # EXPORT FASTA BY GROUP / MARKER
-targets <- best_hits %>%
+targets <- selected_orfs %>%
   distinct(group_id, marker, marker_group_id) %>%
   arrange(group_id, marker)
 
@@ -149,14 +187,18 @@ for (i in seq_len(nrow(targets))) {
   out_m <- file.path(OUT_MARKERS, g, m)
   dir.create(out_m, recursive = TRUE, showWarnings = FALSE)
 
-  df_m <- best_hits %>%
+  df_m <- selected_orfs %>%
     filter(marker_group_id == mg) %>%
-    arrange(evalue, desc(score))
+    arrange(virus_id, copy_rank, evalue, desc(score))
 
   df_m2 <- df_m %>%
     select(
-      virus_id, group_id, marker, marker_group_id,
-      orf_name, evalue, score, prodigal_start, prodigal_end,
+      orf_name, virus_id, group_id, marker,
+      copy_rank,
+      evalue, score,
+      best_score, score_ratio,
+      orf_length, best_orf_length, length_ratio,
+      prodigal_start, prodigal_end,
       Species, Virus_names
     )
 
@@ -174,7 +216,7 @@ for (i in seq_len(nrow(targets))) {
     orfs <- get_orfs(r$virus_id)
 
     hdr <- str_c(
-      r$virus_id,
+      r$orf_name,
       " ",
       df_m[j, ] %>%
         unite("Taxonomy", Kingdom, Phylum, Class, Order, Family, Genus, Species, sep = ";") %>%
@@ -206,4 +248,3 @@ for (i in seq_len(nrow(targets))) {
 
 # EXPORT DATABASE IN SPECIFIC TOOLS FORMAT
 source("scripts/utils/export_format_database.R")
-

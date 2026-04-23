@@ -4,8 +4,6 @@
 #SBATCH --cpus-per-task=50
 #SBATCH --output=align_vmd_pool.out
 
-set -euo pipefail
-
 module load mmseqs2/15.6f452
 
 mkdir -p output/benchmark/alignment_vmd_pool/alignment/tmp
