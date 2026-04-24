@@ -6,12 +6,14 @@ ORF_DIR      <- "output/orfs"
 MANIFEST_TSV <- "output/config/manifest_genomes.tsv"
 MAP_TSV      <- "output/config/marker_taxo_map.tsv"
 OUT_DIR      <- "output/VMD-database"
+OUT_LOGS      <- "output/hmm/logs" 
 
 OUT_TABLES  <- file.path(OUT_DIR, "virus_informations")
 OUT_MARKERS <- file.path(OUT_DIR, "markers")
 
 dir.create(OUT_TABLES, recursive = TRUE, showWarnings = FALSE)
 dir.create(OUT_MARKERS, recursive = TRUE, showWarnings = FALSE)
+
 
 taxonomy_all <- c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species")
 
@@ -143,6 +145,10 @@ virus_metadata <- manifest %>%
 
 write_tsv(virus_metadata, file.path(OUT_TABLES, "virus_metadata.tsv"))
 
+# Calculate logs 
+source("scripts/utils/hmm_search_logs.R")
+
+
 # LOAD ORFS
 load_orfs <- function(virus_id) {
   faa_path <- file.path(ORF_DIR, str_c(virus_id, ".faa"))
@@ -246,5 +252,7 @@ for (i in seq_len(nrow(targets))) {
   )
 }
 
-# EXPORT DATABASE IN SPECIFIC TOOLS FORMAT
+# Export database in specific tools format
 source("scripts/utils/export_format_database.R")
+
+
