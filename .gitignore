@@ -7,3 +7,5 @@ input/ncbi_nr
 input
 *.json
 *.vscode
+scripts/test.bash
+.gitignore
