@@ -1,6 +1,5 @@
 library(tidyverse)
 
-dir.create(OUT_LOGS, recursive = TRUE, showWarnings = FALSE)
 
 genome_map_tsv <- "output/config/genome_marker_map.tsv"
 
