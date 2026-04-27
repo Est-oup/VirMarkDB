@@ -9,3 +9,4 @@ input
 *.vscode
 scripts/test.bash
 .gitignore
+.Rplot
