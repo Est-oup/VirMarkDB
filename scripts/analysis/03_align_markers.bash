@@ -12,7 +12,8 @@ mkdir -p "$OUT1" "$OUT2"
 for fasta in "$IN"/*.fasta; do
   stem="$(basename "$fasta" .fasta)"
 
-  mafft --auto "$fasta" > "${OUT1}/${stem}.aln"
+  # mafft --auto "$fasta" > "${OUT1}/${stem}.aln"
+  mafft --ep 0 --genafpair --maxiterate 1000 "$fasta" > "${OUT1}/${stem}.aln"
   trimal -in "${OUT1}/${stem}.aln" -out "${OUT2}/${stem}.aln" -gt 0.1
 done
 

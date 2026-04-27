@@ -16,7 +16,7 @@ meta <- read_tsv("output/VMD-database/virus_informations/virus_compo_taxo.tsv")
 
 
 analyse_res <- function(marker,ncbi_dir,hits_dir,out_dir,missing_prot_path,hits_prot_path,meta){ 
-  prot <- Biostrings::readAAStringSet(str_c(ncbi_dir,"/", gsub("_.*","",marker),".fasta"))
+  prot <- Biostrings::readAAStringSet(str_c(ncbi_dir,"/", marker,".fasta"))
 
   tab <- read.table(str_c(hits_dir,"/",marker,".m8"))
   colnames(tab) <- c("query","ref","ident","alnlen","mismatch","gapopen","qstart","qend","sstart","send","evalue","bits") 
@@ -96,7 +96,7 @@ analyse_res <- function(marker,ncbi_dir,hits_dir,out_dir,missing_prot_path,hits_
   # Analyse part of the database witch is not covered by the pool
   # Family of the database ref with have the marker 
   meta2 <- meta |>
-    filter(.data[[marker]] != "NA")
+    filter(.data[[str_c(marker,"_orf_names")]] != "NA")
   meta2$Family |> unique()
 
   # Family of the reference database wich query blast 
@@ -124,7 +124,6 @@ analyse_res <- function(marker,ncbi_dir,hits_dir,out_dir,missing_prot_path,hits_
 
 
 # Launch
-# markers <- sub("\\.fasta$", "", list.files(ncbi_dir, pattern = "\\.fasta$", full.names = FALSE))
 markers <- sub("\\.m8$", "", list.files(hits_dir, pattern = "\\.m8$", full.names = FALSE))
 
 lapply(markers, function(marker) analyse_res(marker,ncbi_dir,hits_dir,out_dir,missing_prot_path,hits_prot_path,meta))

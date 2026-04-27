@@ -46,21 +46,21 @@ fetch_marker() {
 }
 
 # fetch markers
-fetch_marker "majorcapsid" 'major capsid protein|major capsid'
-fetch_marker "dnapol"      'DNA polymerase B|B-family DNA polymerase|family B DNA polymerase|(^|[^A-Za-z])PolB([^A-Za-z]|$)|(^|[^A-Za-z])pPolB([^A-Za-z]|$)'
-fetch_marker "atpase"      'packaging ATPase|DNA packaging ATPase'
-fetch_marker "primase"     '(^|[^A-Za-z])primase([^A-Za-z]|$)|DNA primase'
-fetch_marker "vltf3"       'late transcription factor 3|(^|[^A-Za-z])VLTF3([^A-Za-z]|$)'
-fetch_marker "tf2s"        'transcription elongation factor SII|(^|[^A-Za-z])TFIIS([^A-Za-z]|$)|transcription factor S-II'
-fetch_marker "rnapol1"     'DNA-directed RNA polymerase subunit 1|RNA polymerase subunit 1'
-fetch_marker "rnapol2"     'DNA-directed RNA polymerase subunit 2|RNA polymerase subunit 2'
+fetch_marker "majorcapsid_nucleocytoviricota" 'major capsid protein|major capsid'
+fetch_marker "dnapol_nucleocytoviricota"      'DNA polymerase B|B-family DNA polymerase|family B DNA polymerase|(^|[^A-Za-z])PolB([^A-Za-z]|$)|(^|[^A-Za-z])pPolB([^A-Za-z]|$)'
+fetch_marker "atpase_nucleocytoviricota"      'packaging ATPase|DNA packaging ATPase'
+fetch_marker "primase_nucleocytoviricota"     '(^|[^A-Za-z])primase([^A-Za-z]|$)|DNA primase'
+fetch_marker "vltf3_nucleocytoviricota"       'late transcription factor 3|(^|[^A-Za-z])VLTF3([^A-Za-z]|$)'
+fetch_marker "tf2s_nucleocytoviricota"        'transcription elongation factor SII|(^|[^A-Za-z])TFIIS([^A-Za-z]|$)|transcription factor S-II'
+fetch_marker "rnapol1_nucleocytoviricota"     'DNA-directed RNA polymerase subunit 1|RNA polymerase subunit 1'
+fetch_marker "rnapol2_nucleocytoviricota"     'DNA-directed RNA polymerase subunit 2|RNA polymerase subunit 2'
 
 # final count
-echo "capsid   $(grep -c '^>' "$OUTDIR/majorcapsid.fasta" || true)"
-echo "dnapol   $(grep -c '^>' "$OUTDIR/dnapol.fasta" || true)"
-echo "atpase   $(grep -c '^>' "$OUTDIR/atpase.fasta" || true)"
-echo "primase  $(grep -c '^>' "$OUTDIR/primase.fasta" || true)"
-echo "vltf3    $(grep -c '^>' "$OUTDIR/vltf3.fasta" || true)"
-echo "tf2s     $(grep -c '^>' "$OUTDIR/tf2s.fasta" || true)"
-echo "rnapol1  $(grep -c '^>' "$OUTDIR/rnapol1.fasta" || true)"
-echo "rnapol2  $(grep -c '^>' "$OUTDIR/rnapol2.fasta" || true)"
+echo "capsid   $(grep -c '^>' "$OUTDIR/majorcapsid_nucleocytoviricota.fasta" || true)"
+echo "dnapol   $(grep -c '^>' "$OUTDIR/dnapol_nucleocytoviricota.fasta" || true)"
+echo "atpase   $(grep -c '^>' "$OUTDIR/atpase_nucleocytoviricota.fasta" || true)"
+echo "primase  $(grep -c '^>' "$OUTDIR/primase_nucleocytoviricota.fasta" || true)"
+echo "vltf3    $(grep -c '^>' "$OUTDIR/vltf3_nucleocytoviricota.fasta" || true)"
+echo "tf2s     $(grep -c '^>' "$OUTDIR/tf2s_nucleocytoviricota.fasta" || true)"
+echo "rnapol1  $(grep -c '^>' "$OUTDIR/rnapol1_nucleocytoviricota.fasta" || true)"
+echo "rnapol2  $(grep -c '^>' "$OUTDIR/rnapol2_nucleocytoviricota.fasta" || true)"
