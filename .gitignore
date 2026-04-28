@@ -10,3 +10,5 @@ input
 scripts/test.bash
 .gitignore
 .Rplot
+/.quarto/
+**/*.quarto_ipynb
