@@ -26,7 +26,7 @@ download_genome <- function(virus_id) {
 
   seq <- rentrez::entrez_fetch(
     db = "nuccore",
-    id = virus_id,
+    id = gsub("_partial","",virus_id),
     rettype = "fasta",
     retmode = "text"
   )

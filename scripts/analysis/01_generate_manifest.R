@@ -1,7 +1,7 @@
 library(tidyverse)
 
 # Config
-ictv_xlsx <- "VMR_MSL40.v2.20251013.xlsx"
+ictv_xlsx <- "VMR_MSL41.v1.20260320.xlsx"
 manual_gen_ncbi <- "input/manual_genomes_ncbi.tsv"
 manual_gen_priv <- "input/manual_genomes_private.tsv"
 map_file <- "input/mapfile.tsv"
@@ -47,7 +47,10 @@ ictv <- readxl::read_excel(dest, sheet = 2) %>%
     Virus_names, Virus_names_abrv, Host_source, ICTV_ID
   ) %>%
   separate_rows(virus_id, sep = "; ") %>%
-  mutate(Source = "ICTV") 
+  mutate(
+    Source = "ICTV",
+    virus_id = str_replace(virus_id, "^partial: (.+)$", "\\1_partial")
+  ) 
 
 # Load manual genomes on NCBI
 manual_ncbi <- if (file.exists(manual_gen_ncbi)) {
