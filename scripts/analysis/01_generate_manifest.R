@@ -47,7 +47,10 @@ ictv <- readxl::read_excel(dest, sheet = 2) %>%
     Virus_names, Virus_names_abrv, Host_source, ICTV_ID
   ) %>%
   separate_rows(virus_id, sep = "; ") %>%
-  mutate(Source = "ICTV") 
+  mutate(
+    Source = "ICTV",
+    virus_id = str_replace(virus_id, "^partial: (.+)$", "\\1_partial")
+  ) 
 
 # Load manual genomes on NCBI
 manual_ncbi <- if (file.exists(manual_gen_ncbi)) {
