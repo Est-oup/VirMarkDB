@@ -192,10 +192,12 @@ selected_orfs <- tblout_ranked %>%
   left_join(manifest, by = "virus_id")
 
 # EXPORT TABLES
-marker_group_ids <- sort(unique(selected_orfs$marker_group_id))
+marker_group_ids <- sort(unique(marker_map$marker_group_id))
+orf_cols <- str_c(marker_group_ids, "_orf_names")
+copy_cols <- str_c(marker_group_ids, "_n_copies")
 
-virus_compo_taxo <- selected_orfs %>%
-  group_by(virus_id, Virus_names, marker_group_id) %>%
+selected_orfs_wide <- selected_orfs %>%
+  group_by(virus_id, marker_group_id) %>%
   summarise(
     orf_names = str_c(sort(unique(orf_name)), collapse = ";"),
     n_copies = n(),
@@ -206,17 +208,17 @@ virus_compo_taxo <- selected_orfs %>%
     values_from = c(orf_names, n_copies),
     names_glue = "{marker_group_id}_{.value}",
     values_fill = list(orf_names = NA_character_, n_copies = 0)
-  ) %>%
-  left_join(
-    manifest %>%
-      select(virus_id, ICTV_ID, all_of(taxonomy_all)),
-    by = "virus_id"
   )
 
-orf_cols <- str_c(marker_group_ids, "_orf_names")
-copy_cols <- str_c(marker_group_ids, "_n_copies")
-
-virus_compo_taxo <- virus_compo_taxo %>%
+virus_compo_taxo <- manifest %>%
+  select(
+    virus_id, Virus_names, ICTV_ID,
+    all_of(taxonomy_all)
+  ) %>%
+  left_join(selected_orfs_wide, by = "virus_id") %>%
+  mutate(
+    across(all_of(copy_cols), ~replace_na(.x, 0L))
+  ) %>%
   select(
     virus_id, Virus_names, ICTV_ID,
     all_of(orf_cols),
@@ -232,7 +234,15 @@ virus_metadata <- manifest %>%
     Kingdom, Phylum, Class, Order, Family, Genus, Species
   ) %>%
   rename(Origin_source = Source) %>%
-  filter(virus_id %in% virus_compo_taxo$virus_id)
+  left_join(
+    selected_orfs %>%
+      distinct(virus_id) %>%
+      mutate(has_selected_marker = TRUE),
+    by = "virus_id"
+  ) %>%
+  mutate(
+    has_selected_marker = replace_na(has_selected_marker, FALSE)
+  )
 
 write_tsv(virus_metadata, file.path(OUT_TABLES, "virus_metadata.tsv"))
 
