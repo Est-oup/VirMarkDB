@@ -1,7 +1,8 @@
 library(tidyverse)
 
-
 genome_map_tsv <- "output/config/genome_marker_map.tsv"
+
+dir.create(OUT_LOGS, recursive = TRUE, showWarnings = FALSE)
 
 # Plot theme
 plot_theme <- theme_bw(base_size = 11) +
@@ -11,19 +12,80 @@ plot_theme <- theme_bw(base_size = 11) +
     legend.position = "right"
   )
 
+# Helpers
+write_log <- function(x, file_name) {
+  write_tsv(x, file.path(OUT_LOGS, file_name))
+}
+
+save_log_plot <- function(plot, file_name, width = 12, height = 8) {
+  ggsave(
+    file.path(OUT_LOGS, file_name),
+    plot,
+    width = width,
+    height = height
+  )
+}
+
+add_metadata <- function(df) {
+  df %>%
+    select(
+      -any_of(c(
+        "group_id", "marker", "Virus_names", "ICTV_ID",
+        taxonomy_all
+      ))
+    ) %>%
+    left_join(
+      marker_map %>%
+        select(marker_group_id, group_id, marker) %>%
+        distinct(),
+      by = "marker_group_id"
+    ) %>%
+    left_join(
+      manifest %>%
+        select(virus_id, Virus_names, ICTV_ID, any_of(taxonomy_all)),
+      by = "virus_id"
+    )
+}
+
+plot_stage_bar <- function(df, stage_value, file_name, title, y_label) {
+  p <- df %>%
+    filter(stage == stage_value) %>%
+    ggplot(aes(x = reorder(marker_group_id, n_genomes), y = n_genomes)) +
+    geom_col() +
+    coord_flip() +
+    facet_wrap(~marker, scales = "free_y") +
+    labs(
+      x = "Marker group",
+      y = y_label,
+      title = title
+    ) +
+    plot_theme +
+    theme(legend.position = "none")
+
+  save_log_plot(p, file_name)
+}
+
+plot_length_boxplot <- function(df, stage_value, file_name, title) {
+  p <- df %>%
+    filter(stage == stage_value) %>%
+    ggplot(aes(x = marker_group_id, y = orf_length)) +
+    geom_boxplot(outlier.size = 0.5) +
+    coord_flip() +
+    facet_wrap(~marker, scales = "free_y") +
+    labs(
+      x = "Marker group",
+      y = "ORF length",
+      title = title
+    ) +
+    plot_theme +
+    theme(legend.position = "none")
+
+  save_log_plot(p, file_name)
+}
+
 # Add metadata to ranked hits
 tblout_ranked_log <- tblout_ranked %>%
-  left_join(
-    marker_map %>%
-      select(marker_group_id, group_id, marker) %>%
-      distinct(),
-    by = "marker_group_id"
-  ) %>%
-  left_join(
-    manifest %>%
-      select(virus_id, Virus_names, ICTV_ID, any_of(taxonomy_all)),
-    by = "virus_id"
-  ) %>%
+  add_metadata() %>%
   group_by(virus_id, marker_group_id) %>%
   mutate(
     n_orfs_before = n(),
@@ -35,8 +97,9 @@ tblout_ranked_log <- tblout_ranked %>%
   ) %>%
   ungroup()
 
-# Keep selected ORFs as is
-selected_orfs_log <- selected_orfs
+# Keep selected ORFs
+selected_orfs_log <- selected_orfs %>%
+  add_metadata()
 
 # Log by genome and marker
 log_genome_marker <- tblout_ranked_log %>%
@@ -54,19 +117,13 @@ log_genome_marker <- tblout_ranked_log %>%
     .groups = "drop"
   )
 
-write_tsv(
-  log_genome_marker,
-  file.path(OUT_LOGS, "log_genome_marker_before_after.tsv")
-)
+write_log(log_genome_marker, "log_genome_marker_before_after.tsv")
 
 # Multicopy genomes only
 log_duplicated_genomes <- log_genome_marker %>%
   filter(multicopy_before | multicopy_after)
 
-write_tsv(
-  log_duplicated_genomes,
-  file.path(OUT_LOGS, "log_duplicated_genomes.tsv")
-)
+write_log(log_duplicated_genomes, "log_duplicated_genomes.tsv")
 
 # Summary by marker
 log_marker_summary <- log_genome_marker %>%
@@ -80,10 +137,7 @@ log_marker_summary <- log_genome_marker %>%
     .groups = "drop"
   )
 
-write_tsv(
-  log_marker_summary,
-  file.path(OUT_LOGS, "log_marker_summary.tsv")
-)
+write_log(log_marker_summary, "log_marker_summary.tsv")
 
 # Shared ORFs across marker groups
 orf_shared_log <- bind_rows(
@@ -108,12 +162,9 @@ orf_shared_log <- bind_rows(
     filter(n_marker_groups > 1)
 )
 
-write_tsv(
-  orf_shared_log,
-  file.path(OUT_LOGS, "log_orf_shared_across_markers.tsv")
-)
+write_log(orf_shared_log, "log_orf_shared_across_markers.tsv")
 
-# Raw ORF lengths
+# ORF lengths
 orf_length_raw <- bind_rows(
   tblout_ranked_log %>%
     transmute(
@@ -129,12 +180,8 @@ orf_length_raw <- bind_rows(
     )
 )
 
-write_tsv(
-  orf_length_raw,
-  file.path(OUT_LOGS, "log_orf_length_raw.tsv")
-)
+write_log(orf_length_raw, "log_orf_length_raw.tsv")
 
-# ORF length summary
 orf_length_summary <- orf_length_raw %>%
   group_by(stage, marker_group_id, group_id, marker) %>%
   summarise(
@@ -146,10 +193,7 @@ orf_length_summary <- orf_length_raw %>%
     .groups = "drop"
   )
 
-write_tsv(
-  orf_length_summary,
-  file.path(OUT_LOGS, "log_orf_length_summary.tsv")
-)
+write_log(orf_length_summary, "log_orf_length_summary.tsv")
 
 # Missing expected markers
 genome_marker_map <- read_tsv(genome_map_tsv, show_col_types = FALSE) %>%
@@ -189,10 +233,7 @@ missing_marker_log <- genome_marker_map %>%
     missing_after = !detected_after
   )
 
-write_tsv(
-  missing_marker_log,
-  file.path(OUT_LOGS, "log_missing_expected_markers.tsv")
-)
+write_log(missing_marker_log, "log_missing_expected_markers.tsv")
 
 missing_marker_summary <- missing_marker_log %>%
   group_by(marker_group_id, group_id, marker) %>%
@@ -203,10 +244,7 @@ missing_marker_summary <- missing_marker_log %>%
     .groups = "drop"
   )
 
-write_tsv(
-  missing_marker_summary,
-  file.path(OUT_LOGS, "log_missing_expected_markers_summary.tsv")
-)
+write_log(missing_marker_summary, "log_missing_expected_markers_summary.tsv")
 
 # Global summary
 database_summary <- tibble(
@@ -221,10 +259,7 @@ database_summary <- tibble(
   )
 )
 
-write_tsv(
-  database_summary,
-  file.path(OUT_LOGS, "database_summary.tsv")
-)
+write_log(database_summary, "database_summary.tsv")
 
 # Summary for README
 marker_summary <- selected_orfs_log %>%
@@ -249,10 +284,89 @@ marker_summary <- selected_orfs_log %>%
     by = "marker_group_id"
   )
 
-write_tsv(
-  marker_summary,
-  file.path(OUT_LOGS, "marker_summary.tsv")
+write_log(marker_summary, "marker_summary.tsv")
+
+# Family x marker summary
+family_marker_summary <- selected_orfs_log %>%
+  mutate(
+    Family = replace_na(Family, "Unclassified"),
+    Genus = replace_na(Genus, "Unclassified"),
+    Species = replace_na(Species, "Unclassified")
+  ) %>%
+  group_by(Family, marker_group_id, group_id, marker, virus_id) %>%
+  summarise(
+    n_copies = n(),
+    Genus = first(Genus),
+    Species = first(Species),
+    .groups = "drop"
+  ) %>%
+  group_by(Family, marker_group_id, group_id, marker) %>%
+  summarise(
+    n_virus_genomes = n_distinct(virus_id),
+    n_selected_orfs = sum(n_copies),
+    n_multicopy_viruses = sum(n_copies > 1),
+    n_genera = n_distinct(Genus),
+    n_species = n_distinct(Species),
+    .groups = "drop"
+  ) %>%
+  arrange(Family, group_id, marker, marker_group_id)
+
+write_log(family_marker_summary, "family_marker_summary.tsv")
+
+# Wide version for README
+family_marker_summary_wide <- family_marker_summary %>%
+  mutate(marker_label = str_remove(marker_group_id, "_.*")) %>%
+  select(Family, marker_label, n_virus_genomes) %>%
+  pivot_wider(
+    names_from = marker_label,
+    values_from = n_virus_genomes,
+    values_fill = 0
+  ) %>%
+  arrange(Family) %>%
+  bind_rows(
+    summarise(., across(where(is.numeric), sum), Family = "Total genomes")
+  )
+
+write_log(family_marker_summary_wide, "family_marker_summary_wide.tsv")
+
+
+family_marker_summary_wide_md <- knitr::kable(
+  family_marker_summary_wide,
+  format = "pipe"
 )
+
+write_lines(
+  family_marker_summary_wide_md,
+  "output/hmm/logs/family_marker_summary_wide.md"
+)
+
+
+# Family x marker figure
+p_family_marker_summary <- family_marker_summary %>%
+  mutate(
+    Family = fct_reorder(Family, n_virus_genomes, .fun = sum),
+    marker_group_id = fct_reorder(marker_group_id, n_virus_genomes, .fun = sum)
+  ) %>%
+  ggplot(aes(x = marker_group_id, y = Family, fill = n_virus_genomes)) +
+  geom_tile() +
+  labs(
+    x = "Marker group",
+    y = "Family",
+    fill = "Virus genomes",
+    title = "Marker diversity by viral family"
+  ) +
+  plot_theme +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  )
+
+save_log_plot(
+  p_family_marker_summary,
+  "plot_family_marker_summary.png",
+  width = 14,
+  height = 9
+)
+
 
 # Marker coverage per genome
 marker_coverage_distribution <- selected_orfs_log %>%
@@ -260,10 +374,7 @@ marker_coverage_distribution <- selected_orfs_log %>%
   count(virus_id, name = "n_markers_detected") %>%
   count(n_markers_detected, name = "n_viruses")
 
-write_tsv(
-  marker_coverage_distribution,
-  file.path(OUT_LOGS, "marker_coverage_distribution.tsv")
-)
+write_log(marker_coverage_distribution, "marker_coverage_distribution.tsv")
 
 # Covered genomes
 covered_viruses <- selected_orfs_log %>%
@@ -272,6 +383,8 @@ covered_viruses <- selected_orfs_log %>%
 
 # Global taxonomy coverage
 make_taxonomy_coverage <- function(taxo_rank_plot, top_n = 20) {
+  taxo_name <- str_to_lower(taxo_rank_plot)
+
   taxonomy_coverage_summary <- manifest %>%
     select(virus_id, any_of(taxonomy_all)) %>%
     left_join(covered_viruses, by = "virus_id") %>%
@@ -290,18 +403,15 @@ make_taxonomy_coverage <- function(taxo_rank_plot, top_n = 20) {
     rename(taxonomy_group = taxo_value) %>%
     arrange(desc(n_viruses_total), taxonomy_group)
 
-  write_tsv(
+  write_log(
     taxonomy_coverage_summary,
-    file.path(
-      OUT_LOGS,
-      str_c("taxonomy_coverage_summary_", str_to_lower(taxo_rank_plot), ".tsv")
-    )
+    str_c("taxonomy_coverage_summary_", taxo_name, ".tsv")
   )
 
   taxonomy_coverage_plot <- taxonomy_coverage_summary %>%
     slice_head(n = top_n)
 
-  p_taxonomy_coverage <- taxonomy_coverage_plot %>%
+  p <- taxonomy_coverage_plot %>%
     pivot_longer(
       cols = c(n_viruses_covered, n_viruses_not_covered),
       names_to = "status",
@@ -328,12 +438,9 @@ make_taxonomy_coverage <- function(taxo_rank_plot, top_n = 20) {
     ) +
     plot_theme
 
-  ggsave(
-    file.path(
-      OUT_LOGS,
-      str_c("plot_taxonomy_coverage_", str_to_lower(taxo_rank_plot), ".png")
-    ),
-    p_taxonomy_coverage,
+  save_log_plot(
+    p,
+    str_c("plot_taxonomy_coverage_", taxo_name, ".png"),
     width = 10,
     height = 7
   )
@@ -341,6 +448,8 @@ make_taxonomy_coverage <- function(taxo_rank_plot, top_n = 20) {
 
 # Taxonomy coverage by marker
 make_taxonomy_coverage_by_marker <- function(taxo_rank_plot, top_n = 12) {
+  taxo_name <- str_to_lower(taxo_rank_plot)
+
   taxonomy_coverage_summary <- genome_marker_map %>%
     left_join(
       manifest %>%
@@ -369,12 +478,9 @@ make_taxonomy_coverage_by_marker <- function(taxo_rank_plot, top_n = 12) {
     rename(taxonomy_group = taxo_value) %>%
     arrange(marker, desc(n_viruses_total), taxonomy_group)
 
-  write_tsv(
+  write_log(
     taxonomy_coverage_summary,
-    file.path(
-      OUT_LOGS,
-      str_c("taxonomy_coverage_summary_", str_to_lower(taxo_rank_plot), "_by_marker.tsv")
-    )
+    str_c("taxonomy_coverage_summary_", taxo_name, "_by_marker.tsv")
   )
 
   taxonomy_coverage_plot <- taxonomy_coverage_summary %>%
@@ -382,7 +488,7 @@ make_taxonomy_coverage_by_marker <- function(taxo_rank_plot, top_n = 12) {
     slice_max(order_by = n_viruses_total, n = top_n, with_ties = FALSE) %>%
     ungroup()
 
-  p_taxonomy_coverage <- taxonomy_coverage_plot %>%
+  p <- taxonomy_coverage_plot %>%
     pivot_longer(
       cols = c(n_viruses_covered, n_viruses_not_covered),
       names_to = "status",
@@ -406,12 +512,9 @@ make_taxonomy_coverage_by_marker <- function(taxo_rank_plot, top_n = 12) {
     ) +
     plot_theme
 
-  ggsave(
-    file.path(
-      OUT_LOGS,
-      str_c("plot_taxonomy_coverage_", str_to_lower(taxo_rank_plot), "_by_marker.png")
-    ),
-    p_taxonomy_coverage,
+  save_log_plot(
+    p,
+    str_c("plot_taxonomy_coverage_", taxo_name, "_by_marker.png"),
     width = 14,
     height = 10
   )
@@ -422,7 +525,7 @@ make_taxonomy_coverage("Genus")
 make_taxonomy_coverage_by_marker("Family")
 make_taxonomy_coverage_by_marker("Genus")
 
-# Multicopy plot
+# Multicopy plots
 plot_multicopy_data <- log_marker_summary %>%
   select(marker_group_id, marker, genomes_multicopy_before, genomes_multicopy_after) %>%
   pivot_longer(
@@ -438,89 +541,35 @@ plot_multicopy_data <- log_marker_summary %>%
     )
   )
 
-p_multicopy_before <- plot_multicopy_data %>%
-  filter(stage == "before") %>%
-  ggplot(aes(x = reorder(marker_group_id, n_genomes), y = n_genomes)) +
-  geom_col(fill = "#F8766D") +
-  coord_flip() +
-  facet_wrap(~marker, scales = "free_y") +
-  labs(
-    x = "Marker group",
-    y = "Genomes with multicopy",
-    title = "Multicopy genomes before filtering"
-  ) +
-  plot_theme +
-  theme(legend.position = "none")
-
-ggsave(
-  file.path(OUT_LOGS, "plot_multicopy_before.png"),
-  p_multicopy_before,
-  width = 12,
-  height = 8
+plot_stage_bar(
+  plot_multicopy_data,
+  "before",
+  "plot_multicopy_before.png",
+  "Multicopy genomes before filtering",
+  "Genomes with multicopy"
 )
 
-p_multicopy_after <- plot_multicopy_data %>%
-  filter(stage == "after") %>%
-  ggplot(aes(x = reorder(marker_group_id, n_genomes), y = n_genomes)) +
-  geom_col(fill = "#00BFC4") +
-  coord_flip() +
-  facet_wrap(~marker, scales = "free_y") +
-  labs(
-    x = "Marker group",
-    y = "Genomes with multicopy",
-    title = "Multicopy genomes after filtering"
-  ) +
-  plot_theme +
-  theme(legend.position = "none")
-
-ggsave(
-  file.path(OUT_LOGS, "plot_multicopy_after.png"),
-  p_multicopy_after,
-  width = 12,
-  height = 8
+plot_stage_bar(
+  plot_multicopy_data,
+  "after",
+  "plot_multicopy_after.png",
+  "Multicopy genomes after filtering",
+  "Genomes with multicopy"
 )
 
 # ORF length plots
-p_lengths_before <- orf_length_raw %>%
-  filter(stage == "before") %>%
-  ggplot(aes(x = marker_group_id, y = orf_length)) +
-  geom_boxplot(outlier.size = 0.5, fill = "#F8766D") +
-  coord_flip() +
-  facet_wrap(~marker, scales = "free_y") +
-  labs(
-    x = "Marker group",
-    y = "ORF length",
-    title = "ORF length distributions before filtering"
-  ) +
-  plot_theme +
-  theme(legend.position = "none")
-
-ggsave(
-  file.path(OUT_LOGS, "plot_orf_length_boxplot_before.png"),
-  p_lengths_before,
-  width = 12,
-  height = 8
+plot_length_boxplot(
+  orf_length_raw,
+  "before",
+  "plot_orf_length_boxplot_before.png",
+  "ORF length distributions before filtering"
 )
 
-p_lengths_after <- orf_length_raw %>%
-  filter(stage == "after") %>%
-  ggplot(aes(x = marker_group_id, y = orf_length)) +
-  geom_boxplot(outlier.size = 0.5, fill = "#00BFC4") +
-  coord_flip() +
-  facet_wrap(~marker, scales = "free_y") +
-  labs(
-    x = "Marker group",
-    y = "ORF length",
-    title = "ORF length distributions after filtering"
-  ) +
-  plot_theme +
-  theme(legend.position = "none")
-
-ggsave(
-  file.path(OUT_LOGS, "plot_orf_length_boxplot_after.png"),
-  p_lengths_after,
-  width = 12,
-  height = 8
+plot_length_boxplot(
+  orf_length_raw,
+  "after",
+  "plot_orf_length_boxplot_after.png",
+  "ORF length distributions after filtering"
 )
 
 # Missing markers plots
@@ -539,44 +588,18 @@ plot_missing_data <- missing_marker_summary %>%
     )
   )
 
-p_missing_before <- plot_missing_data %>%
-  filter(stage == "before") %>%
-  ggplot(aes(x = reorder(marker_group_id, n_genomes), y = n_genomes)) +
-  geom_col(fill = "#F8766D") +
-  coord_flip() +
-  facet_wrap(~marker, scales = "free_y") +
-  labs(
-    x = "Marker group",
-    y = "Genomes with missing marker",
-    title = "Missing expected markers before filtering"
-  ) +
-  plot_theme +
-  theme(legend.position = "none")
-
-ggsave(
-  file.path(OUT_LOGS, "plot_missing_expected_markers_before.png"),
-  p_missing_before,
-  width = 12,
-  height = 8
+plot_stage_bar(
+  plot_missing_data,
+  "before",
+  "plot_missing_expected_markers_before.png",
+  "Missing expected markers before filtering",
+  "Genomes with missing marker"
 )
 
-p_missing_after <- plot_missing_data %>%
-  filter(stage == "after") %>%
-  ggplot(aes(x = reorder(marker_group_id, n_genomes), y = n_genomes)) +
-  geom_col(fill = "#00BFC4") +
-  coord_flip() +
-  facet_wrap(~marker, scales = "free_y") +
-  labs(
-    x = "Marker group",
-    y = "Genomes with missing marker",
-    title = "Missing expected markers after filtering"
-  ) +
-  plot_theme +
-  theme(legend.position = "none")
-
-ggsave(
-  file.path(OUT_LOGS, "plot_missing_expected_markers_after.png"),
-  p_missing_after,
-  width = 12,
-  height = 8
+plot_stage_bar(
+  plot_missing_data,
+  "after",
+  "plot_missing_expected_markers_after.png",
+  "Missing expected markers after filtering",
+  "Genomes with missing marker"
 )
