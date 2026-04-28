@@ -69,31 +69,173 @@ The database can be used for:
 VMD database workflow
 
 ```mermaid
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "fontFamily": "Arial",
+    "fontSize": "26px",
+    "primaryTextColor": "#111827",
+    "lineColor": "#475569"
+  },
+  "flowchart": {
+    "htmlLabels": true,
+    "curve": "basis"
+  }
+}}%%
+
 flowchart TD
 
-  A["Input data<br/>ICTV table + manual genomes + marker map"] --> B["Genome manifest<br/>taxonomy + genome paths"]
-  A --> C["Protein references<br/>Zenodo + NCBI + manual"]
+  %% 01. INPUTS
 
-  B --> D["Genome FASTA files"]
-  D --> E["ORF prediction<br/>Prodigal<br/>FAA / FNA / GFF"]
+  subgraph INPUT[" "]
+    direction TB
 
-  C --> F["Reference alignment<br/>MAFFT"]
-  F --> G["HMM profiles<br/>hmmbuild"]
+    T1["<b style='font-size:44px'>01. Inputs & preparation</b>"]
 
-  E --> H["Marker search<br/>hmmsearch"]
-  G --> H
+    subgraph INPUT_CONTENT[" "]
+      direction LR
+      A1["Raw inputs<br/><br/>ICTV taxonomy<br/>Genome FASTA<br/>Marker map<br/>Protein references"]
+      A2["Prepared inputs<br/><br/>Genome manifest<br/>Taxonomy links<br/>Marker references"]
+      A1 --> A2
+    end
+  end
 
-  H --> I["Best hit selection<br/>best marker hit per genome"]
-  B --> I
-  E --> I
+  %% 02. ORF PREDICTION
 
-  I --> J["Marker extraction<br/>protein + nucleotide sequences"]
-  J --> K["VMD database<br/>marker FASTA + taxonomy tables"]
+  subgraph ORF[" "]
+    direction TB
 
-  K --> L["Database exports<br/>vsearch + DADA2"]
+    T2["<b style='font-size:44px'>02. ORF prediction</b>"]
 
-  K -. optional .-> M["Benchmark<br/>external protein pools"]
-  M -.-> N["Missing proteins<br/>manual check / clustering"]
+    B1["Prodigal"]
+    B2["Predicted ORFs<br/>proteins + nucleotides + GFF"]
+    B1 --> B2
+  end
+
+  %% 03. MARKER DETECTION
+
+  subgraph DETECT[" "]
+    direction TB
+
+    T3["<b style='font-size:44px'>03. Marker detection</b>"]
+
+    C1["Reference alignment<br/>MAFFT"]
+    C2["HMM profile construction<br/>hmmbuild"]
+    C3["Marker search<br/>hmmsearch"]
+    C1 --> C2 --> C3
+  end
+
+  %% 04. BEST HIT SELECTION
+
+  subgraph SELECT[" "]
+    direction TB
+
+    T4["<b style='font-size:44px'>04. Best hit selection</b>"]
+
+    D1["Parse HMM results"]
+    D2["Select best marker hits<br/>score + length + copy number"]
+    D1 --> D2
+  end
+
+  %% 05. DATABASE GENERATION
+
+  subgraph DB[" "]
+    direction TB
+
+    T5["<b style='font-size:44px'>05. VMD database generation</b>"]
+
+    E1["Extract marker sequences"]
+    E2["Marker FASTA files<br/>protein + nucleotide"]
+    E3["Taxonomy & metadata tables"]
+    E1 --> E2
+    E1 --> E3
+  end
+
+  %% 06. EXPORTS
+  
+
+  subgraph EXPORT[" "]
+    direction TB
+
+    T6["<b style='font-size:44px'>06. Database exports</b>"]
+
+    subgraph EXPORT_CONTENT[" "]
+      direction LR
+      F1["VMD database"]
+      F2["vsearch"]
+      F3["DADA2"]
+      F1 --> F2
+      F1 --> F3
+    end
+  end
+
+  %% 07. BENCHMARKING
+
+  subgraph BENCH[" "]
+    direction TB
+
+    T7["<b style='font-size:44px'>07. Benchmarking & quality check</b>"]
+
+    G1["External viral proteins<br/>NCBI nr"]
+    G2["Compare against VMD markers"]
+    G3["Detect missing / unexpected proteins"]
+    G4["Adjust marker choice<br/>or reference coverage"]
+    G1 --> G2 --> G3 --> G4
+  end
+
+  %% MAIN WORKFLOW
+
+  A2 --> B1
+  A2 --> C1
+
+  B2 --> C3
+  C3 --> D1
+
+  D2 --> E1
+  A2 --> E3
+
+  E2 --> F1
+  E3 --> F1
+
+  F1 -. optional .-> G2
+  G4 -. feedback .-> A1
+
+  %% NODE STYLES
+
+  classDef title fill:transparent,stroke:transparent,color:#111827,font-size:44px,font-weight:bold;
+
+  classDef input fill:#EFF6FF,stroke:#2563EB,stroke-width:2px,color:#111827,font-size:26px;
+  classDef orf fill:#ECFDF5,stroke:#16A34A,stroke-width:2px,color:#111827,font-size:26px;
+  classDef detect fill:#FFF7ED,stroke:#EA580C,stroke-width:2px,color:#111827,font-size:26px;
+  classDef select fill:#FFFBEB,stroke:#D97706,stroke-width:2px,color:#111827,font-size:26px;
+  classDef db fill:#FDF2F8,stroke:#DB2777,stroke-width:2px,color:#111827,font-size:26px;
+  classDef export fill:#F5F3FF,stroke:#7C3AED,stroke-width:2px,color:#111827,font-size:26px;
+  classDef bench fill:#F8FAFC,stroke:#334155,stroke-width:2px,color:#111827,font-size:26px;
+
+  class T1,T2,T3,T4,T5,T6,T7 title;
+
+  class A1,A2 input;
+  class B1,B2 orf;
+  class C1,C2,C3 detect;
+  class D1,D2 select;
+  class E1,E2,E3 db;
+  class F1,F2,F3 export;
+  class G1,G2,G3,G4 bench;
+
+  %% BIG BOX BACKGROUNDS
+
+  style INPUT fill:#DBEAFE,stroke:#1D4ED8,stroke-width:4px,color:#111827;
+  style INPUT_CONTENT fill:#DBEAFE,stroke:transparent,stroke-width:0px,color:#111827;
+
+  style ORF fill:#DCFCE7,stroke:#15803D,stroke-width:4px,color:#111827;
+  style DETECT fill:#FFEDD5,stroke:#C2410C,stroke-width:4px,color:#111827;
+  style SELECT fill:#FEF3C7,stroke:#D97706,stroke-width:4px,color:#111827;
+  style DB fill:#FCE7F3,stroke:#BE185D,stroke-width:4px,color:#111827;
+
+  style EXPORT fill:#EDE9FE,stroke:#6D28D9,stroke-width:4px,color:#111827;
+  style EXPORT_CONTENT fill:#EDE9FE,stroke:transparent,stroke-width:0px,color:#111827;
+
+  style BENCH fill:#F1F5F9,stroke:#334155,stroke-width:4px,color:#111827;
 ```
 
 The workflow currently relies on the following structure:

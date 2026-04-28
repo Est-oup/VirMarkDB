@@ -80,12 +80,10 @@ analyse_res <- function(marker,ncbi_dir,hits_dir,out_dir,missing_prot_path,hits_
     theme_minimal()
 
   # Arrange and display plots
-  final_plot <- gridExtra::grid.arrange(p1, p2, p3, p4, ncol = 2)
-
   # Save 
   ggsave(
     filename = str_c(out_dir,"/" ,marker,".svg"),
-    plot = final_plot,
+    plot = gridExtra::grid.arrange(p1, p2, p3, p4, ncol = 2),
     width = 12,
     height = 8,
     units = "in",
