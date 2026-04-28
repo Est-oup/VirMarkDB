@@ -66,6 +66,36 @@ The database can be used for:
 
 ## 2) Repository layout
 
+VMD database workflow
+
+```mermaid
+flowchart TD
+
+  A["Input data<br/>ICTV table + manual genomes + marker map"] --> B["Genome manifest<br/>taxonomy + genome paths"]
+  A --> C["Protein references<br/>Zenodo + NCBI + manual"]
+
+  B --> D["Genome FASTA files"]
+  D --> E["ORF prediction<br/>Prodigal<br/>FAA / FNA / GFF"]
+
+  C --> F["Reference alignment<br/>MAFFT"]
+  F --> G["HMM profiles<br/>hmmbuild"]
+
+  E --> H["Marker search<br/>hmmsearch"]
+  G --> H
+
+  H --> I["Best hit selection<br/>best marker hit per genome"]
+  B --> I
+  E --> I
+
+  I --> J["Marker extraction<br/>protein + nucleotide sequences"]
+  J --> K["VMD database<br/>marker FASTA + taxonomy tables"]
+
+  K --> L["Database exports<br/>vsearch + DADA2"]
+
+  K -. optional .-> M["Benchmark<br/>external protein pools"]
+  M -.-> N["Missing proteins<br/>manual check / clustering"]
+```
+
 The workflow currently relies on the following structure:
 
 ```bash
