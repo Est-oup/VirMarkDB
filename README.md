@@ -1,4 +1,4 @@
-# VMD — Viral Marker Database (for Bamfordvirae dsDNA Viruses)
+# VMD - Viral Marker Database (for Bamfordvirae dsDNA Viruses)
 
 **VMD** is a reference database of **marker-gene sequences** (**protein + nucleotide**) for dsDNA viruses within **Bamfordvirae**.  
 It is intended for **taxonomic assignment**, **marker-based phylogeny**, and more broadly for workflows that require curated reference sets of conserved viral proteins.
@@ -582,10 +582,16 @@ Examples of module versions visible in the workflow include:
 - The exported database keeps **one retained hit per virus and per marker group** in the main final exports.
 - `NA` values in marker presence tables should be interpreted as **not detected under the current workflow and thresholds**, not automatically as true biological absence.
 - The benchmark filtering strategy is **empirical** and was designed as a practical way to clean large external protein pools before coverage assessment.
+---
+
+## 11) General statistics
+
+
+
 
 ---
 
-## 11) Recommended citation and license
+## 12) Recommended citation and license
 
 To be completed when the public archive is deposited.
 
@@ -596,7 +602,7 @@ Suggested placeholders:
 
 ---
 
-## 12) References
+## 13) References
 
 ### ICTV resources
 - ICTV Master Species Lists (MSL)
