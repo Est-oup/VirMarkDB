@@ -1,4 +1,8 @@
 #!/usr/bin/env bash
+#SBATCH --job-name=scrap_viral_prot
+#SBATCH --partition=fast
+#SBATCH --cpus-per-task=50
+#SBATCH --output=scrap_viral_prot.out
 
 module load blast/2.16.0
 

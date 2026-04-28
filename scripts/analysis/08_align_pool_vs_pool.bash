@@ -1,4 +1,8 @@
 #!/usr/bin/env bash
+#SBATCH --job-name=align_vmd_vmd
+#SBATCH --partition=fast
+#SBATCH --cpus-per-task=50
+#SBATCH --output=align_vmd_vmd.out
 
 module load mmseqs2/15.6f452
 
