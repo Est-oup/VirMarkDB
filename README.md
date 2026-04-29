@@ -435,22 +435,20 @@ output/hmm/search/
 
 ### 5.6 Best-hit selection
 
-For each `(virus_id, marker_group_id)` pair, hits are ranked by e-value and score.
+For each `(virus_id, marker_group_id)` pair, HMM hits are ranked by e-value and score.
 
-The final selection keeps:
+Before ranking, very short ORFs are removed. The minimum accepted ORF length is set to 75% of the shortest reference protein for the corresponding marker group.
 
-- the best hit,
-- plus probable extra copies when they pass score and length filters.
+The final selection keeps the best hit for each `(virus_id, marker_group_id)` pair. Additional hits are retained only when they are close to the best hit in both score and length.
 
-Default filters:
+Default filters for additional copies:
 
 ```text
-score ratio  >= 0.80
-length ratio >= 0.80
-minimum ORF length >= 75% of the shortest reference protein for this marker
+score ratio  >= 0.80 relative to the best hit for this marker group and genome
+length ratio >= 0.80 relative to the best hit for this marker group and genome
 ```
 
-This is used to remove short fragments and weak secondary hits while keeping likely multicopy markers.
+This filtering step is used to remove short fragments and weak secondary hits while keeping likely multicopy markers.
 
 ---
 
