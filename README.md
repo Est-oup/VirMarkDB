@@ -1,4 +1,4 @@
-# VMD - Viral Marker Database (for Bamfordvirae dsDNA Viruses)
+# VMD - Viral Marker Database
 
 **VMD** is a reference database of **marker-gene sequences** (**protein + nucleotide**) for dsDNA viruses within **Bamfordvirae** (only **Nucleocytoviricota** available now).  
 It is intended for **taxonomic assignment**, **marker-based phylogeny**, and more broadly for workflows that require curated reference sets of conserved viral proteins.
