@@ -2,17 +2,17 @@ library(tidyverse)
 library(ggplot2)
 
 ncbi_dir <- "output/benchmark/pool_protein/pool_protein_raw"
-hits_dir <- "output/benchmark/alignment_vmd_pool/alignment"
-out_dir  <- "output/benchmark/alignment_vmd_pool/bench_results"
-missing_prot_path <- "output/benchmark/alignment_vmd_pool/missing_prot"
-hits_prot_path <- "output/benchmark/alignment_vmd_pool/hits_prot"
+hits_dir <- "output/benchmark/alignment_VirMarkDB_pool/alignment"
+out_dir  <- "output/benchmark/alignment_VirMarkDB_pool/bench_results"
+missing_prot_path <- "output/benchmark/alignment_VirMarkDB_pool/missing_prot"
+hits_prot_path <- "output/benchmark/alignment_VirMarkDB_pool/hits_prot"
 
 dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
 dir.create(missing_prot_path, recursive = TRUE, showWarnings = FALSE)
 dir.create(hits_prot_path, recursive = TRUE, showWarnings = FALSE)
 
 # read compo viro
-meta <- read_tsv("output/VMD-database/virus_informations/virus_compo_taxo.tsv")
+meta <- read_tsv("output/VirMarkDB/virus_informations/virus_compo_taxo.tsv")
 
 
 analyse_res <- function(marker,ncbi_dir,hits_dir,out_dir,missing_prot_path,hits_prot_path,meta){ 

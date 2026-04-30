@@ -1,8 +1,8 @@
 library(tidyverse)
 library(fs)
 
-outdir <- "output/VMD-database/export_format"
-virus_compo_taxo_path <- "output/VMD-database/virus_informations/virus_compo_taxo.tsv"
+outdir <- "output/VirMarkDB/export_format"
+virus_compo_taxo_path <- "output/VirMarkDB/virus_informations/virus_compo_taxo.tsv"
 map_tsv <- "output/config/marker_taxo_map.tsv"
 
 taxonomy_all <- c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species")
@@ -62,8 +62,8 @@ for (i in seq_len(nrow(marker_map))) {
   m  <- marker_map$marker[i]
   mg <- marker_map$marker_group_id[i]
 
-  aa_path <- file.path("output/VMD-database/markers", g, m, str_c(mg, "_protein.fasta"))
-  nt_path <- file.path("output/VMD-database/markers", g, m, str_c(mg, "_nucleotid.fasta"))
+  aa_path <- file.path("output/VirMarkDB-database/markers", g, m, str_c(mg, "_protein.fasta"))
+  nt_path <- file.path("output/VirMarkDB-database/markers", g, m, str_c(mg, "_nucleotid.fasta"))
 
   if (!file.exists(aa_path) || !file.exists(nt_path)) {
     next

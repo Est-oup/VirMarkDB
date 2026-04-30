@@ -6,7 +6,7 @@ ORF_DIR         <- "output/orfs"
 REF_PROTEIN_DIR <- "output/references_protein"
 MANIFEST_TSV    <- "output/config/manifest_genomes.tsv"
 MAP_TSV         <- "output/config/marker_taxo_map.tsv"
-OUT_DIR         <- "output/VMD-database"
+OUT_DIR         <- "output/VirMarkDB"
 OUT_LOGS        <- "output/hmm/logs"
 
 OUT_TABLES      <- file.path(OUT_DIR, "virus_informations")
@@ -55,7 +55,7 @@ read_tblout <- function(tbl) {
     orf_name = vapply(fields, `[`, "", 1),
     evalue = as.numeric(vapply(fields, `[`, "", 5)),
     score = as.numeric(vapply(fields, `[`, "", 6)),
-    description = vapply(fields, function(x) paste(x[19:length(x)], collapse = " "), "")
+    description = vapply(fields, function(x) str_c(x[19:length(x)], collapse = " "), "")
   )
 }
 

@@ -1,6 +1,6 @@
-# VMD - Viral Marker Database
+# VirMarkDB
 
-**VMD** is a reference database of **marker-gene sequences** (**protein + nucleotide**) for dsDNA viruses within **Bamfordvirae** (only **Nucleocytoviricota** available now).  
+**VirMarkDB** is a reference database of **marker-gene sequences** (**protein + nucleotide**) for dsDNA viruses within **Bamfordvirae** (only **Nucleocytoviricota** available now).  
 It is intended for **taxonomic assignment**, **marker-based phylogeny**, and more broadly for workflows that require curated reference sets of conserved viral proteins.
 
 This repository documents **how the database was generated**, **how marker-specific HMM profiles were built and applied**, and **how the database was refined through a benchmark step** designed to detect missing or underrepresented diversity.
@@ -107,7 +107,7 @@ It corresponds to the sum of marker-positive genome counts across markers, not t
 │   ├── orfs/
 │   ├── reference_sources/
 │   ├── references_protein/
-│   └── VMD-database/
+│   └── VirMarkDB/
 │       ├── export_format/
 │       ├── markers/
 │       └── virus_informations/
@@ -144,13 +144,13 @@ flowchart TD
   subgraph INPUT[" "]
     direction TB
 
-    T1["<b style='font-size:44px'>01. Inputs & preparation</b>"]
+    T1["<b style='font-size:44px'>01. Inputs</b>"]
 
     subgraph INPUT_CONTENT[" "]
       direction LR
-      A1["Raw inputs<br/><br/>ICTV taxonomy<br/>Genome FASTA<br/>Marker map<br/>Protein references"]
-      A2["Prepared inputs<br/><br/>Genome manifest<br/>Taxonomy links<br/>Marker references"]
-      A1 --> A2
+      A1["Viral genome<br/><br/>ICTV ressources<br/>Mannualy added"]
+      A2["Viral references protein<br/><br/>Articles ressources<br/>Mannualy added"]
+
     end
   end
 
@@ -196,30 +196,34 @@ flowchart TD
   subgraph DB[" "]
     direction TB
 
-    T5["<b style='font-size:44px'>05. VMD database generation</b>"]
+    T5["<b style='font-size:44px'>05. Database generation</b>"]
 
     E1["Extract marker sequences"]
     E2["Marker FASTA files<br/>protein + nucleotide"]
     E3["Taxonomy & metadata tables"]
+    E5["Specific export (VSEARCH; DADA2)"]
     E1 --> E2
     E1 --> E3
+    E3 --> E5
+    E2 --> E5
+
+
   end
 
-  %% 06. EXPORTS
+  %% 06. DATABASE
   
 
-  subgraph EXPORT[" "]
+  subgraph DATABASE[" "]
     direction TB
 
-    T6["<b style='font-size:44px'>06. Database exports</b>"]
+    T6["<b style='font-size:44px'>06. VirMarkDB</b>"]
 
-    subgraph EXPORT_CONTENT[" "]
+    subgraph Database_folder["VirMarkDB folder"]
       direction LR
-      F1["VMD database"]
-      F2["vsearch"]
-      F3["DADA2"]
-      F1 --> F2
-      F1 --> F3
+      F1["markers"]
+      F2["virus_informations"]
+      F3["export_format"]
+
     end
   end
 
@@ -231,7 +235,7 @@ flowchart TD
     T7["<b style='font-size:44px'>07. Benchmarking & quality check</b>"]
 
     G1["External viral proteins<br/>NCBI nr"]
-    G2["Compare against VMD markers"]
+    G2["Compare against VirMarkDB markers"]
     G3["Detect missing / unexpected proteins"]
     G4["Adjust marker choice<br/>or reference coverage"]
     G1 --> G2 --> G3 --> G4
@@ -239,20 +243,21 @@ flowchart TD
 
   %% MAIN WORKFLOW
 
-  A2 --> B1
+  A1 --> B1
   A2 --> C1
 
   B2 --> C3
   C3 --> D1
 
   D2 --> E1
-  A2 --> E3
+  A1 --> E3
 
-  E2 --> F1
-  E3 --> F1
+  E5 --> Database_folder
+  E3 --> Database_folder
+  E2 --> Database_folder
 
-  F1 -. optional .-> G2
-  G4 -. feedback .-> A1
+  Database_folder -. optional .-> G2
+  G4 -. feedback .-> INPUT_CONTENT
 
   %% NODE STYLES
 
@@ -263,7 +268,7 @@ flowchart TD
   classDef detect fill:#FFF7ED,stroke:#EA580C,stroke-width:2px,color:#111827,font-size:26px;
   classDef select fill:#FFFBEB,stroke:#D97706,stroke-width:2px,color:#111827,font-size:26px;
   classDef db fill:#FDF2F8,stroke:#DB2777,stroke-width:2px,color:#111827,font-size:26px;
-  classDef export fill:#F5F3FF,stroke:#7C3AED,stroke-width:2px,color:#111827,font-size:26px;
+  classDef DATABASE fill:#F5F3FF,stroke:#7C3AED,stroke-width:2px,color:#111827,font-size:26px;
   classDef bench fill:#F8FAFC,stroke:#334155,stroke-width:2px,color:#111827,font-size:26px;
 
   class T1,T2,T3,T4,T5,T6,T7 title;
@@ -286,8 +291,8 @@ flowchart TD
   style SELECT fill:#FEF3C7,stroke:#D97706,stroke-width:4px,color:#111827;
   style DB fill:#FCE7F3,stroke:#BE185D,stroke-width:4px,color:#111827;
 
-  style EXPORT fill:#EDE9FE,stroke:#6D28D9,stroke-width:4px,color:#111827;
-  style EXPORT_CONTENT fill:#EDE9FE,stroke:transparent,stroke-width:0px,color:#111827;
+  style DATABASE fill:#EDE9FE,stroke:#6D28D9,stroke-width:4px,color:#111827;
+  style Database_folder fill:#EDE9FE,stroke:transparent,stroke-width:0px,color:#111827;
 
   style BENCH fill:#F1F5F9,stroke:#334155,stroke-width:4px,color:#111827;
 ```
@@ -457,15 +462,15 @@ This filtering step is used to remove short fragments and weak secondary hits wh
 The final exported database is written to:
 
 ```bash
-output/VMD-database/
+output/VirMarkDB/
 ```
 
 It contains:
 
 ```bash
-output/VMD-database/markers/
-output/VMD-database/virus_informations/
-output/VMD-database/export_format/
+output/VirMarkDB/markers/
+output/VirMarkDB/virus_informations/
+output/VirMarkDB/export_format/
 ```
 
 ---
@@ -475,7 +480,7 @@ output/VMD-database/export_format/
 Marker FASTA files are organized as:
 
 ```bash
-output/VMD-database/markers/<group_id>/<marker>/
+output/VirMarkDB/markers/<group_id>/<marker>/
 ```
 
 Each marker-group folder contains:
@@ -510,7 +515,7 @@ The description table contains the selected ORF information, including:
 Global summary tables are written to:
 
 ```bash
-output/VMD-database/virus_informations/
+output/VirMarkDB/virus_informations/
 ```
 
 Main files:
@@ -551,7 +556,7 @@ It can simply mean that no ORF passed the current HMM and filtering steps.
 Additional exports are written to:
 
 ```bash
-output/VMD-database/export_format/
+output/VirMarkDB/export_format/
 ```
 
 Current export targets include:
@@ -572,7 +577,7 @@ Main benchmark steps:
 1. extract a broader Bamfordvirae protein pool from NR;
 2. split proteins by marker using title-based filters;
 3. self-align each marker pool to remove isolated or suspicious sequences;
-4. compare the filtered pool against the current VMD marker database;
+4. compare the filtered pool against the current VirMarkDB marker database;
 5. identify proteins not covered by the current database;
 6. cluster missing proteins with CD-HIT to reduce redundancy.
 
@@ -633,7 +638,7 @@ Suggested placeholders:
 
 ## Contact / issues
 
-This repository documents the generation and refinement of the VMD database.
+This repository documents the generation and refinement of the VirMarkDB database.
 
 Potential uses of the issue tracker include:
 

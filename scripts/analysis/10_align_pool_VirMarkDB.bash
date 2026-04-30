@@ -1,18 +1,18 @@
 #!/usr/bin/env bash
-#SBATCH --job-name=align_vmd_pool
+#SBATCH --job-name=align_VirMarkDB_pool
 #SBATCH --partition=fast
 #SBATCH --cpus-per-task=50
-#SBATCH --output=align_vmd_pool.out
+#SBATCH --output=align_VirMarkDB_pool.out
 
 module load mmseqs2/15.6f452
 
-mkdir -p output/benchmark/alignment_vmd_pool/alignment/tmp
+mkdir -p output/benchmark/alignment_VirMarkDB_pool/alignment/tmp
 
-vmd_db="output/VMD-database/markers"
+VirMarkDB_db="output/VirMarkDB/markers"
 pool_dir="output/benchmark/pool_protein/pool_protein_filt"
-out_dir="output/benchmark/alignment_vmd_pool/alignment"
+out_dir="output/benchmark/alignment_VirMarkDB_pool/alignment"
 
-for ref in "$vmd_db"/*/*/*_protein.fasta; do
+for ref in "$VirMarkDB_db"/*/*/*_protein.fasta; do
     full_name=$(basename "$ref" _protein.fasta)
     query="${pool_dir}/${full_name}.fasta"
 
@@ -25,7 +25,7 @@ for ref in "$vmd_db"/*/*/*_protein.fasta; do
         "$query" \
         "$ref" \
         "${out_dir}/${full_name}.m8" \
-        output/benchmark/alignment_vmd_pool/alignment/tmp \
+        output/benchmark/alignment_VirMarkDB_pool/alignment/tmp \
         --threads 50
 done
 

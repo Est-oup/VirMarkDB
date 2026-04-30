@@ -2,8 +2,8 @@
 
 module load cd-hit/4.8.1
 
-in_dir="output/benchmark/alignment_vmd_pool/missing_prot"
-out_dir="output/benchmark/alignment_vmd_pool/missing_prot/clustering"
+in_dir="output/benchmark/alignment_VirMarkDB_pool/missing_prot"
+out_dir="output/benchmark/alignment_VirMarkDB_pool/missing_prot/clustering"
 
 for fasta in "${in_dir}"/*.fasta; do
 

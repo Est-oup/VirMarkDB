@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Generate VMD database 
+# Generate VirMarkDB database 
     # Generate a manifest list of virus
     module load r/4.4.1
     Rscript scripts/analysis/01_generate_manifest.R
@@ -26,11 +26,11 @@
     module load r/4.4.1
     Rscript scripts/analysis/09_results_align_pool_vs_pool.R
 
-# Test VMD-GV with algniment of a pool of viral protein
-    # Blast with mmseqs each marker from vmdgv to each pool prot
-    sbatch scripts/analysis/10_align_pool_vmd.bash
+# Test VirMarkDB-GV with algniment of a pool of viral protein
+    # Blast with mmseqs each marker from VirMarkDBgv to each pool prot
+    sbatch scripts/analysis/10_align_pool_VirMarkDB.bash
     # Analyze the results
     module load r/4.4.1
-    Rscript scripts/analysis/11_analyse_results_align_pool_vmd.R
+    Rscript scripts/analysis/11_analyse_results_align_pool_VirMarkDB.R
     # Clusterise missing protein 
     bash scripts/analysis/12_cluterise_missing_prot.bash
