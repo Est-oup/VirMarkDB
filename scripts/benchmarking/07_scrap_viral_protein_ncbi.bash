@@ -11,8 +11,11 @@ TMPFILE="output/benchmark/pool_protein/pool_protein_raw/bamford_titles.tsv"
 
 mkdir -p "$OUTDIR"
 
-# SQLite local
+# SQLite local dowloaded from NCBI Taxonomy FTP on 2026-05-04
 LOCAL_TAXDB_DIR="input/ncbi_taxonomy"
+# mkdir -p "$LOCAL_TAXDB_DIR"
+# wget -O "${LOCAL_TAXDB_DIR}/taxdb.tar.gz" "https://ftp.ncbi.nlm.nih.gov/blast/db/taxdb.tar.gz"
+# tar -xzf "${LOCAL_TAXDB_DIR}/taxdb.tar.gz" -C "$LOCAL_TAXDB_DIR"
 
 # NR database shared
 SHARED_NR_DIR="/shared/bank/nr/nr_2025-07-20/blast"
@@ -21,7 +24,7 @@ SHARED_NR_DIR="/shared/bank/nr/nr_2025-07-20/blast"
 export BLASTDB="${LOCAL_TAXDB_DIR}:${SHARED_NR_DIR}"
 
 DB="nr"
-TAXID="2732005"
+TAXID="2732005" # taxid of Bamfordvirae
 
 # extract protein name and title of Bamfordvirae
 blastdbcmd \
