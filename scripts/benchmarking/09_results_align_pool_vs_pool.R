@@ -97,7 +97,7 @@ filter_prot <- function(marker, path_blast, pool_clean) {
   prot <- Biostrings::readAAStringSet(str_c(pool,"/",marker,".fasta"))
 
   # Filter AA duplication
-  # Créer un data frame avec les noms et séquences
+  # Initiate dataframe to store results
   prot_dedup <- prot[names(prot)[!duplicated(names(prot))]]
   
   # Filter by prot name
