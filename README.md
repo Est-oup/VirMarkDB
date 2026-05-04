@@ -1,6 +1,7 @@
 # VirMarkDB
 
 **VirMarkDB** is a reference database of **marker-gene sequences** (**protein + nucleotide**) for viruses. To date only marker-gene for **Nucleocytoviricota** within **Bamfordvirae** are available.  
+
 It is intended for **taxonomic assignment**, **marker-based phylogeny**, and more broadly for workflows that require curated reference sets of conserved viral proteins.
 
 This repository documents **how the database was generated**, **how marker-specific HMM profiles were built and applied**, and **how the database was refined through a benchmark step** designed to detect missing or underrepresented diversity.
@@ -482,7 +483,7 @@ Each marker-group folder contains:
 
 ```bash
 <marker_group_id>_protein.fasta
-<marker_group_id>_nucleotid.fasta
+<marker_group_id>_nucleotide.fasta
 <marker_group_id>_virus_orf_description.tsv
 ```
 
@@ -521,7 +522,7 @@ virus_metadata.tsv
 ```
 
 `virus_compo_taxo.tsv` is the main wide-format marker composition table.  
-It reports, for each genome, the retained ORF names and number of copies for each marker group.
+It reports, for each genome, the retained ORF names for each marker group, the taxonomy and general identifiers.
 
 `virus_metadata.tsv` stores genome-level metadata:
 
