@@ -1,13 +1,8 @@
 input/ncbi.creds
+input/ncbi_taxonomy
+
 output
-old
-private_genomes
-input/ncbi_nr
 *out
-input
 *.json
-*.vscode
 .gitignore
-.Rplot
-/.quarto/
-**/*.quarto_ipynb
+
