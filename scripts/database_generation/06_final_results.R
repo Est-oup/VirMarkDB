@@ -75,9 +75,9 @@ read_domtblout <- function(tbl) {
 
 tblout <- map_dfr(tbl_files, read_domtblout)
 
-# Keep only credible candidate to splitted orf
-score_threshold_orfsplit <- 0.8
-length_threshold_orfsplit <- 0.8
+# Keep best hit and credible additional copies
+score_threshold_multicopy <- 0.8
+length_threshold_multicopy <- 0.8
 
 # Rank hits inside each virus x marker_group
 tblout_ranked <- tblout %>%
@@ -104,8 +104,8 @@ selected_orfs <- tblout_ranked %>%
   filter(
     copy_rank == 1 |
       (
-        score_ratio >= score_threshold_orfsplit &
-        length_ratio >= length_threshold_orfsplit
+        score_ratio >= score_threshold_multicopy &
+        length_ratio >= length_threshold_multicopy
       )
   ) %>%
   left_join(marker_map, by = "marker_group_id") %>%
