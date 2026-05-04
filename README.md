@@ -5,7 +5,7 @@ It is intended for **taxonomic assignment**, **marker-based phylogeny**, and mor
 
 This repository documents **how the database was generated**, **how marker-specific HMM profiles were built and applied**, and **how the database was refined through a benchmark step** designed to detect missing or underrepresented diversity.
 
-The final curated release of the database is distributed separately through (**Zenodo link**)[http://www.gitlab.com].
+The final curated release of the database is distributed separately through [**Zenodo link**][https://zenodo.org/].
 
 ---
 

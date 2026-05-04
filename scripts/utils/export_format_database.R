@@ -62,8 +62,8 @@ for (i in seq_len(nrow(marker_map))) {
   m  <- marker_map$marker[i]
   mg <- marker_map$marker_group_id[i]
 
-  aa_path <- file.path("output/VirMarkDB-database/markers", g, m, str_c(mg, "_protein.fasta"))
-  nt_path <- file.path("output/VirMarkDB-database/markers", g, m, str_c(mg, "_nucleotid.fasta"))
+  aa_path <- file.path("output/VirMarkDB/markers", g, m, str_c(mg, "_protein.fasta"))
+  nt_path <- file.path("output/VirMarkDB/markers", g, m, str_c(mg, "_nucleotid.fasta"))
 
   if (!file.exists(aa_path) || !file.exists(nt_path)) {
     next
