@@ -270,7 +270,7 @@ for (i in seq_len(nrow(targets))) {
 
   Biostrings::writeXStringSet(
     nt_m,
-    file.path(out_m, str_c(mg, "_nucleotid.fasta")),
+    file.path(out_m, str_c(mg, "_nucleotide.fasta")),
     format = "fasta",
     width = 60
   )

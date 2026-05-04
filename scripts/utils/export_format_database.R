@@ -63,7 +63,7 @@ for (i in seq_len(nrow(marker_map))) {
   mg <- marker_map$marker_group_id[i]
 
   aa_path <- file.path(OUT_MARKERS, g, m, str_c(mg, "_protein.fasta"))
-  nt_path <- file.path(OUT_MARKERS, g, m, str_c(mg, "_nucleotid.fasta"))
+  nt_path <- file.path(OUT_MARKERS, g, m, str_c(mg, "_nucleotide.fasta"))
 
   if (!file.exists(aa_path) || !file.exists(nt_path)) {
     next
@@ -86,7 +86,7 @@ for (i in seq_len(nrow(marker_map))) {
 
   Biostrings::writeXStringSet(
     DNA_vs,
-    file.path(outdir, "vsearch", str_c(mg, "_nucleotid.fasta.gz"))
+    file.path(outdir, "vsearch", str_c(mg, "_nucleotide.fasta.gz"))
   )
 
   # dada2 assignTaxonomy
@@ -106,7 +106,7 @@ for (i in seq_len(nrow(marker_map))) {
 
   Biostrings::writeXStringSet(
     DNA_dada_gen,
-    file.path(outdir, "dada2", str_c(mg, "_train_nucleotid.fasta.gz"))
+    file.path(outdir, "dada2", str_c(mg, "_train_nucleotide.fasta.gz"))
   )
 
   # dada2 addSpecies
@@ -143,6 +143,6 @@ for (i in seq_len(nrow(marker_map))) {
 
   Biostrings::writeXStringSet(
     DNA_species,
-    file.path(outdir, "dada2", str_c(mg, "_species_nucleotid.fasta.gz"))
+    file.path(outdir, "dada2", str_c(mg, "_species_nucleotide.fasta.gz"))
   )
 }
