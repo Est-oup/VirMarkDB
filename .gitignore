@@ -7,7 +7,6 @@ input/ncbi_nr
 input
 *.json
 *.vscode
-.gitignore
-.Rplot
+*.Rplot*
 /.quarto/
 **/*.quarto_ipynb
