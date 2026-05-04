@@ -1,6 +1,6 @@
 # VirMarkDB
 
-**VirMarkDB** is a reference database of **marker-gene sequences** (**protein + nucleotide**) for dsDNA viruses within **Bamfordvirae** (only **Nucleocytoviricota** available now).  
+**VirMarkDB** is a reference database of **marker-gene sequences** (**protein + nucleotide**) for viruses. To date only marker-gene for **Nucleocytoviricota** within **Bamfordvirae** are available.  
 It is intended for **taxonomic assignment**, **marker-based phylogeny**, and more broadly for workflows that require curated reference sets of conserved viral proteins.
 
 This repository documents **how the database was generated**, **how marker-specific HMM profiles were built and applied**, and **how the database was refined through a benchmark step** designed to detect missing or underrepresented diversity.
@@ -93,12 +93,9 @@ It corresponds to the sum of marker-positive genome counts across markers, not t
 .
 ├── input/
 │   ├── manual_genomes_ncbi.tsv
-│   ├── manual_genomes_private.tsv
 │   ├── manual_reference_protein/
-│   ├── private_genomes/
 │   ├── mapfile.tsv
-│   ├── ncbi.creds
-│   └── ncbi_taxonomy/
+│   └── ncbi.creds
 ├── output/
 │   ├── benchmark/
 │   ├── config/
@@ -149,7 +146,7 @@ flowchart TD
     subgraph INPUT_CONTENT[" "]
       direction LR
       A1["Viral genome<br/><br/>ICTV ressources<br/>Mannualy added"]
-      A2["Viral references protein<br/><br/>Articles ressources<br/>Mannualy added"]
+      A2["Viral references protein<br/><br/>Literature ressources<br/>Mannualy added"]
 
     end
   end
@@ -313,7 +310,7 @@ The current scripts use:
 
 ### 4.2 Additional genome inputs
 
-The workflow incorporate manually added genomes:
+The workflow incorporates manually added genomes:
 
 ```bash
 input/manual_genomes_ncbi.tsv
@@ -349,7 +346,7 @@ The repository also documents the use of an external Zenodo protein resource dur
 
 ### 5.1 Manifest generation
 
-The manifest step extracts Bamfordvirae entries from ICTV tables, normalizes accession information and merges optional manual additions.
+The manifest step extracts viral entries from ICTV tables, normalizes accession information and merges optional manual additions.
 
 Main outputs:
 
@@ -440,11 +437,9 @@ output/hmm/search/
 
 ### 5.6 Best-hit selection
 
-For each `(virus_id, marker_group_id)` pair, HMM hits are ranked by e-value and score.
+For each `(virus_id, marker_group_id)` pair, HMM hits are ranked first by increasing e-value and then by decreasing bit score.
 
-Before ranking, very short ORFs are removed. The minimum accepted ORF length is set to 75% of the shortest reference protein for the corresponding marker group.
-
-The final selection keeps the best hit for each `(virus_id, marker_group_id)` pair. Additional hits are retained only when they are close to the best hit in both score and length.
+The final selection always keeps the best-ranked hit for each `(virus_id, marker_group_id)` pair. Additional hits are retained only when they are close to the best hit in both score and ORF length.
 
 Default filters for additional copies:
 
@@ -453,7 +448,7 @@ score ratio  >= 0.80 relative to the best hit for this marker group and genome
 length ratio >= 0.80 relative to the best hit for this marker group and genome
 ```
 
-This filtering step is used to remove short fragments and weak secondary hits while keeping likely multicopy markers.
+This filtering step is designed to keep credible additional copies while removing weak secondary hits. It should not be interpreted as a dedicated fragmented-ORF recovery procedure.
 
 ---
 
@@ -503,8 +498,8 @@ The description table contains the selected ORF information, including:
 - `copy_rank`,
 - `score_ratio`,
 - `length_ratio`,
-- `prodigal_start`,
-- `prodigal_end`,
+- `position_start`,
+- `position_end`,
 - `Species`,
 - `Virus_names`.
 
@@ -607,7 +602,7 @@ The workflow relies on:
 - HMMs are currently handled at the marker-group level and are therefore specific to defined taxonomic scopes.
 - `NA` values in marker presence tables mean not detected or not retained under the current workflow and thresholds, not automatically true biological absence.
 - The benchmark filtering strategy is empirical and was designed as a practical way to clean large external protein pools before coverage assessment.
-- The current database focuses on Nucleocytoviricota. Additional Bamfordvirae groups can be added later if suitable marker references and genome mappings are available.
+- The current database focuses on Nucleocytoviricota. Additional viral groups can be added later if suitable marker references and genome mappings are available.
 
 ---
 
