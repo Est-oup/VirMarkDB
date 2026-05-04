@@ -31,200 +31,122 @@ marker_map <- read_tsv(MAP_TSV, show_col_types = FALSE) %>%
   ) %>%
   distinct(marker_group_id, group_id, marker)
 
-# READ HMMSEARCH TABLES
+# READ HMMSEARCH DOMTBLOUT TABLES
 tbl_files <- list.files(HMM_DIR, pattern = "\\.tbl$", full.names = TRUE)
 
-read_tblout <- function(tbl) {
+domtblout_cols <- c("orf_name","target_accession","target_length_aa","marker_group_id","hmm_accession","hmm_length_aa",
+  "evalue","score","bias","domain_number","domain_total","c_evalue","i_evalue","domain_score","domain_bias","hmm_from",
+  "hmm_to","ali_from","ali_to","env_from","env_to","acc"
+)
+
+read_domtblout <- function(tbl) {
   lines <- readLines(tbl, warn = FALSE)
   lines <- lines[!startsWith(lines, "#")]
 
-  if (length(lines) == 0) {
-    return(tibble())
-  }
+  if (length(lines) == 0) {return(tibble())}
 
-  fields <- strsplit(trimws(lines), "\\s+")
-  fname <- str_remove(basename(tbl), "\\.tbl$")
-
-  name_parts <- strsplit(fname, "__", fixed = TRUE)[[1]]
-  virus_id <- name_parts[1]
-  marker_group_id <- paste(name_parts[-1], collapse = "__")
-
-  tibble(
-    virus_id = virus_id,
-    marker_group_id = marker_group_id,
-    orf_name = vapply(fields, `[`, "", 1),
-    evalue = as.numeric(vapply(fields, `[`, "", 5)),
-    score = as.numeric(vapply(fields, `[`, "", 6)),
-    description = vapply(fields, function(x) str_c(x[19:length(x)], collapse = " "), "")
+  hmmer_raw <- readr::read_table(
+    str_c(str_c(lines, collapse = "\n"),"\n"),
+    col_names = FALSE,
+    show_col_types = FALSE,
+    progress = FALSE
   )
+
+  hmmer <- hmmer_raw %>%
+    select(1:22)
+  names(hmmer) <- domtblout_cols
+
+  hmmer$description <- apply(hmmer_raw[, 23:ncol(hmmer_raw), drop = FALSE], 1,function(x) str_c(x, collapse = " "))
+
+  hmmer <- hmmer %>%
+    mutate(
+      virus_id = str_remove(orf_name, "_[0-9]+$"),
+      orf_index = str_extract(orf_name, "[0-9]+$"),
+      .before = 1
+    ) %>%
+    mutate(
+      across(c(target_length_aa,hmm_length_aa,domain_number,domain_total,hmm_from,hmm_to,ali_from,ali_to,env_from,env_to,orf_index),as.integer),
+      across(c(evalue,score,bias,c_evalue,i_evalue,domain_score,domain_bias,acc),as.numeric),
+      virus_id_cut = str_remove(virus_id,".[0-9]+$")
+    ) %>%
+    select(virus_id,virus_id_cut, orf_name, target_length_aa, marker_group_id, hmm_length_aa, evalue, score, description) %>%
+    distinct()
 }
 
-tblout <- map_dfr(tbl_files, read_tblout)
+tblout <- map_dfr(tbl_files, read_domtblout)
 
-# Selection of ORF
-
-default_threshold_score      <- 0.80
-default_threshold_length     <- 0.80
-default_ref_length_fraction  <- 0.75
-
-# Extract prodigal coordinates
-parts <- strsplit(tblout$description, "#", fixed = TRUE)
-
-tblout <- tblout %>%
-  mutate(
-    prodigal_start = as.integer(trimws(sapply(parts, `[`, 2))),
-    prodigal_end   = as.integer(trimws(sapply(parts, `[`, 3))),
-    orf_length     = abs(prodigal_end - prodigal_start) + 1
-  )
-
-# Reference length thresholds
-ref_length_thresholds <- list.files(
-  REF_PROTEIN_DIR,
-  pattern = "\\.fasta$",
-  full.names = TRUE
-) %>%
-  map_dfr(function(path) {
-    ref_seq <- Biostrings::readAAStringSet(path)
-    ref_len <- as.integer(Biostrings::width(ref_seq))
-
-    tibble(
-      marker_group_id = tools::file_path_sans_ext(basename(path)),
-      n_ref_sequences = length(ref_seq),
-      min_ref_length_aa = min(ref_len),
-      max_ref_length_aa = max(ref_len),
-      min_detected_orf_length_aa = ceiling(min(ref_len) * default_ref_length_fraction)
-    )
-  })
-
-write_tsv(
-  ref_length_thresholds,
-  file.path(OUT_LOGS, "ref_length_thresholds.tsv")
-)
-
-# ORF protein lengths
-load_orf_lengths <- function(virus_id) {
-  faa_path <- file.path(ORF_DIR, str_c(virus_id, ".faa"))
-
-  if (!file.exists(faa_path)) {
-    return(tibble())
-  }
-
-  aa_seq <- Biostrings::readAAStringSet(faa_path)
-
-  tibble(
-    virus_id = virus_id,
-    orf_name = sub(" .*", "", names(aa_seq)),
-    orf_length_aa = as.integer(Biostrings::width(aa_seq))
-  )
-}
-
-orf_lengths <- map_dfr(unique(tblout$virus_id), load_orf_lengths)
-
-# Remove short ORFs before ranking
-tblout_all_detected <- tblout %>%
-  left_join(
-    orf_lengths,
-    by = c("virus_id", "orf_name")
-  ) %>%
-  left_join(
-    ref_length_thresholds %>%
-      select(marker_group_id, min_ref_length_aa, min_detected_orf_length_aa),
-    by = "marker_group_id"
-  ) %>%
-  mutate(
-    pass_min_ref_length = orf_length_aa >= min_detected_orf_length_aa
-  ) %>%
-  filter(pass_min_ref_length)
-
-tblout_removed_by_ref_length <- tblout %>%
-  left_join(
-    orf_lengths,
-    by = c("virus_id", "orf_name")
-  ) %>%
-  left_join(
-    ref_length_thresholds %>%
-      select(marker_group_id, min_ref_length_aa, min_detected_orf_length_aa),
-    by = "marker_group_id"
-  ) %>%
-  mutate(
-    pass_min_ref_length = orf_length_aa >= min_detected_orf_length_aa
-  ) %>%
-  filter(!pass_min_ref_length)
-
-write_tsv(
-  tblout_removed_by_ref_length,
-  file.path(OUT_LOGS, "orfs_removed_by_min_ref_length.tsv")
-)
-
-write_tsv(
-  tblout_removed_by_ref_length %>%
-    group_by(marker_group_id) %>%
-    summarise(
-      n_orfs_removed = n(),
-      .groups = "drop"
-    ),
-  file.path(OUT_LOGS, "orfs_removed_by_min_ref_length_summary.tsv")
-)
+# Keep only credible candidate to splitted orf
+score_threshold_orfsplit <- 0.8
+length_threshold_orfsplit <- 0.8
 
 # Rank hits inside each virus x marker_group
-tblout_ranked <- tblout_all_detected %>%
+tblout_ranked <- tblout %>%
   group_by(virus_id, marker_group_id) %>%
   arrange(evalue, desc(score), .by_group = TRUE) %>%
   mutate(
     copy_rank = row_number(),
     best_score = first(score),
-    best_orf_length = first(orf_length),
+    best_orf_length = first(target_length_aa),
     score_ratio = score / best_score,
-    length_ratio = orf_length / best_orf_length
+    length_ratio = target_length_aa / best_orf_length
   ) %>%
+  rename(virus_id_tblout = virus_id) %>%
   ungroup()
+
+# Manage virus id in manifest
+manifest <- manifest %>% 
+  mutate(
+    virus_id_cut = str_remove(virus_id, "_partial"),
+  ) 
 
 # Keep best hit + probable extra copies
 selected_orfs <- tblout_ranked %>%
   filter(
     copy_rank == 1 |
       (
-        score_ratio >= default_threshold_score &
-        length_ratio >= default_threshold_length
+        score_ratio >= score_threshold_orfsplit &
+        length_ratio >= length_threshold_orfsplit
       )
   ) %>%
   left_join(marker_map, by = "marker_group_id") %>%
-  left_join(manifest, by = "virus_id")
+  left_join(manifest, by = "virus_id_cut")
 
 # EXPORT TABLES
 marker_group_ids <- sort(unique(selected_orfs$marker_group_id))
 
+
+# Write table with virus composition across markers + taxonomy
 virus_compo_taxo <- selected_orfs %>%
-  group_by(virus_id, Virus_names, marker_group_id) %>%
+  group_by(virus_id, marker_group_id) %>%
   summarise(
     orf_names = str_c(sort(unique(orf_name)), collapse = ";"),
-    n_copies = n(),
     .groups = "drop"
   ) %>%
   pivot_wider(
     names_from = marker_group_id,
-    values_from = c(orf_names, n_copies),
+    values_from = orf_names,
     names_glue = "{marker_group_id}_{.value}",
-    values_fill = list(orf_names = NA_character_, n_copies = 0)
+    values_fill = NA_character_
   ) %>%
   left_join(
     manifest %>%
-      select(virus_id, ICTV_ID, all_of(taxonomy_all)),
+      select(virus_id, ICTV_ID, Virus_names, all_of(taxonomy_all)),
     by = "virus_id"
   )
 
 orf_cols <- str_c(marker_group_ids, "_orf_names")
-copy_cols <- str_c(marker_group_ids, "_n_copies")
 
 virus_compo_taxo <- virus_compo_taxo %>%
   select(
-    virus_id, Virus_names, ICTV_ID,
+    virus_id, ICTV_ID, Virus_names,
     all_of(orf_cols),
-    all_of(copy_cols),
     all_of(taxonomy_all)
   )
 
 write_tsv(virus_compo_taxo, file.path(OUT_TABLES, "virus_compo_taxo.tsv"))
+
+
+# Write table with virus metadata (specificity, sources, etc)
 
 virus_metadata <- manifest %>%
   select(
@@ -270,9 +192,6 @@ strip_terminal_star <- function(x) {
   Biostrings::AAStringSet(x_chr2)
 }
 
-# Export all detected ORFs by marker
-source("scripts/utils/export_all_detected_orfs_by_marker.R")
-
 # EXPORT FASTA BY GROUP / MARKER
 targets <- selected_orfs %>%
   distinct(group_id, marker, marker_group_id) %>%
@@ -288,7 +207,17 @@ for (i in seq_len(nrow(targets))) {
 
   df_m <- selected_orfs %>%
     filter(marker_group_id == mg) %>%
-    arrange(virus_id, copy_rank, evalue, desc(score))
+    arrange(virus_id, copy_rank, evalue, desc(score)) %>%
+    mutate(
+      description = str_remove(description, "^# ")
+    ) %>%
+    separate(
+      description,
+      into = c("position_start", "position_end", "prodigal_strand", "prodigal_info"),
+      sep = " # ",
+      extra = "merge",
+      convert = TRUE
+    ) 
 
   df_m2 <- df_m %>%
     select(
@@ -296,8 +225,8 @@ for (i in seq_len(nrow(targets))) {
       copy_rank,
       evalue, score,
       best_score, score_ratio,
-      orf_length, best_orf_length, length_ratio,
-      prodigal_start, prodigal_end,
+      target_length_aa, best_orf_length, length_ratio,
+      position_start, position_end,
       Species, Virus_names
     )
 
@@ -316,6 +245,8 @@ for (i in seq_len(nrow(targets))) {
 
     hdr <- str_c(
       r$orf_name,
+      " ",
+      m,
       " ",
       df_m[j, ] %>%
         unite("Taxonomy", Kingdom, Phylum, Class, Order, Family, Genus, Species, sep = ";") %>%
