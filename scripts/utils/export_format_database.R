@@ -51,8 +51,8 @@ write_tsv(taxo_vsearch, file.path(outdir, "vsearch", "taxonomy.tsv"))
 
 # Extract taxonomy from FASTA headers: "virus_id Kingdom;Phylum;...;Species"
 get_taxo_from_names <- function(x) {
-  parts <- str_split_fixed(names(x), " ", 2)
-  taxo <- parts[, 2]
+  parts <- str_split_fixed(names(x), " ", 3)
+  taxo <- parts[, 3]
   taxo[taxo == ""] <- "NA;NA;NA;NA;NA;NA;NA"
   taxo
 }
