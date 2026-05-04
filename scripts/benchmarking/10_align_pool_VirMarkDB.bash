@@ -29,3 +29,4 @@ for ref in "$VirMarkDB_db"/*/*/*_protein.fasta; do
         --threads 50
 done
 
+echo "All alignments done"
