@@ -179,7 +179,7 @@ ORF_CACHE <- list()
 
 get_orfs <- function(virus_id) {
   if (is.null(ORF_CACHE[[virus_id]])) {
-    ORF_CACHE[[virus_id]] <- load_orfs(virus_id)
+    ORF_CACHE[[virus_id]] <<- load_orfs(virus_id)
   }
   ORF_CACHE[[virus_id]]
 }
