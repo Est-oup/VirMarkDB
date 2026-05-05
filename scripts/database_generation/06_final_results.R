@@ -67,7 +67,7 @@ read_domtblout <- function(tbl) {
     mutate(
       across(c(target_length_aa,hmm_length_aa,domain_number,domain_total,hmm_from,hmm_to,ali_from,ali_to,env_from,env_to,orf_index),as.integer),
       across(c(evalue,score,bias,c_evalue,i_evalue,domain_score,domain_bias,acc),as.numeric),
-      virus_id_cut = str_remove(virus_id,".[0-9]+$")
+      virus_id_cut = str_remove(virus_id,"\\.[0-9]+$")
     ) %>%
     select(virus_id,virus_id_cut, orf_name, target_length_aa, marker_group_id, hmm_length_aa, evalue, score, description) %>%
     distinct()
