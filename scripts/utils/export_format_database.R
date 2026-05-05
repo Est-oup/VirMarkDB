@@ -4,6 +4,7 @@ library(fs)
 outdir <- "output/VirMarkDB/export_format"
 virus_compo_taxo_path <- "output/VirMarkDB/virus_informations/virus_compo_taxo.tsv"
 map_tsv <- "output/config/marker_taxo_map.tsv"
+OUT_MARKERS     <- file.path(OUT_DIR, "markers")
 
 taxonomy_all <- c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species")
 
