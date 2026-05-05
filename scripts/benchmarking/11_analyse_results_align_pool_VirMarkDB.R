@@ -94,23 +94,18 @@ analyse_res <- function(marker,ncbi_dir,hits_dir,out_dir,missing_prot_path,hits_
   )
 
   # Analyse part of the database witch is not covered by the pool
+  marker_orf_col <- str_c(marker, "_orf_names")
+
   # Family of the database ref with have the marker 
   meta2 <- meta |>
-    filter(.data[[str_c(marker,"_orf_names")]] != "NA")
+    filter(marker_orf_col != "NA")
   meta2$Family |> unique()
-
-  # Family of the reference database wich query blast 
-  meta3 <- meta2 |>
-    filter(virus_id %in% unique(tab$ref))
-  meta3$Family |> unique()
-  
 
 
   # Analyse on many query has best match with wich family 
   
   family_count <- tab_best |>
-    mutate(virus_id_ref = sub(" .*", "", ref)) |>
-    left_join(meta, by = c("ref" = "virus_id")) |>
+    left_join(meta, by = setNames(marker_orf_col, "ref")) |>
     group_by(Family) |>
     summarise(
     nb_queries = n_distinct(query),  
