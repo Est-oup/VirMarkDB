@@ -57,8 +57,8 @@ for (marker in manual_markers) {
   }
   
   x <- manual_file |>
-    read_table(col_names = c("accession", "description"))
-  
+    read_tsv(col_names = c("accession", "description"),show_col_types = FALSE)
+
   assign(str_c(marker, "_manual"), x)
   
   if (nrow(x) == 0) {
