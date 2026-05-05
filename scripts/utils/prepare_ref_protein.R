@@ -13,8 +13,11 @@ dir.create(merged_sequences_path, recursive = TRUE, showWarnings = FALSE)
 zip_url  <- "https://zenodo.org/records/3368642/files/Additional%20data.zip?download=1"
 zip_dest <- file.path(zenodo_dir, "Additional_data.zip")
 
-download.file(zip_url, destfile = zip_dest, mode = "wb", quiet = FALSE)
-unzip(zip_dest, exdir = zenodo_dir)
+if (!file.exists(zip_dest)) {
+  download.file(zip_url, destfile = zip_dest, mode = "wb")
+  unzip(zip_dest, exdir = zenodo_dir)
+}
+
 
 # Load Zenodo protein references
 majorcapsid_nucleocytoviricota_zenodo <- Biostrings::readAAStringSet(file.path(zenodo_files_path, "capsid.prt"))
