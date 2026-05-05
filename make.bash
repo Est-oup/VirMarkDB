@@ -33,4 +33,4 @@
     module load r/4.4.1
     Rscript scripts/benchmarking/11_analyse_results_align_pool_VirMarkDB.R
     # Clusterise missing protein 
-    bash scripts/benchmarking/12_cluterise_missing_prot.bash
+    bash scripts/benchmarking/12_clusterise_missing_prot.bash
