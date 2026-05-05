@@ -26,7 +26,7 @@
     module load r/4.4.1
     Rscript scripts/benchmarking/09_results_align_pool_vs_pool.R
 
-# Test VirMarkDB-GV with algniment of a pool of viral protein
+# Test VirMarkDB with algniment of a pool of viral protein
     # Blast with mmseqs each marker from VirMarkDBgv to each pool prot
     sbatch scripts/benchmarking/10_align_pool_VirMarkDB.bash
     # Analyze the results
