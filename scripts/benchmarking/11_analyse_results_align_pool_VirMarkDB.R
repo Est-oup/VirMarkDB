@@ -1,7 +1,7 @@
 library(tidyverse)
-library(ggplot2)
+library(patchwork)
 
-ncbi_dir <- "output/benchmark/pool_protein/pool_protein_raw"
+ncbi_dir <- "output/benchmark/pool_protein/pool_protein_filt"
 hits_dir <- "output/benchmark/alignment_VirMarkDB_pool/alignment"
 out_dir  <- "output/benchmark/alignment_VirMarkDB_pool/bench_results"
 missing_prot_path <- "output/benchmark/alignment_VirMarkDB_pool/missing_prot"
@@ -80,16 +80,18 @@ analyse_res <- function(marker,ncbi_dir,hits_dir,out_dir,missing_prot_path,hits_
     theme_minimal()
 
   # Arrange and display plots
-  # Save 
+  # Combine plots
+  combined_plot <- (p1 | p2) / (p3 | p4)
+  
+  # Save plot
   ggsave(
-    filename = str_c(out_dir,"/" ,marker,".svg"),
-    plot = gridExtra::grid.arrange(p1, p2, p3, p4, ncol = 2),
+    filename = str_c(out_dir, "/", marker, ".svg"),
+    plot = combined_plot,
     width = 12,
     height = 8,
     units = "in",
-    dpi = 300)
-
-
+    dpi = 300
+  )
 
   # Analyse part of the database witch is not covered by the pool
   # Family of the database ref with have the marker 
@@ -107,9 +109,10 @@ analyse_res <- function(marker,ncbi_dir,hits_dir,out_dir,missing_prot_path,hits_
   # Analyse on many query has best match with wich family 
   
   family_count <- tab_best |>
-  left_join(meta, by = c("ref" = "virus_id")) |>
-  group_by(Family) |>
-  summarise(
+    mutate(virus_id_ref = sub(" .*", "", ref)) |>
+    left_join(meta, by = c("ref" = "virus_id")) |>
+    group_by(Family) |>
+    summarise(
     nb_queries = n_distinct(query),  
     .groups = "drop"
   ) |>
