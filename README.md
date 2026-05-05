@@ -6,7 +6,7 @@ It is intended for **taxonomic assignment**, **marker-based phylogeny**, and mor
 
 This repository documents **how the database was generated**, **how marker-specific HMM profiles were built and applied**, and **how the database was refined through a benchmark step** designed to detect missing or underrepresented diversity.
 
-The final curated release of the database is distributed separately through [**Zenodo link**][https://zenodo.org/].
+The final curated release of the database is distributed separately through [**Zenodo link**](https://zenodo.org/).
 
 ---
 
@@ -44,27 +44,22 @@ The current database includes the following marker sets:
 
 ### 1.3 Marker groups and taxon-aware HMM profiles
 
-HMM profiles are handled at the **`marker_group_id`** level.
+VirMarkDB uses **taxon-aware HMM profiles** defined at the `marker_group_id` level.
 
-A `marker_group_id` corresponds to one marker within a defined taxonomic scope.  
-This means that the same broad marker can have several HMM profiles if different taxonomic groups need different reference spaces.
+Each `marker_group_id` links:
+- one marker gene,
+- one taxonomic scope,
+- one corresponding HMM profile.
 
-In practice:
+This structure allows the same marker, for example `majorcapsid` or `dnapol`, to be represented by different HMM profiles when sequence divergence between viral lineages is too high for a single universal model.
 
-- marker groups are defined in `marker_taxo_map.tsv`,
-- genomes are linked to expected marker groups in `genome_marker_map.tsv`,
-- and each genome is searched only against the HMM profiles assigned to its taxonomic group.
-
-This avoids forcing one universal HMM profile onto all lineages when the marker is too divergent across the phylum.
+Marker groups are defined in: [`input/mapfile.tsv`](input/mapfile.tsv)
 
 ---
 
 ### 1.4 General statistics
 
 The table below summarizes the number of viral genomes represented by family and marker group.
-
-`n_marker_genome_total` is the row total across marker groups.  
-It corresponds to the sum of marker-positive genome counts across markers, not to the number of unique genomes.
 
 |Family            | atpase| dnapol| majorcapsid| primase| rnapol1| rnapol2| tf2s| vltf3|
 |:-----------------|------:|------:|-----------:|-------:|-------:|-------:|----:|-----:|
@@ -96,7 +91,7 @@ It corresponds to the sum of marker-positive genome counts across markers, not t
 │   ├── manual_genomes_ncbi.tsv
 │   ├── manual_reference_protein/
 │   ├── mapfile.tsv
-│   └── ncbi.creds
+│   └── ncbi.creds          # private credentials (line 1: email, line 2: NCBI API key)
 ├── output/
 │   ├── benchmark/
 │   ├── config/
@@ -110,7 +105,8 @@ It corresponds to the sum of marker-positive genome counts across markers, not t
 │       ├── markers/
 │       └── virus_informations/
 ├── scripts/
-│   ├── analysis/
+│   ├── benchmarking/
+│   ├── database_generation/
 │   └── utils/
 ├── make.bash
 └── README.md
@@ -299,148 +295,72 @@ flowchart TD
 
 ### 4.1 ICTV resources
 
-The workflow uses ICTV resources to build the initial genome manifest and taxonomy.
+The workflow uses the [**ICTV Virus Metadata Resource VMR_MSL41.v1.20260320**](https://ictv.global/sites/default/files/VMR/VMR_MSL41.v1.20260320.xlsx), released on **2026-03-20**, to build the initial genome manifest and associated taxonomy.
 
-The current scripts use:
-
-- ICTV Virus Metadata Resource,
-- taxonomy fields from `Kingdom` to `Species`,
-- GenBank accession information associated with ICTV virus entries.
+The VMR provides virus names, ICTV identifiers, taxonomy fields from `Kingdom` to `Species`, GenBank accession information, genome composition and host source metadata.
 
 ---
 
 ### 4.2 Additional genome inputs
 
-The workflow incorporates manually added genomes:
+The workflow incorporates manually added genomes:[`input/manual_genomes_ncbi.tsv`](input/manual_genomes_ncbi.tsv).
 
-```bash
-input/manual_genomes_ncbi.tsv
-```
-
-These additions are merged with ICTV-derived entries in the final manifest:
-
-```bash
-output/config/manifest_genomes.tsv
-```
+These additions are merged with ICTV-derived entries in the final manifest: `output/config/manifest_genomes.tsv`.
 
 ---
 
 ### 4.3 Reference protein sources
 
-Marker HMM profiles are built from marker-group-specific reference protein sets stored in:
+Marker HMM profiles are built from marker-group-specific reference protein sets stored in [`output/references_protein/`](output/references_protein/).
 
-```bash
-output/references_protein/
-```
+Reference proteins come from three complementary source types:
 
-These reference sets combine:
-
-- sequences derived from external reference resources,
+- published reference datasets,
 - manually curated protein accessions,
-- and benchmark-guided additions when needed.
+- benchmark-guided additions used to improve marker coverage.
 
-The repository also documents the use of an external Zenodo protein resource during reference preparation.
-
----
-
-## 5) Database generation
-
-### 5.1 Manifest generation
-
-The manifest step extracts viral entries from ICTV tables, normalizes accession information and merges optional manual additions.
-
-Main outputs:
-
-```bash
-output/config/manifest_genomes.tsv
-output/config/marker_taxo_map.tsv
-output/config/genome_marker_map.tsv
-```
-
-`manifest_genomes.tsv` is the central genome table.  
-`marker_taxo_map.tsv` defines marker groups and their taxonomic scope.  
-`genome_marker_map.tsv` expands the expected genome × marker combinations.
+| Taxonomic scope | Marker groups | Reference source | Source type | Notes |
+|---|---|---|---|---|
+| `Nucleocytoviricota` | `majorcapsid`, `dnapol`, `atpase`, `primase`, `rnapol1`, `rnapol2`, `tf2s`, `vltf3` | [Guglielmini et al. 2019 Zenodo repository](https://zenodo.org/record/3368642) | Published reference dataset | Initial conserved NCLDV marker-protein reference set |
+| `Nucleocytoviricota` | `majorcapsid`, `dnapol` | manual accessions | Manual curation | Added when a known marker was missing or poorly represented |
 
 ---
 
-### 5.2 Genome retrieval / preparation
+## 5) General workflow
 
-Genome FASTA files are gathered in:
+### 5.1 Database generation
 
-```bash
-output/genomes/
-```
+#### 5.1.1 ORF prediction
 
-This can include:
+ORFs are predicted from each genome using **Prodigal** in metagenomic mode (`-p meta`).
 
-- downloaded NCBI genomes,
-- copied private genomes,
-- manually declared genome additions.
+This step is performed by [`02_prodigal.bash`](scripts/database_generation/02_prodigal.bash).
 
----
+#### 5.1.2 Reference alignment and HMM construction
 
-### 5.3 ORF prediction
+Marker-group-specific reference proteins are aligned with **MAFFT** using the options `--ep 0 --genafpair`.
 
-ORFs are predicted from each genome using **Prodigal** in metagenomic mode:
+This step is performed by [`03_align_markers.bash`](scripts/database_generation/03_align_markers.bash).
 
-```bash
--p meta
-```
+Filtered alignments are then converted into HMM profiles with **HMMER hmmbuild**.
 
-Outputs:
+This step is performed by [`04_hmmbuild.bash`](scripts/database_generation/04_hmmbuild.bash).
 
-```bash
-output/orfs/*.faa
-output/orfs/*.fna
-output/orfs/*.gff
-```
-
----
-
-### 5.4 Reference alignment and HMM construction
-
-Marker-group-specific reference proteins are aligned with **MAFFT** and filtered with **trimAl**.
-
-Alignment outputs:
-
-```bash
-output/hmm/aln/
-output/hmm/aln_filt/
-```
-
-Filtered alignments are converted into HMM profiles with **HMMER hmmbuild**.
-
-HMM outputs:
-
-```bash
-output/hmm/hmms/
-```
-
----
-
-### 5.5 HMM search
+#### 5.1.3 HMM search
 
 Predicted ORF proteomes are searched with **hmmsearch**.
 
-Importantly, each genome is searched only against the HMM profiles assigned to it through:
+This step is performed by [`05_hmmsearch.bash`](scripts/database_generation/05_hmmsearch.bash).
 
-```bash
-output/config/genome_marker_map.tsv
-```
+Each genome is searched only against the HMM profiles assigned to it through `genome_marker_map.tsv`.
 
-HMM search outputs:
-
-```bash
-output/hmm/search/
-```
-
----
-
-### 5.6 Best-hit selection
+#### 5.1.4 Predicted protein selection
 
 For each `(virus_id, marker_group_id)` pair, HMM hits are ranked first by increasing e-value and then by decreasing bit score.
 
 The final selection always keeps the best-ranked hit for each `(virus_id, marker_group_id)` pair. Additional hits are retained only when they are close to the best hit in both score and ORF length.
+
+This step is performed by [`06_final_results.R`](scripts/database_generation/06_final_results.R).
 
 Default filters for additional copies:
 
@@ -449,82 +369,130 @@ score ratio  >= 0.80 relative to the best hit for this marker group and genome
 length ratio >= 0.80 relative to the best hit for this marker group and genome
 ```
 
-This filtering step is designed to keep credible additional copies while removing weak secondary hits. It should not be interpreted as a dedicated fragmented-ORF recovery procedure.
+This filtering step is designed to keep credible additional copies while removing weak secondary hits.
 
 ---
 
-## 6) Final database outputs
+### 5.2 Benchmark-guided refinement
 
-The final exported database is written to:
+VirMarkDB was evaluated against a broader **Bamfordvirae protein pool** extracted from a local **NCBI NR** database.
+
+The purpose of this benchmark is to detect marker diversity that is missing or underrepresented in the current database.
+
+| Step | Description | Script |
+|---:|---|---|
+| 1 | Extract a broader Bamfordvirae protein pool from NR and split proteins by marker using title-based filters. | [`07_scrap_viral_protein_ncbi.bash`](scripts/benchmarking/07_scrap_viral_protein_ncbi.bash) |
+| 2 | Self-align each marker pool to identify isolated or suspicious protein sequences. | [`08_align_pool_vs_pool.bash`](scripts/benchmarking/08_align_pool_vs_pool.bash) |
+| 3 | Analyse marker pool self-alignments and filter likely misannotated proteins. | [`09_results_align_pool_vs_pool.R`](scripts/benchmarking/09_results_align_pool_vs_pool.R) |
+| 4 | Compare the filtered external protein pool against the current VirMarkDB marker database. | [`10_align_pool_VirMarkDB.bash`](scripts/benchmarking/10_align_pool_VirMarkDB.bash) |
+| 5 | Identify proteins not covered by the current VirMarkDB database. | [`11_analyse_results_align_pool_VirMarkDB.R`](scripts/benchmarking/11_analyse_results_align_pool_VirMarkDB.R) |
+| 6 | Cluster missing proteins with **CD-HIT** to reduce redundancy. | [`12_cluterise_missing_prot.bash`](scripts/benchmarking/12_cluterise_missing_prot.bash) |
+
+---
+
+## 6) Output database structure
+
+The database is generated locally in:
 
 ```bash
 output/VirMarkDB/
 ```
 
-It contains:
+For public use, the curated release will be distributed through the Zenodo archive linked at the top of this README.
 
-```bash
-output/VirMarkDB/markers/
-output/VirMarkDB/virus_informations/
-output/VirMarkDB/export_format/
-```
+The local output folder contains three main components:
+
+| Folder | Content | Role in the database |
+|---|---|---|
+| `markers/` | Retained marker ORF sequences and per-marker ORF description tables | Consolidated output of the HMM-based marker detection step |
+| `virus_informations/` | Genome metadata and wide marker-composition tables | Links retained ORFs to virus names, ICTV identifiers and taxonomy |
+| `export_format/` | Reformatted FASTA and taxonomy files | Tool-specific exports derived from the curated marker database |
 
 ---
 
-### 6.1 Marker folders
+### 6.1 Marker detection outputs
 
-Marker FASTA files are organized as:
+Marker-specific outputs are organised by taxonomic group and marker name:
 
 ```bash
 output/VirMarkDB/markers/<group_id>/<marker>/
 ```
 
-Each marker-group folder contains:
+Each marker-group folder contains the retained ORFs for one `marker_group_id`.
 
-```bash
-<marker_group_id>_protein.fasta
-<marker_group_id>_nucleotide.fasta
-<marker_group_id>_virus_orf_description.tsv
+| File | Description |
+|---|---|
+| `<marker_group_id>_protein.fasta` | Protein sequences of the retained ORFs for this marker group |
+| `<marker_group_id>_nucleotide.fasta` | Nucleotide sequences corresponding to the retained ORFs |
+| `<marker_group_id>_virus_orf_description.tsv` | Per-ORF table describing the retained HMM hits and their associated virus metadata |
+
+These files are the main curated marker outputs produced after HMM search and best-hit selection.
+
+Protein FASTA headers follow this structure:
+
+```text
+>orf_name marker Kingdom;Phylum;Class;Order;Family;Genus;Species
 ```
 
-The description table contains the selected ORF information, including:
+Example:
 
-- `virus_id`,
-- `group_id`,
-- `marker`,
-- `marker_group_id`,
-- `orf_name`,
-- `evalue`,
-- `score`,
-- `copy_rank`,
-- `score_ratio`,
-- `length_ratio`,
-- `position_start`,
-- `position_end`,
-- `Species`,
-- `Virus_names`.
+```text
+>AF012825.2_156 atpase Bamfordvirae;Nucleocytoviricota;...;Species_name
+```
+
+Terminal stop characters (`*`) are removed from exported protein sequences when present.
 
 ---
 
-### 6.2 Global virus tables
+### 6.2 Marker ORF description tables
 
-Global summary tables are written to:
+Each `<marker_group_id>_virus_orf_description.tsv` file describes the ORFs retained for one marker group.
+
+| Column | Description |
+|---|---|
+| `orf_name` | ORF identifier from the Prodigal-predicted ORF FASTA |
+| `virus_id` | Genome identifier matched to the manifest |
+| `group_id` | Taxonomic group used to define the marker group |
+| `marker` | Marker name |
+| `copy_rank` | Rank of the ORF among hits for the same genome and marker group |
+| `evalue` | HMMER e-value of the retained hit |
+| `score` | HMMER bit score of the retained hit |
+| `best_score` | Best HMMER score for this genome and marker group |
+| `score_ratio` | ORF score divided by the best score for this genome and marker group |
+| `target_length_aa` | Predicted ORF length in amino acids |
+| `best_orf_length` | Length of the best-ranked ORF for this genome and marker group |
+| `length_ratio` | ORF length divided by the best ORF length |
+| `position_start` | ORF start coordinate from the Prodigal description |
+| `position_end` | ORF end coordinate from the Prodigal description |
+| `Species` | ICTV species name |
+| `Virus_names` | Virus name from the ICTV VMR |
+
+The first-ranked ORF is always retained. Additional ORFs are retained only when they pass the score and length ratio thresholds defined during predicted protein selection.
+
+---
+
+### 6.3 Virus information tables
+
+Genome-level database tables are written to:
 
 ```bash
 output/VirMarkDB/virus_informations/
 ```
 
-Main files:
+| File | Description |
+|---|---|
+| `virus_compo_taxo.tsv` | Wide-format table linking each genome to the ORFs retained for each marker group |
+| `virus_metadata.tsv` | Genome-level metadata table derived from the manifest |
 
-```bash
-virus_compo_taxo.tsv
-virus_metadata.tsv
+`virus_compo_taxo.tsv` is the main composition table. It reports, for each genome, the retained ORF names for each marker group. When several ORFs are retained for the same genome and marker group, ORF names are separated by semicolons.
+
+Example structure:
+
+```text
+virus_id | ICTV_ID | Virus_names | atpase_nucleocytoviricota_orf_names | dnapol_nucleocytoviricota_orf_names | ...
 ```
 
-`virus_compo_taxo.tsv` is the main wide-format marker composition table.  
-It reports, for each genome, the retained ORF names for each marker group, the taxonomy and general identifiers.
-
-`virus_metadata.tsv` stores genome-level metadata:
+`virus_metadata.tsv` stores contextual information for genomes represented in the database, including:
 
 - `virus_id`,
 - `ICTV_ID`,
@@ -532,54 +500,32 @@ It reports, for each genome, the retained ORF names for each marker group, the t
 - `Virus_names_abrv`,
 - `Host_source`,
 - `Origin_source`,
-- taxonomy from `Kingdom` to `Species`.
-
-`Origin_source` indicates how the genome entered the workflow, for example through ICTV-derived entries, manual NCBI additions or private genome additions.
-
----
-
-### 6.3 Note on genome counts
-
-The number of genomes in the manifest (from ICTV) and the number of genomes with selected marker ORFs can differ.
-
-A genome present in the manifest but absent from marker FASTA exports should not be interpreted automatically as missing from the pipeline.  
-It can simply mean that no ORF passed the current HMM and filtering steps.
+- taxonomy fields from `Kingdom` to `Species`.
 
 ---
 
 ### 6.4 Tool-specific exports
 
-Additional exports are written to:
+Tool-specific exports are written to:
 
 ```bash
 output/VirMarkDB/export_format/
 ```
 
-Current export targets include:
+These files are derived from the curated marker outputs and are provided only to make the database easier to reuse in common sequence-assignment workflows.
 
-- `vsearch`,
-- `dada2`.
+| Folder | Content |
+|---|---|
+| `vsearch/` | FASTA files with simplified sequence identifiers and a separate taxonomy table |
+| `dada2/` | Training FASTA files formatted for DADA2 taxonomy-assignment functions |
 
----
+The VSEARCH export separates sequence identifiers and taxonomy into FASTA files plus a `taxonomy.tsv` file.
 
-## 7) Benchmark-guided refinement
-
-The database was also evaluated against a broader Bamfordvirae protein pool extracted from a local **NR** database.
-
-The purpose of this benchmark was to detect missing or underrepresented marker diversity.
-
-Main benchmark steps:
-
-1. extract a broader Bamfordvirae protein pool from NR;
-2. split proteins by marker using title-based filters;
-3. self-align each marker pool to remove isolated or suspicious sequences;
-4. compare the filtered pool against the current VirMarkDB marker database;
-5. identify proteins not covered by the current database;
-6. cluster missing proteins with CD-HIT to reduce redundancy.
+The DADA2 export rewrites FASTA headers into taxonomy strings expected by DADA2 training-set functions.
 
 ---
 
-## 8) Software used
+## 7) Software used
 
 The workflow relies on:
 
@@ -588,7 +534,6 @@ The workflow relies on:
 | **R** | `4.4.1` |
 | **Prodigal** | `2.6.3` |
 | **MAFFT** | `7.525` |
-| **trimAl** | `1.5.0` |
 | **HMMER** | `3.3.2` |
 | **BLAST+** | `2.16.0` |
 | **MMseqs2** | `15.6f452` |
@@ -596,7 +541,7 @@ The workflow relies on:
 
 ---
 
-## 10) Notes and limitations
+## 8) Notes and limitations
 
 - ORF prediction was performed with Prodigal, which is practical and robust, but viral genomes can still contain coding configurations that are difficult to predict.
 - HMM profile performance depends strongly on the diversity and quality of the seed reference sets.
@@ -605,9 +550,16 @@ The workflow relies on:
 - The benchmark filtering strategy is empirical and was designed as a practical way to clean large external protein pools before coverage assessment.
 - The current database focuses on Nucleocytoviricota. Additional viral groups can be added later if suitable marker references and genome mappings are available.
 
+
+The number of genomes in the manifest (from ICTV) and the number of genomes with selected marker ORFs can differ.
+
+A genome present in the manifest but absent from marker FASTA exports should not be interpreted automatically as missing from the pipeline.  
+It can simply mean that no ORF passed the current HMM and filtering steps.
+
+
 ---
 
-## 13) Recommended citation and license
+## 9) Recommended citation and license
 
 To be completed when the public archive is deposited.
 
@@ -618,21 +570,20 @@ Suggested placeholders:
 
 ---
 
-## 14) References
+## 10) References
 
 ### ICTV resources
 
-- ICTV Master Species Lists
-- ICTV Virus Metadata Resource
+- ICTV Virus Metadata Resource: [**ICTV Virus Metadata Resource VMR_MSL41.v1.20260320**](https://ictv.global/sites/default/files/VMR/VMR_MSL41.v1.20260320.xlsx)
 
 ### Reference datasets and literature
 
-- Guglielmini et al. (2019), on large and giant eukaryotic dsDNA viruses
-- Associated Zenodo supplementary data deposit used as one of the reference sources
+- [Guglielmini et al. 2019 ](https://doi.org/10.1073/pnas.1912006116), on Diversification of giant and large eukaryotic dsDNA viruses predated the origin of modern eukaryotes.
+- Associated [Zenodo](https://zenodo.org/record/3368642) supplementary data deposit used as one of the reference sources.
 
 ---
 
-## Contact / issues
+## 11) Contact / issues
 
 This repository documents the generation and refinement of the VirMarkDB database.
 
