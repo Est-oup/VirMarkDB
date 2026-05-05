@@ -43,8 +43,7 @@ ictv <- readxl::read_excel(dest, sheet = 2) %>%
     Host_source = `Host source`
   ) %>%
   select(
-    virus_id, Kingdom, Phylum, Class, Order, Family, Genus, Species,
-    Virus_names, Virus_names_abrv, Host_source, ICTV_ID
+    virus_id, taxo_cols, Virus_names, Virus_names_abrv, Host_source, ICTV_ID
   ) %>%
   separate_rows(virus_id, sep = "; ") %>%
   mutate(
@@ -84,9 +83,14 @@ genomes <- genomes %>%
   distinct()
 
 # Check duplication
-dup_ids <- genomes %>%
+genomes %>%
   count(virus_id, name = "n") %>%
-  filter(n > 1)
+  filter(n > 1) %>%
+  {
+    if (nrow(.)) {
+      write_tsv(., "output/config/dup_ids_check.tsv")
+    }
+  }
 
 # Export manifest
 write_tsv(genomes, out_tsv)
@@ -108,8 +112,7 @@ for (i in seq_len(nrow(marker_map))) {
         marker_group_id = marker_map$marker_group_id[[i]]
       ) %>%
       select(
-        virus_id, Kingdom, Phylum, Class, Order, Family, Genus, Species,
-        group_id, marker, marker_group_id
+        virus_id, taxo_cols, group_id, marker, marker_group_id
       )
   )
 }
