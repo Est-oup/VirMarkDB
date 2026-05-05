@@ -21,7 +21,6 @@ for fasta in "${in_dir}"/*.fasta; do
         -n 5 \
         -d 0 \
         -M 0 \
-        -T "${SLURM_CPUS_PER_TASK}" \
         > "${out_dir}/${marker}/${marker}_cdhit95.log" 2>&1
 
 done
