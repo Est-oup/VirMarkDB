@@ -118,7 +118,7 @@ The table below summarizes the number of viral genomes represented by family and
 
 ## 3) Workflow overview 
 
-![VirMarkDB workflow overview](workflow.excalidraw.png)
+![VirMarkDB workflow overview](input/workflow.excalidraw.png)
 
 ## 4) Input and provenance
 
