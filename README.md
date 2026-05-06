@@ -44,16 +44,19 @@ The current database includes the following marker sets:
 
 ### 1.3 Marker groups and taxon-aware HMM profiles
 
-VirMarkDB uses **taxon-aware HMM profiles** defined at the `marker_group_id` level.
+VirMarkDB uses **taxon-aware HMM profiles** defined by marker groups.
 
-Each `marker_group_id` links:
-- one marker gene,
-- one taxonomic scope,
+A marker group corresponds to the combination of:
+
+- one marker gene;
+- one taxonomic group;
 - one corresponding HMM profile.
+
+In the input tables, marker groups are described by the `marker`, `group_id` and `marker_group_id` columns.
 
 This structure allows the same marker, for example `majorcapsid` or `dnapol`, to be represented by different HMM profiles when sequence divergence between viral lineages is too high for a single universal model.
 
-Marker groups are defined in: [`input/mapfile.tsv`](input/mapfile.tsv)
+Marker groups are defined in [`input/mapfile.tsv`](input/mapfile.tsv).
 
 ---
 
@@ -116,180 +119,7 @@ The table below summarizes the number of viral genomes represented by family and
 
 ## 3) Workflow overview 
 
-```mermaid
-%%{init: {
-  "theme": "base",
-  "themeVariables": {
-    "fontFamily": "Arial",
-    "fontSize": "26px",
-    "primaryTextColor": "#111827",
-    "lineColor": "#475569"
-  },
-  "flowchart": {
-    "htmlLabels": true,
-    "curve": "basis"
-  }
-}}%%
-
-flowchart TD
-
-  %% 01. INPUTS
-
-  subgraph INPUT[" "]
-    direction TB
-
-    T1["<b style='font-size:44px'>01. Inputs</b>"]
-
-    subgraph INPUT_CONTENT[" "]
-      direction LR
-      A1["Viral genome<br/><br/>ICTV ressources<br/>Mannualy added"]
-      A2["Viral references protein<br/><br/>Literature ressources<br/>Mannualy added"]
-
-    end
-  end
-
-  %% 02. ORF PREDICTION
-
-  subgraph ORF[" "]
-    direction TB
-
-    T2["<b style='font-size:44px'>02. ORF prediction</b>"]
-
-    B1["Prodigal"]
-    B2["Predicted ORFs<br/>proteins + nucleotides + GFF"]
-    B1 --> B2
-  end
-
-  %% 03. MARKER DETECTION
-
-  subgraph DETECT[" "]
-    direction TB
-
-    T3["<b style='font-size:44px'>03. Marker detection</b>"]
-
-    C1["Reference alignment<br/>MAFFT"]
-    C2["HMM profile construction<br/>hmmbuild"]
-    C3["Marker search<br/>hmmsearch"]
-    C1 --> C2 --> C3
-  end
-
-  %% 04. BEST HIT SELECTION
-
-  subgraph SELECT[" "]
-    direction TB
-
-    T4["<b style='font-size:44px'>04. Best hit selection</b>"]
-
-    D1["Parse HMM results"]
-    D2["Select best marker hits<br/>score + length + copy number"]
-    D1 --> D2
-  end
-
-  %% 05. DATABASE GENERATION
-
-  subgraph DB[" "]
-    direction TB
-
-    T5["<b style='font-size:44px'>05. Database generation</b>"]
-
-    E1["Extract marker sequences"]
-    E2["Marker FASTA files<br/>protein + nucleotide"]
-    E3["Taxonomy & metadata tables"]
-    E5["Specific export (VSEARCH; DADA2)"]
-    E1 --> E2
-    E1 --> E3
-    E3 --> E5
-    E2 --> E5
-
-
-  end
-
-  %% 06. DATABASE
-  
-
-  subgraph DATABASE[" "]
-    direction TB
-
-    T6["<b style='font-size:44px'>06. VirMarkDB</b>"]
-
-    subgraph Database_folder["VirMarkDB folder"]
-      direction LR
-      F1["markers"]
-      F2["virus_informations"]
-      F3["export_format"]
-
-    end
-  end
-
-  %% 07. BENCHMARKING
-
-  subgraph BENCH[" "]
-    direction TB
-
-    T7["<b style='font-size:44px'>07. Benchmarking & quality check</b>"]
-
-    G1["External viral proteins<br/>NCBI nr"]
-    G2["Compare against VirMarkDB markers"]
-    G3["Detect missing / unexpected proteins"]
-    G4["Adjust marker choice<br/>or reference coverage"]
-    G1 --> G2 --> G3 --> G4
-  end
-
-  %% MAIN WORKFLOW
-
-  A1 --> B1
-  A2 --> C1
-
-  B2 --> C3
-  C3 --> D1
-
-  D2 --> E1
-  A1 --> E3
-
-  E5 --> Database_folder
-  E3 --> Database_folder
-  E2 --> Database_folder
-
-  Database_folder -. optional .-> G2
-  G4 -. feedback .-> INPUT_CONTENT
-
-  %% NODE STYLES
-
-  classDef title fill:transparent,stroke:transparent,color:#111827,font-size:44px,font-weight:bold;
-
-  classDef input fill:#EFF6FF,stroke:#2563EB,stroke-width:2px,color:#111827,font-size:26px;
-  classDef orf fill:#ECFDF5,stroke:#16A34A,stroke-width:2px,color:#111827,font-size:26px;
-  classDef detect fill:#FFF7ED,stroke:#EA580C,stroke-width:2px,color:#111827,font-size:26px;
-  classDef select fill:#FFFBEB,stroke:#D97706,stroke-width:2px,color:#111827,font-size:26px;
-  classDef db fill:#FDF2F8,stroke:#DB2777,stroke-width:2px,color:#111827,font-size:26px;
-  classDef DATABASE fill:#F5F3FF,stroke:#7C3AED,stroke-width:2px,color:#111827,font-size:26px;
-  classDef bench fill:#F8FAFC,stroke:#334155,stroke-width:2px,color:#111827,font-size:26px;
-
-  class T1,T2,T3,T4,T5,T6,T7 title;
-
-  class A1,A2 input;
-  class B1,B2 orf;
-  class C1,C2,C3 detect;
-  class D1,D2 select;
-  class E1,E2,E3 db;
-  class F1,F2,F3 export;
-  class G1,G2,G3,G4 bench;
-
-  %% BIG BOX BACKGROUNDS
-
-  style INPUT fill:#DBEAFE,stroke:#1D4ED8,stroke-width:4px,color:#111827;
-  style INPUT_CONTENT fill:#DBEAFE,stroke:transparent,stroke-width:0px,color:#111827;
-
-  style ORF fill:#DCFCE7,stroke:#15803D,stroke-width:4px,color:#111827;
-  style DETECT fill:#FFEDD5,stroke:#C2410C,stroke-width:4px,color:#111827;
-  style SELECT fill:#FEF3C7,stroke:#D97706,stroke-width:4px,color:#111827;
-  style DB fill:#FCE7F3,stroke:#BE185D,stroke-width:4px,color:#111827;
-
-  style DATABASE fill:#EDE9FE,stroke:#6D28D9,stroke-width:4px,color:#111827;
-  style Database_folder fill:#EDE9FE,stroke:transparent,stroke-width:0px,color:#111827;
-
-  style BENCH fill:#F1F5F9,stroke:#334155,stroke-width:4px,color:#111827;
-```
+![alt text](workflow.excalidraw.png)
 
 ## 4) Input and provenance
 
@@ -352,21 +182,21 @@ Predicted ORF proteomes are searched with **hmmsearch**.
 
 This step is performed by [`05_hmmsearch.bash`](scripts/database_generation/05_hmmsearch.bash).
 
-Each genome is searched only against the HMM profiles assigned to it through `genome_marker_map.tsv`.
+Each genome is searched only against the marker-group HMM profiles assigned to its taxonomic scope through `genome_marker_map.tsv`.
 
 #### 5.1.4 Predicted protein selection
 
-For each `(virus_id, marker_group_id)` pair, HMM hits are ranked first by increasing e-value and then by decreasing bit score.
+For each genome and marker group, HMM hits are ranked first by increasing e-value and then by decreasing bit score.
 
-The final selection always keeps the best-ranked hit for each `(virus_id, marker_group_id)` pair. Additional hits are retained only when they are close to the best hit in both score and ORF length.
+The final selection always keeps the best-ranked hit for each genome × marker-group combination. Additional hits are retained only when they are close to the best hit in both score and ORF length.
 
 This step is performed by [`06_final_results.R`](scripts/database_generation/06_final_results.R).
 
 Default filters for additional copies:
 
 ```text
-score ratio  >= 0.80 relative to the best hit for this marker group and genome
-length ratio >= 0.80 relative to the best hit for this marker group and genome
+score ratio  >= 0.80 relative to the best hit for the same genome and marker group
+length ratio >= 0.80 relative to the best hit for the same genome and marker group
 ```
 
 This filtering step is designed to keep credible additional copies while removing weak secondary hits.
@@ -402,11 +232,11 @@ For public use, the curated release will be distributed through the Zenodo archi
 
 The local output folder contains three main components:
 
-| Folder | Content | Role in the database |
-|---|---|---|
-| `markers/` | Retained marker ORF sequences and per-marker ORF description tables | Consolidated output of the HMM-based marker detection step |
-| `virus_informations/` | Genome metadata and wide marker-composition tables | Links retained ORFs to virus names, ICTV identifiers and taxonomy |
-| `export_format/` | Reformatted FASTA and taxonomy files | Tool-specific exports derived from the curated marker database |
+| Folder | Content |
+|---|---|
+| `markers/` | Retained marker ORF sequences and per-marker ORF description tables |
+| `virus_informations/` | Virus composition and metadata tables |
+| `export_format/` | VSEARCH and DADA2 formatted exports |
 
 ---
 
@@ -418,7 +248,7 @@ Marker-specific outputs are organised by taxonomic group and marker name:
 output/VirMarkDB/markers/<group_id>/<marker>/
 ```
 
-Each marker-group folder contains the retained ORFs for one `marker_group_id`.
+Each folder contains the retained ORFs for one marker group.
 
 | File | Description |
 |---|---|
@@ -484,7 +314,7 @@ output/VirMarkDB/virus_informations/
 | `virus_compo_taxo.tsv` | Wide-format table linking each genome to the ORFs retained for each marker group |
 | `virus_metadata.tsv` | Genome-level metadata table derived from the manifest |
 
-`virus_compo_taxo.tsv` is the main composition table. It reports, for each genome, the retained ORF names for each marker group. When several ORFs are retained for the same genome and marker group, ORF names are separated by semicolons.
+`virus_compo_taxo.tsv` is the main marker-composition table. It contains one row per genome and one column per marker group.When several ORFs are retained for the same genome and marker group, ORF names are separated by semicolons.
 
 Example structure:
 
@@ -543,18 +373,19 @@ The workflow relies on:
 
 ## 8) Notes and limitations
 
-- ORF prediction was performed with Prodigal, which is practical and robust, but viral genomes can still contain coding configurations that are difficult to predict.
-- HMM profile performance depends strongly on the diversity and quality of the seed reference sets.
-- HMMs are currently handled at the marker-group level and are therefore specific to defined taxonomic scopes.
-- `NA` values in marker presence tables mean not detected or not retained under the current workflow and thresholds, not automatically true biological absence.
-- The benchmark filtering strategy is empirical and was designed as a practical way to clean large external protein pools before coverage assessment.
-- The current database focuses on Nucleocytoviricota. Additional viral groups can be added later if suitable marker references and genome mappings are available.
+- ORF prediction is performed with **Prodigal** in metagenomic mode. This approach is practical and robust, but some viral coding sequences may still be difficult to predict correctly.
 
+- Some viral genes, especially in large DNA viruses, can contain introns, inteins, sequencing artefacts or internal stop codons. These features can lead to truncated or fragmented predicted proteins. This limitation is currently tracked in issue #2 and will be addressed in future versions.
 
-The number of genomes in the manifest (from ICTV) and the number of genomes with selected marker ORFs can differ.
+- HMM profile performance depends strongly on the diversity, quality and taxonomic coverage of the seed reference protein sets.
 
-A genome present in the manifest but absent from marker FASTA exports should not be interpreted automatically as missing from the pipeline.  
-It can simply mean that no ORF passed the current HMM and filtering steps.
+- HMM profiles are currently handled by marker group and are therefore specific to defined taxonomic scopes.
+
+- `NA` values in marker presence tables mean “not detected or not retained under the current workflow and thresholds”. They should not be interpreted automatically as true biological absence.
+
+- The benchmark filtering strategy is empirical and was designed as a practical way to clean large external protein pools before marker-coverage assessment.
+
+- The current database focuses on `Nucleocytoviricota`. Additional viral groups will be added later if suitable marker references and genome mappings are available.
 
 
 ---
