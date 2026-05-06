@@ -98,20 +98,25 @@ analyse_res <- function(marker,ncbi_dir,hits_dir,out_dir,missing_prot_path,hits_
 
   # Family of the database ref with have the marker 
   meta2 <- meta |>
-    filter(marker_orf_col != "NA")
+    filter(!is.na(.data[[marker_orf_col]]))
   meta2$Family |> unique()
 
 
   # Analyse on many query has best match with wich family 
-  
+  meta_marker_long <- meta %>%
+    select(virus_id, Family, all_of(marker_orf_col)) %>%
+    filter(!is.na(.data[[marker_orf_col]])) %>%
+    separate_rows(all_of(marker_orf_col), sep = ";") %>%
+    rename(ref = all_of(marker_orf_col))
+
   family_count <- tab_best |>
-    left_join(meta, by = setNames(marker_orf_col, "ref")) |>
+    left_join(meta_marker_long, by = "ref") |>
     group_by(Family) |>
     summarise(
-    nb_queries = n_distinct(query),  
-    .groups = "drop"
-  ) |>
-  arrange(desc(nb_queries)) 
+      nb_queries = n_distinct(query),
+      .groups = "drop"
+    ) |>
+    arrange(desc(nb_queries))
   print(family_count)
 
 
