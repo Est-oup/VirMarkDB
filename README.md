@@ -376,6 +376,8 @@ The workflow relies on:
 
 - Some viral genes, especially in large DNA viruses, can contain introns, inteins, sequencing artefacts or internal stop codons. These features can lead to truncated or fragmented predicted proteins. This limitation is currently tracked in [issue #1](../../issues/1) and will be addressed in future versions.
 
+- Some genomes included in the source metadata are partial genome records. Missing marker genes in these entries may therefore reflect incomplete genome sequence coverage rather than true biological absence.
+
 - HMM profile performance depends strongly on the diversity, quality and taxonomic coverage of the seed reference protein sets.
 
 - HMM profiles are currently handled by marker group and are therefore specific to defined taxonomic scopes.
