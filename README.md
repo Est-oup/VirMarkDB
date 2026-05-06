@@ -1,6 +1,6 @@
 # VirMarkDB
 
-**VirMarkDB** is a reference database of **marker-gene sequences** (**protein + nucleotide**) for viruses. To date only marker-gene for **Nucleocytoviricota** within **Bamfordvirae** are available.  
+**VirMarkDB** is a reference database of **marker-gene sequences** (**protein + nucleotide**) for viruses. The current release focuses on **Nucleocytoviricota** within **Bamfordvirae**.
 
 It is intended for **taxonomic assignment**, **marker-based phylogeny**, and more broadly for workflows that require curated reference sets of conserved viral proteins.
 
@@ -20,8 +20,7 @@ Current taxonomic scope:
 |---|---|
 | `Bamfordvirae` | `Nucleocytoviricota` |
 
-Taxonomy from **Kingdom** to **Species** is mainly derived from ICTV resources.
-
+Taxonomy from **Kingdom** to **Species** is derived from the ICTV Virus Metadata Resource.
 ---
 
 
@@ -119,7 +118,7 @@ The table below summarizes the number of viral genomes represented by family and
 
 ## 3) Workflow overview 
 
-![alt text](workflow.excalidraw.png)
+![VirMarkDB workflow overview](workflow.excalidraw.png)
 
 ## 4) Input and provenance
 
@@ -133,7 +132,7 @@ The VMR provides virus names, ICTV identifiers, taxonomy fields from `Kingdom` t
 
 ### 4.2 Additional genome inputs
 
-The workflow incorporates manually added genomes:[`input/manual_genomes_ncbi.tsv`](input/manual_genomes_ncbi.tsv).
+The workflow incorporates manually added genomes: [`input/manual_genomes_ncbi.tsv`](input/manual_genomes_ncbi.tsv).
 
 These additions are merged with ICTV-derived entries in the final manifest: `output/config/manifest_genomes.tsv`.
 
@@ -141,7 +140,7 @@ These additions are merged with ICTV-derived entries in the final manifest: `out
 
 ### 4.3 Reference protein sources
 
-Marker HMM profiles are built from marker-group-specific reference protein sets stored in [`output/references_protein/`](output/references_protein/).
+Marker HMM profiles are built from marker-group-specific reference protein sets stored in `output/references_protein/`. Reference preparation is handled by [`prepare_ref_protein.R`](scripts/utils/prepare_ref_protein.R).
 
 Reference proteins come from three complementary source types:
 
@@ -172,7 +171,7 @@ Marker-group-specific reference proteins are aligned with **MAFFT** using the op
 
 This step is performed by [`03_align_markers.bash`](scripts/database_generation/03_align_markers.bash).
 
-Filtered alignments are then converted into HMM profiles with **HMMER hmmbuild**.
+Alignments are then converted into HMM profiles with **HMMER hmmbuild**.
 
 This step is performed by [`04_hmmbuild.bash`](scripts/database_generation/04_hmmbuild.bash).
 
@@ -216,7 +215,7 @@ The purpose of this benchmark is to detect marker diversity that is missing or u
 | 3 | Analyse marker pool self-alignments and filter likely misannotated proteins. | [`09_results_align_pool_vs_pool.R`](scripts/benchmarking/09_results_align_pool_vs_pool.R) |
 | 4 | Compare the filtered external protein pool against the current VirMarkDB marker database. | [`10_align_pool_VirMarkDB.bash`](scripts/benchmarking/10_align_pool_VirMarkDB.bash) |
 | 5 | Identify proteins not covered by the current VirMarkDB database. | [`11_analyse_results_align_pool_VirMarkDB.R`](scripts/benchmarking/11_analyse_results_align_pool_VirMarkDB.R) |
-| 6 | Cluster missing proteins with **CD-HIT** to reduce redundancy. | [`12_cluterise_missing_prot.bash`](scripts/benchmarking/12_cluterise_missing_prot.bash) |
+| 6 | Cluster missing proteins with **CD-HIT** to reduce redundancy. | [`12_clusterise_missing_prot.bash`](scripts/benchmarking/12_clusterise_missing_prot.bash) |
 
 ---
 
@@ -314,7 +313,7 @@ output/VirMarkDB/virus_informations/
 | `virus_compo_taxo.tsv` | Wide-format table linking each genome to the ORFs retained for each marker group |
 | `virus_metadata.tsv` | Genome-level metadata table derived from the manifest |
 
-`virus_compo_taxo.tsv` is the main marker-composition table. It contains one row per genome and one column per marker group.When several ORFs are retained for the same genome and marker group, ORF names are separated by semicolons.
+`virus_compo_taxo.tsv` is the main marker-composition table. It contains one row per genome and one column per marker group. When several ORFs are retained for the same genome and marker group, ORF names are separated by semicolons.
 
 Example structure:
 
@@ -375,7 +374,7 @@ The workflow relies on:
 
 - ORF prediction is performed with **Prodigal** in metagenomic mode. This approach is practical and robust, but some viral coding sequences may still be difficult to predict correctly.
 
-- Some viral genes, especially in large DNA viruses, can contain introns, inteins, sequencing artefacts or internal stop codons. These features can lead to truncated or fragmented predicted proteins. This limitation is currently tracked in issue #2 and will be addressed in future versions.
+- Some viral genes, especially in large DNA viruses, can contain introns, inteins, sequencing artefacts or internal stop codons. These features can lead to truncated or fragmented predicted proteins. This limitation is currently tracked in [issue #1](../../issues/1) and will be addressed in future versions.
 
 - HMM profile performance depends strongly on the diversity, quality and taxonomic coverage of the seed reference protein sets.
 
