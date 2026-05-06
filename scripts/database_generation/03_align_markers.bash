@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 module load mafft/7.525
-module load trimal/1.5.0
 
 IN="output/references_protein"
 OUT1="output/hmm/aln"
