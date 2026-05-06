@@ -1,7 +1,5 @@
 input/ncbi.creds
 input/ncbi_taxonomy
-
 output
 *out
 *.json
-.gitignore
