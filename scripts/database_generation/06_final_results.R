@@ -8,6 +8,7 @@ MANIFEST_TSV    <- "output/config/manifest_genomes.tsv"
 MAP_TSV         <- "output/config/marker_taxo_map.tsv"
 OUT_DIR         <- "output/VirMarkDB"
 OUT_LOGS        <- "output/hmm/logs"
+REMOVE_SEQS     <- "input/remove_specific_ORF_sequences.txt"
 
 OUT_TABLES      <- file.path(OUT_DIR, "virus_informations")
 OUT_MARKERS     <- file.path(OUT_DIR, "markers")
@@ -74,6 +75,11 @@ read_domtblout <- function(tbl) {
 }
 
 tblout <- map_dfr(tbl_files, read_domtblout)
+
+# Remove specified unwanted ORF sequences
+rem_seqs <- readLines(REMOVE_SEQS, warn = FALSE)
+tblout <- tblout %>%
+  filter(!orf_name %in% rem_seqs)
 
 # Keep best hit and credible additional copies
 score_threshold_multicopy <- 0.8
