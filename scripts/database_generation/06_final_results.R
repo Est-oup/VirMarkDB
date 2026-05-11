@@ -227,13 +227,11 @@ for (i in seq_len(nrow(targets))) {
 
   df_m2 <- df_m %>%
     select(
-      orf_name, virus_id, group_id, marker,
-      copy_rank,
-      evalue, score,
-      best_score, score_ratio,
-      target_length_aa, best_orf_length, length_ratio,
-      position_start, position_end,
-      Species, Virus_names
+      orf_name, virus_id, group_id, marker, evalue, score, target_length_aa,
+      position_start, position_end, Species, Virus_names
+    ) %>%
+    rename(
+      ORF_length_aa = target_length_aa
     )
 
   write_tsv(
