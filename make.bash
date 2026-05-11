@@ -2,7 +2,7 @@
 
 # Generate VirMarkDB database 
     # Generate a manifest list of virus
-    module load r/4.4.1
+    module load r/4.5.2
     Rscript scripts/database_generation/01_generate_manifest.R
     # Search ORF in viral genomes
     bash scripts/database_generation/02_prodigal.bash
@@ -23,14 +23,14 @@
     sbatch scripts/benchmarking/07_scrap_viral_protein_ncbi.bash
     #  Filter out mis annotated protein with an auto alignment
     sbatch scripts/benchmarking/08_align_pool_vs_pool.bash
-    module load r/4.4.1
+    module load r/4.5.2
     Rscript scripts/benchmarking/09_results_align_pool_vs_pool.R
 
 # Test VirMarkDB with algniment of a pool of viral protein
     # Blast with mmseqs each marker from VirMarkDB to each pool prot
     sbatch scripts/benchmarking/10_align_pool_VirMarkDB.bash
     # Analyze the results
-    module load r/4.4.1
+    module load r/4.5.2
     Rscript scripts/benchmarking/11_analyse_results_align_pool_VirMarkDB.R
     # Clusterise missing protein 
     bash scripts/benchmarking/12_clusterise_missing_prot.bash
