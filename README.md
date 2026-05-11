@@ -65,22 +65,22 @@ The table below summarizes the number of viral genomes represented by family and
 
 |Family            | atpase| dnapol| majorcapsid| primase| rnapol1| rnapol2| tf2s| vltf3|
 |:-----------------|------:|------:|-----------:|-------:|-------:|-------:|----:|-----:|
-|Allomimiviridae   |      4|      5|           3|       4|       4|       5|    4|     5|
-|Ascoviridae       |      5|      5|           6|       5|       5|       5|    5|     5|
+|Allomimiviridae   |      4|      5|           3|       5|       4|       5|    4|     5|
+|Ascoviridae       |      5|      6|           6|       5|       5|       5|    5|     5|
 |Asfarviridae      |     20|     20|          20|      20|      20|      20|   20|    20|
 |Hydriviridae      |      0|      1|           1|       1|       1|       1|    1|     1|
 |Iridoviridae      |     52|     52|          55|      52|      52|      52|   47|    52|
-|Mamonoviridae     |      2|      2|           2|       2|       0|       0|    2|     1|
+|Mamonoviridae     |      2|      2|           2|       2|       0|       0|    2|     2|
 |Marseilleviridae  |      4|      4|           4|       5|       3|       3|    4|     4|
-|Mesomimiviridae   |      5|      6|           6|       6|       6|       6|    6|     6|
+|Mesomimiviridae   |      6|      6|           6|       6|       6|       6|    6|     6|
 |Mimiviridae       |     20|     20|          20|      20|      20|      20|   20|    20|
 |Orpheoviridae     |      0|      1|           1|       1|       1|       1|    1|     1|
-|Phycodnaviridae   |     29|     26|          29|      30|       1|       1|   26|    28|
+|Phycodnaviridae   |     29|     30|          29|      30|       1|       1|   26|    29|
 |Pithoviridae      |      0|     13|          13|      13|      13|      13|   13|    13|
-|Poxviridae        |     52|     53|          21|      49|      53|      53|   45|     2|
+|Poxviridae        |     52|     54|          21|      49|      53|      53|   45|     2|
 |Schizomimiviridae |      2|      2|           2|       2|       2|       2|    2|     2|
-|Yaraviridae       |      1|      0|           1|       0|       0|       0|    0|     0|
-|Total genomes     |    196|    210|         184|     210|     181|     182|  196|   160|
+|Yaraviridae       |      2|      0|           2|       0|       0|       0|    0|     0|
+|Total genomes     |    198|    216|         185|     211|     181|     182|  196|   162|
 
 ---
 
@@ -90,27 +90,30 @@ The table below summarizes the number of viral genomes represented by family and
 ```bash
 .
 ├── input/
-│   ├── manual_genomes_ncbi.tsv
-│   ├── manual_reference_protein/
-│   ├── mapfile.tsv
-│   └── ncbi.creds          # private credentials (line 1: email, line 2: NCBI API key)
+│   ├── manual_genomes_ncbi.tsv              # manually added genome accessions
+│   ├── manual_reference_protein/            # manually added marker-protein references
+│   ├── mapfile.tsv                          # marker-group definitions and taxonomic mappings
+│   ├── ncbi.creds                           # private credentials (line 1: email, line 2: NCBI API key)
+│   ├── remove_specific_ORF_sequences.txt    # retained ORFs manually excluded from the final database
+│   └── workflow.excalidraw.png              # workflow overview figure
 ├── output/
-│   ├── benchmark/
-│   ├── config/
-│   ├── genomes/
-│   ├── hmm/
-│   ├── orfs/
-│   ├── reference_sources/
-│   ├── references_protein/
-│   └── VirMarkDB/
-│       ├── export_format/
-│       ├── markers/
-│       └── virus_informations/
+│   ├── benchmark/                           # benchmark intermediate files and results
+│   ├── config/                              # configuration tables
+│   ├── genomes/                             # genomes FASTA
+│   ├── hmm/                                 # alignments, HMM profiles and HMM search outputs
+│   ├── orfs/                                # Prodigal predicted ORFs
+│   ├── reference_sources/                   # source files of reference proteins
+│   ├── references_protein/                  # marker group specific reference protein sets
+│   └── VirMarkDB/                           # final generated database
+│       ├── export_format/                   # VSEARCH and DADA2 export formats
+│       ├── markers/                         # marker protein and nucleotide sequences
+│       └── virus_informations/              # genome metadata and marker composition tables
 ├── scripts/
-│   ├── benchmarking/
-│   ├── database_generation/
-│   └── utils/
-├── make.bash
+│   ├── benchmarking/                        # benchmark scripts
+│   ├── database_generation/                 # main database generation scripts
+│   └── utils/                               # helper scripts
+├── CHANGELOG.md                             # release notes and version history
+├── make.bash                                # main workflow launcher
 └── README.md
 ```
 
@@ -360,7 +363,7 @@ The workflow relies on:
 
 | Tool | Version |
 |---|---|
-| **R** | `4.4.1` |
+| **R** | `4.5.2` |
 | **Prodigal** | `2.6.3` |
 | **MAFFT** | `7.525` |
 | **HMMER** | `3.3.2` |
