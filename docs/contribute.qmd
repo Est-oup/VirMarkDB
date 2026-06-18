@@ -10,7 +10,7 @@ Contributions, corrections and suggestions are welcome via the GitHub issue trac
 
 ## Issue tracker
 
-Open an issue for:
+Open an [issue](https://github.com/Est-oup/VirMarkDB/issues) for:
 
 - suspicious or incorrect marker assignments;
 - missing taxa or poorly represented lineages;
@@ -18,9 +18,6 @@ Open an issue for:
 - questions about workflow provenance or reproducibility;
 - documentation corrections.
 
-```text
-https://github.com/Est-oup/VirMarkDB/issues
-```
 
 ## Pull request workflow
 

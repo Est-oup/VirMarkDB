@@ -33,7 +33,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./assets/favicon.svg" rel="icon" type="image/svg+xml">
+<link href="./assets/logo_virmark.png" rel="icon" type="image/png">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -83,6 +83,10 @@ ul.task-list li input[type="checkbox"] {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
+    <a href="./index.html" class="navbar-brand navbar-brand-logo">
+    <img src="./assets/logo_virmark.png" alt="VirMarkDB logo" class="navbar-logo light-content">
+    <img src="./assets/logo_virmark.png" alt="VirMarkDB logo" class="navbar-logo dark-content">
+    </a>
     <a class="navbar-brand" href="./index.html">
     <span class="navbar-title">VirMarkDB</span>
     </a>
@@ -106,16 +110,12 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text">Workflow</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./analysis.html"> 
-<span class="menu-text">Analyses</span></a>
-  </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./usage.html"> 
-<span class="menu-text">Usage</span></a>
-  </li>  
-  <li class="nav-item">
     <a class="nav-link" href="./releases.html"> 
 <span class="menu-text">Releases</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./analysis.html"> 
+<span class="menu-text">Analyses</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./contribute.html"> 
@@ -150,7 +150,6 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#orf-description-table-columns" id="toc-orf-description-table-columns" class="nav-link" data-scroll-target="#orf-description-table-columns">ORF description table columns</a></li>
   </ul></li>
   <li><a href="#virus_informations" id="toc-virus_informations" class="nav-link" data-scroll-target="#virus_informations">virus_informations/</a></li>
-  <li><a href="#export_format" id="toc-export_format" class="nav-link" data-scroll-target="#export_format">export_format/</a></li>
   <li><a href="#files-excluded-from-public-releases" id="toc-files-excluded-from-public-releases" class="nav-link" data-scroll-target="#files-excluded-from-public-releases">Files excluded from public releases</a></li>
   </ul></li>
   </ul>
@@ -197,7 +196,6 @@ ul.task-list li input[type="checkbox"] {
 <pre class="text"><code>VirMarkDB_vX.Y.Z/
 ├── markers/
 ├── virus_informations/
-├── export_format/
 ├── README.md
 ├── CITATION.cff
 ├── LICENSE
@@ -239,7 +237,6 @@ ul.task-list li input[type="checkbox"] {
 <pre class="text"><code>&gt;orf_name marker Kingdom;Phylum;Class;Order;Family;Genus;Species</code></pre>
 <p>Example:</p>
 <pre class="text"><code>&gt;AF012825.2_156 atpase Bamfordvirae;Nucleocytoviricota;...;Species_name</code></pre>
-<p>Terminal stop characters (<code>*</code>) are removed from exported protein sequences.</p>
 </section>
 <section id="nucleotide-fasta-header" class="level3">
 <h3 class="anchored" data-anchor-id="nucleotide-fasta-header">Nucleotide FASTA header</h3>
@@ -354,45 +351,6 @@ ul.task-list li input[type="checkbox"] {
 </table>
 <p>Example structure of <code>virus_compo_taxo.tsv</code>:</p>
 <pre class="text"><code>virus_id | ICTV_ID | Virus_names | atpase_nucleocytoviricota_orf_names | dnapol_nucleocytoviricota_orf_names | ...</code></pre>
-</section>
-<section id="export_format" class="level2">
-<h2 class="anchored" data-anchor-id="export_format">export_format/</h2>
-<p>Tool-specific exports are derived from the curated marker outputs to simplify reuse in common sequence-assignment workflows.</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 50%">
-<col style="width: 50%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Folder</th>
-<th>Content</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>vsearch/</code></td>
-<td>FASTA files with simplified sequence identifiers and a separate taxonomy table, compatible with VSEARCH <code>--usearch_global</code></td>
-</tr>
-<tr class="even">
-<td><code>dada2/</code></td>
-<td>Training FASTA files formatted for DADA2 taxonomy-assignment functions</td>
-</tr>
-</tbody>
-</table>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Note
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>These are <strong>VSEARCH-compatible</strong> and <strong>DADA2-compatible</strong> exports, not native output formats of those tools. See <a href="./usage.html">Usage</a> for example commands.</p>
-</div>
-</div>
 </section>
 <section id="files-excluded-from-public-releases" class="level2">
 <h2 class="anchored" data-anchor-id="files-excluded-from-public-releases">Files excluded from public releases</h2>
@@ -817,7 +775,7 @@ cluster-specific configuration files</code></pre>
 <footer class="footer">
   <div class="nav-footer">
     <div class="nav-footer-left">
-<p>VirMarkDB — curated viral marker database</p>
+<p>VirMarkDB - viral marker database</p>
 </div>   
     <div class="nav-footer-center">
       &nbsp;

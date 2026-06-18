@@ -20,7 +20,6 @@ For public use, the curated release is distributed as a versioned archive throug
 VirMarkDB_vX.Y.Z/
 ├── markers/
 ├── virus_informations/
-├── export_format/
 ├── README.md
 ├── CITATION.cff
 ├── LICENSE
@@ -54,8 +53,6 @@ Example:
 ```text
 >AF012825.2_156 atpase Bamfordvirae;Nucleocytoviricota;...;Species_name
 ```
-
-Terminal stop characters (`*`) are removed from exported protein sequences.
 
 ### Nucleotide FASTA header
 
@@ -96,19 +93,6 @@ Example structure of `virus_compo_taxo.tsv`:
 ```text
 virus_id | ICTV_ID | Virus_names | atpase_nucleocytoviricota_orf_names | dnapol_nucleocytoviricota_orf_names | ...
 ```
-
-## export_format/
-
-Tool-specific exports are derived from the curated marker outputs to simplify reuse in common sequence-assignment workflows.
-
-| Folder | Content |
-|---|---|
-| `vsearch/` | FASTA files with simplified sequence identifiers and a separate taxonomy table, compatible with VSEARCH `--usearch_global` |
-| `dada2/` | Training FASTA files formatted for DADA2 taxonomy-assignment functions |
-
-::: {.callout-note}
-These are **VSEARCH-compatible** and **DADA2-compatible** exports, not native output formats of those tools. See [Usage](usage.qmd) for example commands.
-:::
 
 ## Files excluded from public releases
 

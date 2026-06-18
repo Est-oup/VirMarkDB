@@ -39,7 +39,7 @@ website:
         text: About
 
   page-footer:
-    left: "VirMarkDB — curated viral marker database"
+    left: "VirMarkDB - viral marker database"
     right:
       - text: GitHub
         href: https://github.com/Est-oup/VirMarkDB

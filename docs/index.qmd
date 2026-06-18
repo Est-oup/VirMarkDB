@@ -11,7 +11,7 @@ toc: false
 </div>
 <p class="lead">
 
-VirMarkDB is a curated reference database of viral marker-gene sequences for <strong>*Nucleocytoviricota*</strong> within <strong>*Bamfordvirae*</strong>. It provides protein and nucleotide FASTA files, HMM profiles, and tool-compatible exports for taxonomic assignment, marker-based phylogeny and marker detection workflows.
+VirMarkDB is a curated reference database of viral marker-gene sequences for <strong>*Nucleocytoviricota*</strong> within <strong>*Bamfordvirae*</strong>. It provides protein and nucleotide FASTA files, HMM profiles, marker-based phylogeny and marker detection workflows.
 </p>
 
 <div class="hero-actions">

@@ -4,18 +4,6 @@ description: "Database generation."
 page-layout: full
 ---
 
-```{r}
-#| echo: false
-#| include: false
-
-workflow_src <- file.path("..", "input", "workflow.excalidraw.png")
-workflow_dst <- file.path("assets", "workflow.excalidraw.png")
-
-if (file.exists(workflow_src)) {
-  dir.create(dirname(workflow_dst), recursive = TRUE, showWarnings = FALSE)
-  file.copy(workflow_src, workflow_dst, overwrite = TRUE)
-}
-```
 
 # Workflow overview
 
@@ -24,8 +12,7 @@ VirMarkDB documents how the database is generated, how marker-specific HMM profi
 
 ```{=html}
 <div class="workflow-figure">
-  <img src="assets/workflow.excalidraw.png" alt="VirMarkDB workflow overview"
-    onerror="this.style.display='none'; this.parentElement.classList.add('missing-workflow-img'); this.parentElement.innerHTML='<p><strong>Workflow figure not found.</strong><br>Copy <code>input/workflow.excalidraw.png</code> to <code>docs/assets/workflow.excalidraw.png</code> before rendering.</p>';">
+  <img src="assets/workflow.excalidraw.png" alt="VirMarkDB workflow overview">
 </div>
 ```
 
