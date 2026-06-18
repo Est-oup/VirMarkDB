@@ -1,0 +1,66 @@
+---
+title: ""
+description: "Reference database of viral marker-gene sequences"
+page-layout: full
+toc: false
+---
+
+::: {.hero}
+<div class="hero-logo">
+![](assets/logo_virmark_blank.png){width="800"}
+</div>
+<p class="lead">
+
+VirMarkDB is a curated reference database of viral marker-gene sequences for <strong>*Nucleocytoviricota*</strong> within <strong>*Bamfordvirae*</strong>. It provides protein and nucleotide FASTA files, HMM profiles, and tool-compatible exports for taxonomic assignment, marker-based phylogeny and marker detection workflows.
+</p>
+
+<div class="hero-actions">
+<a class="btn-vm primary" href="releases.html">Download</a>
+<a class="btn-vm secondary" href="database.html">Database</a>
+<a class="btn-vm secondary" href="workflow.html">Workflow</a>
+</div>
+
+<div class="badge-row">
+<span class="vm-badge">*Bamfordvirae*</span>
+<span class="vm-badge">*Nucleocytoviricota*</span>
+<span class="vm-badge">8 marker genes</span>
+<span class="vm-badge">15 viral families</span>
+<span class="vm-badge">225 genomes</span>
+</div>
+:::
+
+## Current snapshot
+
+::: {.card-grid}
+::: {.vm-card}
+<div class="metric">8</div>
+<div class="metric-label">marker genes</div>
+:::
+
+::: {.vm-card}
+<div class="metric">15</div>
+<div class="metric-label">viral families</div>
+:::
+
+::: {.vm-card}
+<div class="metric">225</div>
+<div class="metric-label">incorporated genomes</div>
+:::
+
+::: {.vm-card}
+<div class="metric">8</div>
+<div class="metric-label">marker groups (current release)</div>
+:::
+:::
+
+## Documentation map
+
+| Page | Content |
+|---|---|
+| [Database](database.qmd) | Taxonomic scope, marker genes, marker groups, taxon-aware HMM strategy, coverage table |
+| [Workflow](workflow.qmd) | Input sources, ORF prediction, HMM construction, HMM search, hit selection, benchmark-guided refinement |
+| [Files & formats](files-formats.qmd) | Release archive structure, FASTA headers, TSV column descriptions, tool-specific exports |
+| [Analyses](analysis.qmd) | Coverage tables and figures generated from the current release |
+| [Releases](releases.qmd) | Downloadable archives, checksums, changelog and versioning policy |
+| [Contribute](contribute.qmd) | How to report issues, add genomes or proteins, correct taxonomy |
+| [About](about.qmd) | Citation, license, references, known limitations |

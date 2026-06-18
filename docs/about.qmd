@@ -1,0 +1,129 @@
+---
+title: "About"
+description: "Citation, license, references, contact and known limitations"
+page-layout: full
+---
+
+# Citation
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| results: asis
+
+citation_file <- file.path("..", "CITATION.cff")
+
+if (file.exists(citation_file)) {
+  citation <- yaml::read_yaml(citation_file)
+
+  format_author <- function(author) {
+    given <- author[["given-names"]]
+    family <- author[["family-names"]]
+
+    if (!is.null(given) && !is.null(family)) {
+      paste(given, family)
+    } else if (!is.null(author[["name"]])) {
+      author[["name"]]
+    } else {
+      NA_character_
+    }
+  }
+
+  authors <- citation$authors
+  authors_text <- if (!is.null(authors)) {
+    paste(vapply(authors, format_author, character(1)), collapse = ", ")
+  } else {
+    "To be completed"
+  }
+
+  citation_table <- data.frame(
+    Field = c(
+      "Title",
+      "Authors",
+      "Version",
+      "Date released",
+      "DOI",
+      "Repository",
+      "URL",
+      "License"
+    ),
+    Value = c(
+      citation$title %||% "To be completed",
+      authors_text,
+      citation$version %||% "To be completed",
+      citation[["date-released"]] %||% "To be completed",
+      citation$doi %||% "To be added after Zenodo deposition",
+      citation[["repository-code"]] %||% "To be completed",
+      citation$url %||% "To be completed",
+      citation$license %||% "See LICENSE"
+    ),
+    check.names = FALSE
+  )
+
+  cat("### Citation metadata\\n\\n")
+  cat(knitr::kable(citation_table, format = "html", escape = TRUE))
+
+  cat("\\n\\n### Suggested citation\\n\\n")
+  cat("```text\\n")
+  cat(
+    paste0(
+      authors_text,
+      ". ",
+      citation$title %||% "VirMarkDB",
+      ". Version ",
+      citation$version %||% "To be completed",
+      ". ",
+      citation[["repository-code"]] %||% "https://github.com/Est-oup/VirMarkDB",
+      "\\n"
+    )
+  )
+  cat("```\\n")
+} else {
+  cat(
+    '<p><strong>CITATION.cff not found.</strong><br>',
+    'Expected path: <code>../CITATION.cff</code>.</p>'
+  )
+}
+```
+
+::: {.callout-note}
+**Suggested citation**
+
+TO_COMPLETE TO_COMPLETE. VirMarkDB. Version 1.0.0. https://github.com/Est-oup/VirMarkDB
+:::
+
+
+## License
+
+VirMarkDB is distributed under the CC-BY-4.0 license, you can view it here: [LICENSE](https://github.com/Est-oup/VirMarkDB/blob/dev/LICENSE).
+
+## References
+
+### ICTV resources
+
+- ICTV Virus Metadata Resource: `VMR_MSL41.v1.20260320`.
+
+### Reference datasets
+
+- Guglielmini et al. 2019 — diversification of giant and large eukaryotic dsDNA viruses predating the origin of modern eukaryotes. Associated Zenodo supplementary data were used as one of the reference protein sources.
+
+## Contact
+
+Use the GitHub issue tracker for questions, corrections, missing taxa, suspicious marker assignments, and reproducibility problems: [Open an issue](https://github.com/Est-oup/VirMarkDB/issues).
+
+## Notes and limitations {#notes-and-limitations}
+
+**ORF prediction.** ORFs are predicted with Prodigal in metagenomic mode. This approach is practical and robust, but some viral coding sequences may still be difficult to predict correctly. Genes containing introns, inteins, sequencing artefacts, or internal stop codons may lead to truncated or fragmented predicted proteins.
+
+**Partial genome records.** Some source genomes are partial records. Missing markers in those entries may therefore reflect incomplete sequence coverage rather than true biological absence.
+
+**HMM profile performance.** Profile sensitivity depends on the diversity, quality, and taxonomic coverage of the seed reference protein sets. Under-represented lineages may show lower detection rates.
+
+**Marker-group scope.** HMM profiles are currently defined per marker group. Each marker group links a marker gene, a taxonomic scope, a reference protein set, and the corresponding HMM profile. Divergent lineages outside the current marker-group scope may not be detected reliably.
+
+**Missing value interpretation.** `NA` or zero values in marker presence tables mean *not detected or not retained under the current workflow and thresholds*. They should not be interpreted as confirmed biological absence.
+
+**Benchmark filtering.** The benchmark-guided refinement strategy is empirical and was designed as a practical way to clean large external protein pools before marker-coverage assessment. It is not a formal validation.
+
+**Current taxonomic scope.** The database currently covers Nucleocytoviricota. Additional viral groups will be added if suitable marker references and genome mappings become available.

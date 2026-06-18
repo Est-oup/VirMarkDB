@@ -1,0 +1,13 @@
+name: virmarkdb
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - r-base=4.5.2
+  - prodigal=2.6.3
+  - mafft=7.525
+  - hmmer=3.3.2
+  - blast=2.16.0
+  - mmseqs2=15.6f452
+  - cd-hit=4.8.1
+  - quarto

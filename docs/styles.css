@@ -1,0 +1,338 @@
+/* VirMarkDB custom style */
+
+:root {
+  --vm-blue: #0B1F3A;
+  --vm-blue-2: #123B66;
+  --vm-cyan: #2FB7C7;
+  --vm-green: #7BC96F;
+  --vm-bg: #F6F9FC;
+  --vm-card: #FFFFFF;
+  --vm-border: #DDE7F0;
+  --vm-muted: #5B6B7A;
+  --vm-text: #17212B;
+}
+
+body {
+  background: var(--vm-bg);
+  color: var(--vm-text);
+}
+
+/* Navbar */
+.navbar-title {
+  font-weight: 800;
+  letter-spacing: 0.2px;
+}
+
+/* TOC sidebar */
+#quarto-sidebar-toc-left {
+  background: transparent;
+}
+
+nav#TOC a {
+  color: var(--vm-muted);
+  font-size: 0.88rem;
+}
+
+nav#TOC a:hover,
+nav#TOC a.active {
+  color: var(--vm-blue);
+  font-weight: 600;
+}
+
+/* Hero — index only, full bleed */
+.hero {
+  background:
+    radial-gradient(circle at top right, rgba(47, 183, 199, 0.28), transparent 34%),
+    linear-gradient(135deg, #08192F 0%, #0B1F3A 52%, #123B66 100%);
+  color: white;
+  border-radius: 24px;
+  padding: 3.6rem 3rem;
+  margin: 0.8rem 0 2rem 0;
+  box-shadow: 0 18px 48px rgba(11, 31, 58, 0.20);
+}
+
+.hero h1 {
+  color: white;
+  font-size: clamp(2.2rem, 5vw, 4.2rem);
+  line-height: 1;
+  font-weight: 900;
+  margin-bottom: 1rem;
+}
+
+.hero .lead {
+  color: #DDEFFF;
+  max-width: 680px;
+  font-size: 1.12rem;
+  line-height: 1.6;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  margin-top: 1.4rem;
+}
+
+.btn-vm {
+  display: inline-block;
+  padding: 0.62rem 1rem;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.95rem;
+  border: 1px solid rgba(255,255,255,0.28);
+}
+
+.btn-vm.primary {
+  background: white;
+  color: var(--vm-blue);
+}
+
+.btn-vm.secondary {
+  color: white;
+  background: rgba(255,255,255,0.10);
+}
+
+.badge-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 1.4rem;
+}
+
+.vm-badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 0.3rem 0.65rem;
+  font-size: 0.85rem;
+  color: #DDFBFF;
+  background: rgba(47, 183, 199, 0.14);
+  border: 1px solid rgba(47, 183, 199, 0.35);
+}
+
+/* Card grids — 2-col by default so they fit inside the content column */
+.card-grid,
+.download-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin: 1.2rem 0;
+}
+
+.vm-card,
+.download-card {
+  background: var(--vm-card);
+  border: 1px solid var(--vm-border);
+  border-radius: 16px;
+  padding: 1.1rem 1.2rem;
+  box-shadow: 0 6px 20px rgba(11, 31, 58, 0.05);
+}
+
+/* Span variants kept for index page (page-layout: full) */
+.vm-card.full,
+.download-card.primary-download {
+  grid-column: span 2;
+}
+
+.vm-card h3,
+.download-card h3 {
+  margin-top: 0;
+  margin-bottom: 0.4rem;
+  color: var(--vm-blue);
+  font-weight: 800;
+}
+
+.vm-card p,
+.download-card p {
+  color: var(--vm-muted);
+  margin-bottom: 0;
+}
+
+.download-card code {
+  display: block;
+  margin-top: 0.8rem;
+  padding: 0.6rem;
+  background: #F0F5F9;
+  border-radius: 10px;
+}
+
+/* Metrics */
+.metric {
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--vm-blue);
+  line-height: 1;
+}
+
+.metric-label {
+  color: var(--vm-muted);
+  font-size: 0.92rem;
+  margin-top: 0.3rem;
+}
+
+/* Marker pills */
+.marker-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+
+.marker {
+  font-family: var(--bs-font-monospace);
+  background: #EAF7FA;
+  color: #0B5360;
+  border: 1px solid #BEE9F0;
+  border-radius: 10px;
+  padding: 0.38rem 0.6rem;
+  font-size: 0.9rem;
+}
+
+/* Workflow steps */
+.workflow-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.8rem;
+  margin: 1.2rem 0;
+}
+
+.workflow-step {
+  background: white;
+  border: 1px solid var(--vm-border);
+  border-radius: 14px;
+  padding: 0.9rem;
+}
+
+.workflow-step .num {
+  width: 1.8rem;
+  height: 1.8rem;
+  border-radius: 50%;
+  background: var(--vm-blue);
+  color: white;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 800;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.workflow-step h3 {
+  font-size: 0.97rem;
+  margin: 0.2rem 0;
+  color: var(--vm-blue);
+}
+
+.workflow-step p {
+  color: var(--vm-muted);
+  font-size: 0.88rem;
+  margin-bottom: 0;
+}
+
+/* Workflow figure */
+.workflow-figure {
+  background: white;
+  border: 1px solid var(--vm-border);
+  border-radius: 16px;
+  padding: 0.8rem;
+  margin: 1.2rem 0 1.8rem 0;
+  box-shadow: 0 6px 20px rgba(11, 31, 58, 0.05);
+}
+
+.workflow-figure img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 10px;
+}
+
+.missing-workflow-img {
+  color: var(--vm-muted);
+  padding: 1rem;
+}
+
+/* Callouts */
+.callout-note,
+.callout-tip,
+.callout-warning,
+.callout-important {
+  border-radius: 12px;
+}
+
+/* Tables */
+table {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  font-size: 0.93rem;
+}
+
+thead th {
+  background: #EAF1F8 !important;
+  color: var(--vm-blue) !important;
+}
+
+/* Details */
+details {
+  background: white;
+  border: 1px solid var(--vm-border);
+  border-radius: 12px;
+  padding: 0.9rem 1rem;
+  margin: 1rem 0;
+}
+
+summary {
+  cursor: pointer;
+  font-weight: 700;
+  color: var(--vm-blue);
+}
+
+/* Code blocks */
+pre.text,
+pre.sourceCode,
+pre {
+  border-radius: 12px;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .hero {
+    padding: 2rem 1.2rem;
+    border-radius: 16px;
+  }
+
+  .card-grid,
+  .download-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .vm-card.full,
+  .download-card.primary-download {
+    grid-column: span 1;
+  }
+
+  .workflow-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .workflow-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Table managment */
+.table-scroll {
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+/* Image center */
+.hero-logo img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 1rem;
+}

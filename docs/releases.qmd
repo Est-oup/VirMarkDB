@@ -1,0 +1,88 @@
+---
+title: "Releases"
+description: "Download VirMarkDB, checksums, changelog and versioning policy"
+page-layout: full
+---
+
+# Releases
+
+::: {.callout-warning}
+No public release has been deposited yet. This page will be updated with download links, checksums and a DOI when the first archive is deposited on Zenodo.
+:::
+
+## Current release
+
+::: {.card-grid}
+::: {.vm-card}
+### Version
+
+<div class="metric">—</div>
+<div class="metric-label">not yet deposited</div>
+:::
+
+::: {.vm-card}
+### Distribution
+
+The complete release will be distributed as a single versioned archive on Zenodo.
+
+```text
+VirMarkDB_vX.Y.Z.tar.gz
+```
+:::
+:::
+
+## Download
+
+<div class="download-grid">
+  <div class="download-card primary-download">
+    <h3>Complete release archive</h3>
+    <p>All curated marker sequences, metadata tables, tool-compatible exports, citation file, license and changelog.</p>
+    <p><em>Zenodo link to be added after deposit.</em></p>
+  </div>
+</div>
+
+## Archive contents
+
+For a description of each file and folder in the release archive, see [Files & formats](files-formats.qmd).
+
+## Checksums
+
+```bash
+sha256sum VirMarkDB_vX.Y.Z.tar.gz > VirMarkDB_vX.Y.Z.sha256
+```
+
+| File | SHA256 |
+|---|---|
+| `VirMarkDB_vX.Y.Z.tar.gz` | — |
+
+## Changelog
+
+See `CHANGELOG.md` in the repository root for the full version history.
+
+## Previous releases
+
+| Version | Date | DOI | Notes |
+|---|---|---|---|
+| — | — | — | No previous releases |
+
+## Versioning policy
+
+| Change type | Version increment | Example |
+|---|---|---|
+| New marker group or major restructuring | Major | `v1.0.0` → `v2.0.0` |
+| Added genomes, proteins or improved coverage | Minor | `v1.0.0` → `v1.1.0` |
+| Documentation or small metadata corrections | Patch | `v1.0.0` → `v1.0.1` |
+
+## Release checklist
+
+Before each public release:
+
+- regenerate `output/VirMarkDB/`;
+- run `Rscript docs/scripts/build_docs_analysis.R`;
+- update `docs/data/` tables;
+- update this release page (version, date, DOI, checksum);
+- update `CHANGELOG.md`;
+- update `CITATION.cff`;
+- build archive and compute checksum;
+- deposit archive on Zenodo;
+- update DOI and download link above.

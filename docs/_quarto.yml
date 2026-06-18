@@ -1,0 +1,64 @@
+project:
+  type: website
+  output-dir: .
+
+website:
+  title: "VirMarkDB"
+  site-url: "https://Est-oup.github.io/VirMarkDB/"
+  repo-url: "https://github.com/Est-oup/VirMarkDB"
+  repo-actions: [issue, source]
+  page-navigation: true
+  back-to-top-navigation: true
+  favicon: assets/logo_virmark.png
+  image: assets/logo_virmark.png
+
+  search:
+    location: navbar
+    type: overlay
+
+  navbar:
+    logo: assets/logo_virmark.png
+    logo-alt: "VirMarkDB logo"
+    logo-href: index.qmd
+    pinned: true
+    background: "#0B1F3A"
+    left:
+      - href: index.qmd
+        text: Home
+      - href: database.qmd
+        text: Database
+      - href: workflow.qmd
+        text: Workflow
+      - href: releases.qmd
+        text: Releases
+      - href: analysis.qmd
+        text: Analyses
+      - href: contribute.qmd
+        text: Contribute
+      - href: about.qmd
+        text: About
+
+  page-footer:
+    left: "VirMarkDB — curated viral marker database"
+    right:
+      - text: GitHub
+        href: https://github.com/Est-oup/VirMarkDB
+      - text: Issues
+        href: https://github.com/Est-oup/VirMarkDB/issues
+      - text: Zenodo
+        href: https://zenodo.org/
+
+format:
+  html:
+    theme: cosmo
+    css: styles.css
+    toc: true
+    toc-depth: 3
+    toc-location: left
+    number-sections: false
+    code-copy: true
+    smooth-scroll: true
+    link-external-newwindow: true
+
+execute:
+  freeze: auto

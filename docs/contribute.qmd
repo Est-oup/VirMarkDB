@@ -1,0 +1,69 @@
+---
+title: "Contribute"
+description: "How to report issues, add genomes or proteins, and correct taxonomy"
+page-layout: full
+---
+
+# Contribute
+
+Contributions, corrections and suggestions are welcome via the GitHub issue tracker and pull requests.
+
+## Issue tracker
+
+Open an issue for:
+
+- suspicious or incorrect marker assignments;
+- missing taxa or poorly represented lineages;
+- requests for new marker groups;
+- questions about workflow provenance or reproducibility;
+- documentation corrections.
+
+```text
+https://github.com/Est-oup/VirMarkDB/issues
+```
+
+## Pull request workflow
+
+1. Open an issue describing the proposed change.
+2. Fork the repository.
+3. Create a dedicated branch.
+4. Modify the relevant files.
+5. Check metadata consistency (see checklist below).
+6. Open a pull request referencing the issue.
+
+## Adding reference proteins
+
+When proposing a new marker-protein reference, provide:
+
+| Field | Description |
+|---|---|
+| `marker` | Marker name matching an existing identifier |
+| `protein_accession` | Protein accession or stable identifier |
+| `source` | Source database, publication or curation source |
+| `taxonomy` | ICTV-compatible taxonomy when possible |
+| `reason` | Why this sequence should be added |
+
+## Adding reference genomes
+
+When proposing a new reference genome, provide:
+
+| Field | Description |
+|---|---|
+| `genome_accession` | Genome accession or stable identifier |
+| `virus_name` | Virus name |
+| `ICTV_ID` | ICTV identifier when available |
+| `taxonomy` | Taxonomic assignment |
+| `source` | Source database or publication |
+| `reason` | Why this genome should be added |
+
+## Metadata consistency checklist
+
+Before opening a pull request:
+
+- identifiers are stable and not session-specific;
+- marker names match existing marker identifiers in `mapfile.tsv`;
+- `group_id` and `marker_group_id` use lowercase identifiers without spaces;
+- taxonomy is consistent from Kingdom to Species;
+- missing taxonomy ranks are coded as `NA`;
+- added files are not cluster-specific;
+- `input/ncbi.creds` and other private credentials are never committed.

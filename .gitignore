@@ -3,3 +3,8 @@ input/ncbi_taxonomy
 output
 *out
 *.json
+docs2
+docs/*.html
+docs/analysis_files/
+docs/_freeze
+docs/site_libs
