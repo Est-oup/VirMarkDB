@@ -95,7 +95,7 @@ VirMarkDB_vX.Y.Z/
 <div class="vm-subtitle">Markers</div>
 Organised by taxonomic group and marker:
 ```text
-markers/<group_id>/<marker
+markers/<group_id>/<marker>/
 ``` 
 
 | File | Description |
