@@ -1,12 +1,20 @@
-cff-version: 1.2.0
+cff-version: 1.0.0
 title: "VirMarkDB"
 message: "If you use VirMarkDB, please cite it using the metadata from this file."
 type: dataset
 authors:
-  - family-names: "Estoup Paul, Nicolas Henry, Erwan Corre, Anne-Claire Baudoux"
-repository-code: "https://Est-oup.com/Est-oup/VirMarkDB"
-url: "https://Est-oup.github.io/VirMarkDB/"
-abstract: "VirMarkDB is a viral marker database for taxonomic assignations and phylogeny."
+  - given-names: "Paul"
+    family-names: "Estoup"
+  - given-names: "Nicolas"
+    family-names: "Henry"
+  - given-names: "Erwan"
+    family-names: "Corre"
+  - given-names: "Anne-Claire"
+    family-names: "Baudoux"
+
+repository-code: "https://github.com/Est-oup/VirMarkDB"
+url: "https://est-oup.github.io/VirMarkDB/"
+abstract: "VirMarkDB is a curated reference database providing protein sequences of viral marker genes for Nucleocytoviricota within Bamfordvirae."
 
 keywords:
   - viruses
