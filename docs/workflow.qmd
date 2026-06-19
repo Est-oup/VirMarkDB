@@ -1,5 +1,5 @@
 ---
-title: "Workflow"
+title: ""
 description: "Database generation."
 page-layout: full
 ---
@@ -18,11 +18,18 @@ VirMarkDB documents how the database is generated, how marker-specific HMM profi
 
 ## Input and provenance
 
+::: {.vm-section}
+
 ### ICTV resources
 
-The initial genome manifest and associated taxonomy are derived from the ICTV Virus Metadata Resource `VMR_MSL41.v1.20260320`, released on 2026-03-20.
+The initial genome manifest and associated taxonomy are derived from the ICTV Virus Metadata Resource [VMR_MSL41.v1.20260320](https://ictv.global/sites/default/files/VMR/VMR_MSL41.v1.20260320.xlsx), released on 2026-03-20.
 
 The VMR provides virus names, ICTV identifiers, taxonomy from Kingdom to Species, GenBank accession information, genome composition, and host-source metadata.
+
+::: {.text-center}
+[![](assets/ictv_logo.png){fig-alt="ICTV logo" width="120"}](https://ictv.global/)
+:::
+
 
 ### Additional genome inputs
 
@@ -178,9 +185,11 @@ Reference proteins come from three source types:
 | Published reference datasets | Initial conserved NCLDV marker-protein reference set |
 | Manual curation | Added when a marker was missing or poorly represented |
 | Benchmark-guided additions | Added after benchmark analysis to improve marker coverage |
+:::
 
 ## General workflow
 
+::: {.vm-section}
 ```{=html}
 <div class="workflow-grid">
   <div class="workflow-step">
@@ -210,34 +219,30 @@ Reference proteins come from three source types:
   </div>
 </div>
 ```
+:::
 
 ## ORF prediction
 
+::: {.vm-section}
 ORFs are predicted from each genome using Prodigal in metagenomic mode:
 
 ```bash
 prodigal -p meta
 ```
 
-Script:
-
-```text
-scripts/database_generation/02_prodigal.bash
-```
+Script: `scripts/database_generation/02_prodigal.bash`
+:::
 
 ## Reference alignment and HMM construction
 
+::: {.vm-section}
 Reference proteins are aligned with MAFFT:
 
 ```bash
 mafft --ep 0 --genafpair
 ```
 
-Script:
-
-```text
-scripts/database_generation/03_align_markers.bash
-```
+Script: `scripts/database_generation/03_align_markers.bash`
 
 Alignments are converted into HMM profiles with HMMER `hmmbuild`:
 
@@ -245,30 +250,23 @@ Alignments are converted into HMM profiles with HMMER `hmmbuild`:
 hmmbuild <output.hmm> <alignment.fasta>
 ```
 
-Script:
-
-```text
-scripts/database_generation/04_hmmbuild.bash
-```
+Script: `scripts/database_generation/04_hmmbuild.bash`
+:::
 
 ## HMM search
 
+::: {.vm-section}
 Predicted ORF proteomes are searched with `hmmsearch`.
 
-Each genome is searched only against the marker-group profiles assigned to its taxonomic scope through:
+Each genome is searched only against the marker-group profiles assigned to its taxonomic scope through: `genome_marker_map.tsv`
 
-```text
-genome_marker_map.tsv
-```
+Script: `scripts/database_generation/05_hmmsearch.bash`
 
-Script:
-
-```text
-scripts/database_generation/05_hmmsearch.bash
-```
+:::
 
 ## Hit selection
 
+::: {.vm-section}
 For each genome × marker-group combination, HMM hits are ranked by increasing e-value and then by decreasing bit score.
 
 The best-ranked hit is always retained. Additional hits are kept only when they are close to the best hit in both score and length.
@@ -283,12 +281,14 @@ scripts/database_generation/06_final_results.R
 |---|---:|
 | Score ratio relative to the best hit | ≥ 0.80 |
 | Length ratio relative to the best hit | ≥ 0.80 |
+:::
 
-## Benchmark-guided refinement
+## Quality check 
 
+::: {.vm-section}
 VirMarkDB is evaluated against a broader Bamfordvirae protein pool extracted from a local NCBI NR database.
 
-The objective of this benchmark is to detect marker diversity that is missing or underrepresented in the current release.
+The objective of this check is to detect marker diversity that is missing or underrepresented in the current release.
 
 <details>
 <summary>Benchmark steps</summary>
@@ -303,9 +303,11 @@ The objective of this benchmark is to detect marker diversity that is missing or
 | 6 | Cluster missing proteins with CD-HIT to reduce redundancy. | `scripts/benchmarking/12_clusterise_missing_prot.bash` |
 
 </details>
+:::
 
 ## Software versions
 
+::: {.vm-section}
 | Tool | Version |
 |---|---|
 | R | 4.5.2 |
@@ -315,5 +317,4 @@ The objective of this benchmark is to detect marker diversity that is missing or
 | BLAST+ | 2.16.0 |
 | MMseqs2 | 15.6f452 |
 | CD-HIT | 4.8.1 |
-
-A versioned Conda environment is provided in `docs/environment.yml` for reproducibility.
+:::

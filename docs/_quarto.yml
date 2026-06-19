@@ -17,7 +17,7 @@ website:
     type: overlay
 
   navbar:
-    logo: assets/logo_virmark.png
+    logo: assets/logo_virmark_blank.png
     logo-alt: "VirMarkDB logo"
     logo-href: index.qmd
     pinned: true
@@ -30,7 +30,7 @@ website:
       - href: workflow.qmd
         text: Workflow
       - href: releases.qmd
-        text: Releases
+        text: Download & Releases
       - href: analysis.qmd
         text: Analyses
       - href: contribute.qmd

@@ -1,5 +1,5 @@
 ---
-title: "About"
+title: ""
 description: "Citation, license, references, contact and known limitations"
 page-layout: full
 ---
@@ -61,24 +61,7 @@ if (file.exists(citation_file)) {
     check.names = FALSE
   )
 
-  cat("### Citation metadata\\n\\n")
   cat(knitr::kable(citation_table, format = "html", escape = TRUE))
-
-  cat("\\n\\n### Suggested citation\\n\\n")
-  cat("```text\\n")
-  cat(
-    paste0(
-      authors_text,
-      ". ",
-      citation$title %||% "VirMarkDB",
-      ". Version ",
-      citation$version %||% "To be completed",
-      ". ",
-      citation[["repository-code"]] %||% "https://github.com/Est-oup/VirMarkDB",
-      "\\n"
-    )
-  )
-  cat("```\\n")
 } else {
   cat(
     '<p><strong>CITATION.cff not found.</strong><br>',
@@ -102,7 +85,7 @@ VirMarkDB is distributed under the CC-BY-4.0 license, you can view it here: [LIC
 
 ### ICTV resources
 
-- ICTV Virus Metadata Resource: `VMR_MSL41.v1.20260320`.
+- ICTV Virus Metadata Resource: [`VMR_MSL41.v1.20260320`](https://ictv.global/sites/default/files/VMR/VMR_MSL41.v1.20260320.xlsx).
 
 ### Reference datasets
 
