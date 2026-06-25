@@ -4,22 +4,28 @@ description: "Taxonomic scope, marker genes, marker groups and coverage statisti
 page-layout: full
 ---
 
-# Database content
-
-VirMarkDB is a curated reference database of viral marker-gene sequences. The current release covers **Nucleocytoviricota** within **Bamfordvirae**, with taxonomy derived from the **ICTV Virus Metadata Resource (VMR_MSL41.v1.20260320)**.
-
 ## Taxonomic scope
+
+::: {.vm-section}
+VirMarkDB is a curated reference database of viral marker-gene sequences. The current release covers **Nucleocytoviricota** within **Bamfordvirae**, with taxonomy derived from the **ICTV Virus Metadata Resource ([VMR_MSL41.v1.20260320](https://ictv.global/sites/default/files/VMR/VMR_MSL41.v1.20260320.xlsx))**.
+
+::: {.text-center}
+[![](assets/ictv_logo.png){fig-alt="ICTV logo" width="120"}](https://ictv.global/)
+:::
 
 | Rank | Value |
 |---|---|
 | Kingdom | Bamfordvirae |
 | Phylum | Nucleocytoviricota |
-| Source | ICTV VMR_MSL41.v1.20260320 |
+| Source | [ICTV](https://ictv.global/) [VMR_MSL41.v1.20260320](https://ictv.global/sites/default/files/VMR/VMR_MSL41.v1.20260320.xlsx) |
 
 Taxonomy from Kingdom to Species is derived from the ICTV VMR. Manual genome additions follow the same taxonomy fields.
+:::
+
 
 ## Marker genes
 
+::: {.vm-section}
 The current release includes eight conserved marker genes for Nucleocytoviricota.
 
 <div class="marker-list">
@@ -44,8 +50,11 @@ The current release includes eight conserved marker genes for Nucleocytoviricota
 | `tf2s` | Transcription factor S-II / TFIIS-like |
 | `vltf3` | Viral late transcription factor 3 |
 
+:::
+
 ## Lineage-specific markers and HMM profiles
 
+::: {.vm-section}
 Some viral marker genes are too divergent to be represented by a single **HMM profile** across all viral lineages. In addition, not all **marker genes** are relevant for all taxonomic groups. For this reason, **VirMarkDB** uses marker groups to associate **marker genes** with specific viral lineages and **dedicated HMM profiles**.
 
 Each marker group links:
@@ -58,9 +67,16 @@ More details on [Workflow](workflow.qmd) page.
 
 This structure allows **VirMarkDB** to build separate HMM profiles for divergent lineages while keeping a common marker-gene framework across the database.
 
+:::
+
+
 ## Output files and formats
 
-### Release archive structure
+::: {.vm-section}
+
+::: {.vm-subsection}
+<div class="vm-subtitle">Release archive structure</div>
+
 
 The public release is distributed as a versioned archive. See [Releases](releases.qmd) for download links.
 
@@ -73,12 +89,13 @@ VirMarkDB_vX.Y.Z/
 ├── LICENSE
 └── CHANGELOG.md
 ```
+:::
 
-### markers/
-
+::: {.vm-subsection}
+<div class="vm-subtitle">Markers</div>
 Organised by taxonomic group and marker:
 ```text
-markers/<group_id>/<marker
+markers/<group_id>/<marker>/
 ``` 
 
 | File | Description |
@@ -93,7 +110,7 @@ markers/<group_id>/<marker
 >orf_name marker Kingdom;Phylum;Class;Order;Family;Genus;Species
 ```
 
-**ORF description table — main columns**
+**ORF description table**
 
 | Column | Description |
 |:---:|---|
@@ -106,25 +123,24 @@ markers/<group_id>/<marker
 | `score_ratio` | ORF score / best score for this genome × marker group |
 | `length_ratio` | ORF length / best ORF length for this genome × marker group |
 
-### virus_informations/
+:::
+
+::: {.vm-subsection}
+<div class="vm-subtitle">Virus_informations</div>
 
 | File | Description |
 |---|---|
 | `virus_compo_taxo.tsv` | Wide-format table: one row per genome, one column per marker group |
 | `virus_metadata.tsv` | Genome-level metadata: identifiers, virus names, host source, taxonomy |
 
-### export_format/
+:::
 
-Tool-specific exports derived from the curated marker outputs.
+:::
 
-| Folder | Content |
-|---|---|
-| `vsearch/` | FASTA files with simplified headers and a taxonomy table, compatible with `vsearch --usearch_global` |
-| `dada2/` | Training FASTA files formatted for DADA2 taxonomy-assignment functions |
-
-See [Usage](usage.qmd) for example commands.
 
 ## Coverage statistics
+
+::: {.vm-section}
 
 The table below shows the number of viral genomes represented per family and marker group in the current release.
 
@@ -156,4 +172,6 @@ For interactive coverage figures, see the [Analyses](analysis.qmd) page.
 
 ::: {.callout-important}
 Missing values do not automatically indicate true biological absence. They may reflect incomplete genome sequences, marker divergence, ORF prediction limits or filtering thresholds. See [About — limitations](about.qmd#notes-and-limitations) for details.
+:::
+
 :::

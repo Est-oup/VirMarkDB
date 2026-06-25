@@ -8,7 +8,7 @@
 
 <meta name="description" content="Database generation.">
 
-<title>Workflow – VirMarkDB</title>
+<title>workflow – VirMarkDB</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -119,8 +119,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="./index.html" class="navbar-brand navbar-brand-logo">
-    <img src="./assets/logo_virmark.png" alt="VirMarkDB logo" class="navbar-logo light-content">
-    <img src="./assets/logo_virmark.png" alt="VirMarkDB logo" class="navbar-logo dark-content">
+    <img src="./assets/logo_virmark_blank.png" alt="VirMarkDB logo" class="navbar-logo light-content">
+    <img src="./assets/logo_virmark_blank.png" alt="VirMarkDB logo" class="navbar-logo dark-content">
     </a>
     <a class="navbar-brand" href="./index.html">
     <span class="navbar-title">VirMarkDB</span>
@@ -146,7 +146,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./releases.html"> 
-<span class="menu-text">Releases</span></a>
+<span class="menu-text">Download &amp; Releases</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./analysis.html"> 
@@ -177,20 +177,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#workflow-overview" id="toc-workflow-overview" class="nav-link active" data-scroll-target="#workflow-overview">Workflow overview</a>
   <ul class="collapse">
-  <li><a href="#input-and-provenance" id="toc-input-and-provenance" class="nav-link" data-scroll-target="#input-and-provenance">Input and provenance</a>
-  <ul class="collapse">
-  <li><a href="#ictv-resources" id="toc-ictv-resources" class="nav-link" data-scroll-target="#ictv-resources">ICTV resources</a></li>
-  <li><a href="#additional-genome-inputs" id="toc-additional-genome-inputs" class="nav-link" data-scroll-target="#additional-genome-inputs">Additional genome inputs</a></li>
-  <li><a href="#marker-group-configuration" id="toc-marker-group-configuration" class="nav-link" data-scroll-target="#marker-group-configuration">Marker-group configuration</a></li>
-  <li><a href="#taxon-specific-marker-gene-detection" id="toc-taxon-specific-marker-gene-detection" class="nav-link" data-scroll-target="#taxon-specific-marker-gene-detection">Taxon-specific marker gene detection</a></li>
-  <li><a href="#hmm-profile-resources" id="toc-hmm-profile-resources" class="nav-link" data-scroll-target="#hmm-profile-resources">HMM profile resources</a></li>
-  </ul></li>
+  <li><a href="#input-and-provenance" id="toc-input-and-provenance" class="nav-link" data-scroll-target="#input-and-provenance">Input and provenance</a></li>
   <li><a href="#general-workflow" id="toc-general-workflow" class="nav-link" data-scroll-target="#general-workflow">General workflow</a></li>
   <li><a href="#orf-prediction" id="toc-orf-prediction" class="nav-link" data-scroll-target="#orf-prediction">ORF prediction</a></li>
   <li><a href="#reference-alignment-and-hmm-construction" id="toc-reference-alignment-and-hmm-construction" class="nav-link" data-scroll-target="#reference-alignment-and-hmm-construction">Reference alignment and HMM construction</a></li>
   <li><a href="#hmm-search" id="toc-hmm-search" class="nav-link" data-scroll-target="#hmm-search">HMM search</a></li>
   <li><a href="#hit-selection" id="toc-hit-selection" class="nav-link" data-scroll-target="#hit-selection">Hit selection</a></li>
-  <li><a href="#benchmark-guided-refinement" id="toc-benchmark-guided-refinement" class="nav-link" data-scroll-target="#benchmark-guided-refinement">Benchmark-guided refinement</a></li>
+  <li><a href="#quality-check" id="toc-quality-check" class="nav-link" data-scroll-target="#quality-check">Quality check</a></li>
   <li><a href="#software-versions" id="toc-software-versions" class="nav-link" data-scroll-target="#software-versions">Software versions</a></li>
   </ul></li>
   </ul>
@@ -201,30 +194,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
     </div>
 <!-- main -->
-<main class="content column-page-right" id="quarto-document-content">
-
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">Workflow</h1>
-</div>
-
-<div>
-  <div class="description">
-    Database generation.
-  </div>
-</div>
+<main class="content column-page-right" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
 
 
-<div class="quarto-title-meta column-page-right">
-
-    
-  
-    
-  </div>
-  
-
-
-</header>
 
 
 <section id="workflow-overview" class="level1">
@@ -235,10 +207,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <section id="input-and-provenance" class="level2">
 <h2 class="anchored" data-anchor-id="input-and-provenance">Input and provenance</h2>
+<div class="vm-section">
 <section id="ictv-resources" class="level3">
 <h3 class="anchored" data-anchor-id="ictv-resources">ICTV resources</h3>
-<p>The initial genome manifest and associated taxonomy are derived from the ICTV Virus Metadata Resource <code>VMR_MSL41.v1.20260320</code>, released on 2026-03-20.</p>
+<p>The initial genome manifest and associated taxonomy are derived from the ICTV Virus Metadata Resource <a href="https://ictv.global/sites/default/files/VMR/VMR_MSL41.v1.20260320.xlsx">VMR_MSL41.v1.20260320</a>, released on 2026-03-20.</p>
 <p>The VMR provides virus names, ICTV identifiers, taxonomy from Kingdom to Species, GenBank accession information, genome composition, and host-source metadata.</p>
+<div class="text-center">
+<p><a href="https://ictv.global/"><img src="assets/ictv_logo.png" class="img-fluid" alt="ICTV logo" width="120"></a></p>
+</div>
 </section>
 <section id="additional-genome-inputs" class="level3">
 <h3 class="anchored" data-anchor-id="additional-genome-inputs">Additional genome inputs</h3>
@@ -857,9 +833,11 @@ vltf3_nucleocytoviricota.tsv
 </tbody>
 </table>
 </section>
+</div>
 </section>
 <section id="general-workflow" class="level2">
 <h2 class="anchored" data-anchor-id="general-workflow">General workflow</h2>
+<div class="vm-section">
 <div class="workflow-grid">
   <div class="workflow-step">
     <span class="num">1</span>
@@ -887,35 +865,38 @@ vltf3_nucleocytoviricota.tsv
     <p>Best-ranked hits and credible additional copies are retained.</p>
   </div>
 </div>
+</div>
 </section>
 <section id="orf-prediction" class="level2">
 <h2 class="anchored" data-anchor-id="orf-prediction">ORF prediction</h2>
+<div class="vm-section">
 <p>ORFs are predicted from each genome using Prodigal in metagenomic mode:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">prodigal</span> <span class="at">-p</span> meta</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Script:</p>
-<pre class="text"><code>scripts/database_generation/02_prodigal.bash</code></pre>
+<p>Script: <code>scripts/database_generation/02_prodigal.bash</code></p>
+</div>
 </section>
 <section id="reference-alignment-and-hmm-construction" class="level2">
 <h2 class="anchored" data-anchor-id="reference-alignment-and-hmm-construction">Reference alignment and HMM construction</h2>
+<div class="vm-section">
 <p>Reference proteins are aligned with MAFFT:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">mafft</span> <span class="at">--ep</span> 0 <span class="at">--genafpair</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Script:</p>
-<pre class="text"><code>scripts/database_generation/03_align_markers.bash</code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">mafft</span> <span class="at">--ep</span> 0 <span class="at">--genafpair</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Script: <code>scripts/database_generation/03_align_markers.bash</code></p>
 <p>Alignments are converted into HMM profiles with HMMER <code>hmmbuild</code>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">hmmbuild</span> <span class="op">&lt;</span>output.hmm<span class="op">&gt;</span> <span class="op">&lt;</span>alignment.fasta<span class="op">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Script:</p>
-<pre class="text"><code>scripts/database_generation/04_hmmbuild.bash</code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">hmmbuild</span> <span class="op">&lt;</span>output.hmm<span class="op">&gt;</span> <span class="op">&lt;</span>alignment.fasta<span class="op">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Script: <code>scripts/database_generation/04_hmmbuild.bash</code></p>
+</div>
 </section>
 <section id="hmm-search" class="level2">
 <h2 class="anchored" data-anchor-id="hmm-search">HMM search</h2>
+<div class="vm-section">
 <p>Predicted ORF proteomes are searched with <code>hmmsearch</code>.</p>
-<p>Each genome is searched only against the marker-group profiles assigned to its taxonomic scope through:</p>
-<pre class="text"><code>genome_marker_map.tsv</code></pre>
-<p>Script:</p>
-<pre class="text"><code>scripts/database_generation/05_hmmsearch.bash</code></pre>
+<p>Each genome is searched only against the marker-group profiles assigned to its taxonomic scope through: <code>genome_marker_map.tsv</code></p>
+<p>Script: <code>scripts/database_generation/05_hmmsearch.bash</code></p>
+</div>
 </section>
 <section id="hit-selection" class="level2">
 <h2 class="anchored" data-anchor-id="hit-selection">Hit selection</h2>
+<div class="vm-section">
 <p>For each genome × marker-group combination, HMM hits are ranked by increasing e-value and then by decreasing bit score.</p>
 <p>The best-ranked hit is always retained. Additional hits are kept only when they are close to the best hit in both score and length.</p>
 <p>Script:</p>
@@ -938,11 +919,13 @@ vltf3_nucleocytoviricota.tsv
 </tr>
 </tbody>
 </table>
+</div>
 </section>
-<section id="benchmark-guided-refinement" class="level2">
-<h2 class="anchored" data-anchor-id="benchmark-guided-refinement">Benchmark-guided refinement</h2>
+<section id="quality-check" class="level2">
+<h2 class="anchored" data-anchor-id="quality-check">Quality check</h2>
+<div class="vm-section">
 <p>VirMarkDB is evaluated against a broader Bamfordvirae protein pool extracted from a local NCBI NR database.</p>
-<p>The objective of this benchmark is to detect marker diversity that is missing or underrepresented in the current release.</p>
+<p>The objective of this check is to detect marker diversity that is missing or underrepresented in the current release.</p>
 <details>
 <summary>
 Benchmark steps
@@ -994,9 +977,11 @@ Benchmark steps
 </tbody>
 </table>
 </details>
+</div>
 </section>
 <section id="software-versions" class="level2">
 <h2 class="anchored" data-anchor-id="software-versions">Software versions</h2>
+<div class="vm-section">
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -1035,7 +1020,7 @@ Benchmark steps
 </tr>
 </tbody>
 </table>
-<p>A versioned Conda environment is provided in <code>docs/environment.yml</code> for reproducibility.</p>
+</div>
 
 
 </section>

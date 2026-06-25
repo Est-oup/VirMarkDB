@@ -1,29 +1,61 @@
 /* VirMarkDB custom style */
 
+/* ----------------------------- */
+/* Theme variables               */
+/* ----------------------------- */
+
 :root {
-  --vm-blue: #0B1F3A;
-  --vm-blue-2: #123B66;
-  --vm-cyan: #2FB7C7;
-  --vm-green: #7BC96F;
-  --vm-bg: #F6F9FC;
-  --vm-card: #FFFFFF;
-  --vm-border: #DDE7F0;
-  --vm-muted: #5B6B7A;
-  --vm-text: #17212B;
+  --vm-blue: #0b1f3a;
+  --vm-blue-2: #123b66;
+  --vm-blue-3: #1f5f8f;
+  --vm-cyan: #2fb7c7;
+  --vm-cyan-soft: #d9f6ff;
+  --vm-green: #7bc96f;
+
+  --vm-bg: #f6f9fc;
+  --vm-card: #ffffff;
+  --vm-card-soft: #f8fbff;
+  --vm-border: #dde7f0;
+
+  --vm-text: #17212b;
+  --vm-muted: #5b6b7a;
+  --vm-muted-2: #6f8192;
+
+  --vm-shadow-sm: 0 6px 20px rgba(11, 31, 58, 0.05);
+  --vm-shadow-md: 0 18px 45px rgba(20, 35, 70, 0.10);
 }
+
+/* ----------------------------- */
+/* Global layout                 */
+/* ----------------------------- */
 
 body {
   background: var(--vm-bg);
   color: var(--vm-text);
 }
 
-/* Navbar */
+/* Keep links consistent with the VirMarkDB palette */
+a {
+  color: var(--vm-blue-3);
+}
+
+a:hover {
+  color: var(--vm-blue);
+}
+
+/* ----------------------------- */
+/* Navbar                        */
+/* ----------------------------- */
+
 .navbar-title {
   font-weight: 800;
   letter-spacing: 0.2px;
 }
 
-/* TOC sidebar */
+/* ----------------------------- */
+/* TOC sidebar                   */
+/* ----------------------------- */
+
 #quarto-sidebar-toc-left {
   background: transparent;
 }
@@ -39,79 +71,199 @@ nav#TOC a.active {
   font-weight: 600;
 }
 
-/* Hero — index only, full bleed */
+/* ----------------------------- */
+/* Homepage hero                 */
+/* ----------------------------- */
+
+/* Main homepage block */
 .hero {
+  max-width: 1180px;
+  margin: 2.5rem auto 3rem auto;
+  padding: 2.5rem;
+  border-radius: 28px;
   background:
-    radial-gradient(circle at top right, rgba(47, 183, 199, 0.28), transparent 34%),
-    linear-gradient(135deg, #08192F 0%, #0B1F3A 52%, #123B66 100%);
-  color: white;
-  border-radius: 24px;
-  padding: 3.6rem 3rem;
-  margin: 0.8rem 0 2rem 0;
-  box-shadow: 0 18px 48px rgba(11, 31, 58, 0.20);
+    radial-gradient(circle at top left, rgba(47, 183, 199, 0.26), transparent 34%),
+    radial-gradient(circle at bottom right, rgba(18, 59, 102, 0.10), transparent 38%),
+    linear-gradient(135deg, #f8fbff 0%, #eef6fb 100%);
+  border: 1px solid rgba(35, 80, 130, 0.16);
+  box-shadow: var(--vm-shadow-md);
 }
 
-.hero h1 {
-  color: white;
-  font-size: clamp(2.2rem, 5vw, 4.2rem);
-  line-height: 1;
-  font-weight: 900;
-  margin-bottom: 1rem;
+/* Two-column hero layout */
+.hero-inner {
+  display: grid;
+  grid-template-columns: minmax(280px, 42%) minmax(360px, 58%);
+  align-items: center;
+  gap: 3rem;
 }
 
-.hero .lead {
-  color: #DDEFFF;
-  max-width: 680px;
-  font-size: 1.12rem;
-  line-height: 1.6;
-}
-
-.hero-actions {
+/* Logo container */
+.hero-logo-panel {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.7rem;
-  margin-top: 1.4rem;
+  align-items: center;
+  justify-content: center;
+  min-height: 360px;
+  padding: 1.8rem;
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at 30% 18%, rgba(255, 255, 255, 0.92), transparent 34%),
+    linear-gradient(135deg, #d9f6ff 0%, #b8e9f4 48%, #8fd3e6 100%);
+  border: 1px solid rgba(34, 120, 150, 0.22);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.65),
+    0 10px 28px rgba(11, 31, 58, 0.06);
 }
 
-.btn-vm {
-  display: inline-block;
-  padding: 0.62rem 1rem;
-  border-radius: 999px;
-  text-decoration: none;
-  font-weight: 700;
-  font-size: 0.95rem;
-  border: 1px solid rgba(255,255,255,0.28);
+/* Logo image */
+.hero-logo {
+  width: min(100%, 460px);
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 10px 22px rgba(11, 31, 58, 0.12));
 }
 
-.btn-vm.primary {
-  background: white;
+/* Fallback if the logo is inserted with Markdown inside .hero-logo */
+.hero-logo img {
+  width: min(100%, 460px);
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  filter: drop-shadow(0 10px 22px rgba(11, 31, 58, 0.12));
+}
+
+/* Text column */
+.hero-content {
+  max-width: 680px;
+}
+
+/* Small uppercase label */
+.eyebrow {
+  margin: 0 0 0.6rem 0;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: #2d567f;
+}
+
+/* Main title */
+.hero-title {
+  margin: 0 0 1rem 0;
+  font-size: clamp(2.8rem, 5vw, 5.2rem);
+  line-height: 0.95;
+  letter-spacing: -0.05em;
   color: var(--vm-blue);
 }
 
-.btn-vm.secondary {
-  color: white;
-  background: rgba(255,255,255,0.10);
+/* Hero description */
+.hero .lead {
+  margin: 0;
+  max-width: 64ch;
+  font-size: clamp(1.05rem, 1.4vw, 1.25rem);
+  line-height: 1.65;
+  color: #26384f;
 }
 
+/* ----------------------------- */
+/* Hero buttons                  */
+/* ----------------------------- */
+
+/* Button row */
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 1.8rem;
+}
+
+/* Shared button style */
+.btn-vm {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0.72rem 1.25rem;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-decoration: none;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    background 0.15s ease,
+    border-color 0.15s ease;
+}
+
+/* Button hover */
+.btn-vm:hover {
+  transform: translateY(-1px);
+  text-decoration: none;
+}
+
+/* Primary call-to-action */
+.btn-vm.primary {
+  background: var(--vm-blue);
+  color: #ffffff;
+  border: 1px solid var(--vm-blue);
+  box-shadow: 0 8px 20px rgba(11, 31, 58, 0.18);
+}
+
+/* Primary call-to-action hover */
+.btn-vm.primary:hover {
+  background: #08192f;
+  color: #ffffff;
+}
+
+/* Secondary call-to-action */
+.btn-vm.secondary {
+  background: rgba(255, 255, 255, 0.84);
+  color: var(--vm-blue);
+  border: 1px solid rgba(35, 80, 130, 0.18);
+}
+
+/* Secondary call-to-action hover */
+.btn-vm.secondary:hover {
+  background: #ffffff;
+  color: var(--vm-blue);
+  border-color: rgba(35, 80, 130, 0.28);
+}
+
+/* ----------------------------- */
+/* Hero badges                   */
+/* ----------------------------- */
+
+/* Badge container */
 .badge-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.4rem;
-  margin-top: 1.4rem;
+  gap: 1rem 0.65rem; /* row gap, column gap */
+  margin-top: 1.6rem;
 }
 
+/* Default badge */
 .vm-badge {
   display: inline-flex;
   align-items: center;
+  padding: 0.42rem 0.75rem;
   border-radius: 999px;
-  padding: 0.3rem 0.65rem;
-  font-size: 0.85rem;
-  color: #DDFBFF;
-  background: rgba(47, 183, 199, 0.14);
-  border: 1px solid rgba(47, 183, 199, 0.35);
+  background: rgba(147, 223, 237, 0.42);
+  border: 1px solid rgba(76, 169, 192, 0.42);
+  font-size: 0.86rem;
+  color: #22435f;
 }
 
-/* Card grids — 2-col by default so they fit inside the content column */
+/* Taxonomic badge color */
+.vm-badge-taxon {
+  background: rgba(11, 31, 58, 0.92);
+  border-color: rgba(11, 31, 58, 0.92);
+  color: #ffffff;
+}
+
+/* ----------------------------- */
+/* Card grids                    */
+/* ----------------------------- */
+
+/* Two-column grids */
 .card-grid,
 .download-grid {
   display: grid;
@@ -120,21 +272,23 @@ nav#TOC a.active {
   margin: 1.2rem 0;
 }
 
+/* Generic card style */
 .vm-card,
 .download-card {
   background: var(--vm-card);
   border: 1px solid var(--vm-border);
   border-radius: 16px;
   padding: 1.1rem 1.2rem;
-  box-shadow: 0 6px 20px rgba(11, 31, 58, 0.05);
+  box-shadow: var(--vm-shadow-sm);
 }
 
-/* Span variants kept for index page (page-layout: full) */
+/* Wide cards */
 .vm-card.full,
 .download-card.primary-download {
   grid-column: span 2;
 }
 
+/* Card titles */
 .vm-card h3,
 .download-card h3 {
   margin-top: 0;
@@ -143,21 +297,123 @@ nav#TOC a.active {
   font-weight: 800;
 }
 
+/* Card text */
 .vm-card p,
 .download-card p {
   color: var(--vm-muted);
   margin-bottom: 0;
 }
 
+/* Code inside download cards */
 .download-card code {
   display: block;
   margin-top: 0.8rem;
   padding: 0.6rem;
-  background: #F0F5F9;
+  background: #f0f5f9;
   border-radius: 10px;
 }
 
-/* Metrics */
+/* Snapshot cards */
+.snapshot-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 190px));
+  justify-content: center;
+  gap: 1rem;
+}
+
+/* Compact snapshot card */
+.snapshot-grid .vm-card {
+  text-align: center;
+  padding: 1.3rem 1rem;
+}
+
+/* Snapshot metric number */
+.snapshot-grid .metric {
+  font-size: 2.3rem;
+}
+
+/* Snapshot metric label */
+.snapshot-grid .metric-label {
+  font-size: 0.92rem;
+}
+
+/* ----------------------------- */
+/* Large panel section           */
+/* ----------------------------- */
+
+
+/* Main content panel */
+.vm-section {
+  background: var(--vm-card);
+  border: 1px solid var(--vm-border);
+  border-radius: 18px;
+  padding: 1.4rem 1.6rem;
+  margin: 0.8rem 0 2rem 0;
+  box-shadow: var(--vm-shadow-sm);
+}
+
+/* Remove extra spacing at the end of panels */
+.vm-section > *:last-child {
+  margin-bottom: 0;
+}
+
+/* Internal subsection block */
+.vm-subsection {
+  margin-top: 1.4rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--vm-border);
+}
+
+/* First internal subsection should not add a top divider */
+.vm-subsection:first-child {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
+}
+
+/* Internal subsection title */
+.vm-subtitle {
+  margin: 0 0 0.7rem 0;
+  color: var(--vm-blue);
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+}
+
+/* Small descriptive text under internal titles */
+.vm-subtext {
+  color: var(--vm-muted);
+  margin-bottom: 0.9rem;
+}
+
+/* Softer code blocks inside panels */
+.vm-section pre {
+  margin-top: 0.7rem;
+  margin-bottom: 1rem;
+}
+
+/* Cleaner tables inside panels */
+.vm-section table {
+  margin-top: 0.8rem;
+  margin-bottom: 1rem;
+}
+
+/* Centered source logo */
+.source-logo-center {
+  text-align: center;
+  margin: 1.2rem 0 1.4rem 0;
+}
+
+.source-logo-center img {
+  max-width: 120px;
+  height: auto;
+}
+
+/* ----------------------------- */
+/* Metrics                       */
+/* ----------------------------- */
+
+/* Large metric number */
 .metric {
   font-size: 2rem;
   font-weight: 900;
@@ -165,13 +421,18 @@ nav#TOC a.active {
   line-height: 1;
 }
 
+/* Metric caption */
 .metric-label {
   color: var(--vm-muted);
   font-size: 0.92rem;
   margin-top: 0.3rem;
 }
 
-/* Marker pills */
+/* ----------------------------- */
+/* Marker pills                  */
+/* ----------------------------- */
+
+/* Marker list container */
 .marker-list {
   display: flex;
   flex-wrap: wrap;
@@ -179,17 +440,22 @@ nav#TOC a.active {
   margin: 1rem 0;
 }
 
+/* Marker label */
 .marker {
   font-family: var(--bs-font-monospace);
-  background: #EAF7FA;
-  color: #0B5360;
-  border: 1px solid #BEE9F0;
+  background: #eaf7fa;
+  color: #0b5360;
+  border: 1px solid #bee9f0;
   border-radius: 10px;
   padding: 0.38rem 0.6rem;
   font-size: 0.9rem;
 }
 
-/* Workflow steps */
+/* ----------------------------- */
+/* Workflow cards                */
+/* ----------------------------- */
+
+/* Workflow step grid */
 .workflow-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
@@ -197,19 +463,22 @@ nav#TOC a.active {
   margin: 1.2rem 0;
 }
 
+/* Workflow step card */
 .workflow-step {
-  background: white;
+  background: var(--vm-card);
   border: 1px solid var(--vm-border);
   border-radius: 14px;
   padding: 0.9rem;
+  box-shadow: var(--vm-shadow-sm);
 }
 
+/* Workflow step number */
 .workflow-step .num {
   width: 1.8rem;
   height: 1.8rem;
   border-radius: 50%;
   background: var(--vm-blue);
-  color: white;
+  color: #ffffff;
   display: inline-flex;
   justify-content: center;
   align-items: center;
@@ -218,28 +487,35 @@ nav#TOC a.active {
   margin-bottom: 0.5rem;
 }
 
+/* Workflow step title */
 .workflow-step h3 {
   font-size: 0.97rem;
   margin: 0.2rem 0;
   color: var(--vm-blue);
 }
 
+/* Workflow step text */
 .workflow-step p {
   color: var(--vm-muted);
   font-size: 0.88rem;
   margin-bottom: 0;
 }
 
-/* Workflow figure */
+/* ----------------------------- */
+/* Workflow figure               */
+/* ----------------------------- */
+
+/* Figure card */
 .workflow-figure {
-  background: white;
+  background: var(--vm-card);
   border: 1px solid var(--vm-border);
   border-radius: 16px;
   padding: 0.8rem;
   margin: 1.2rem 0 1.8rem 0;
-  box-shadow: 0 6px 20px rgba(11, 31, 58, 0.05);
+  box-shadow: var(--vm-shadow-sm);
 }
 
+/* Figure image */
 .workflow-figure img {
   width: 100%;
   height: auto;
@@ -247,12 +523,17 @@ nav#TOC a.active {
   border-radius: 10px;
 }
 
+/* Missing figure message */
 .missing-workflow-img {
   color: var(--vm-muted);
   padding: 1rem;
 }
 
-/* Callouts */
+/* ----------------------------- */
+/* Callouts                      */
+/* ----------------------------- */
+
+/* Rounded callout boxes */
 .callout-note,
 .callout-tip,
 .callout-warning,
@@ -260,46 +541,96 @@ nav#TOC a.active {
   border-radius: 12px;
 }
 
-/* Tables */
+/* ----------------------------- */
+/* Tables                        */
+/* ----------------------------- */
+
+/* Generic table */
 table {
-  background: white;
+  background: var(--vm-card);
   border-radius: 12px;
   overflow: hidden;
   font-size: 0.93rem;
 }
 
+/* Table headers */
 thead th {
-  background: #EAF1F8 !important;
+  background: #eaf1f8 !important;
   color: var(--vm-blue) !important;
 }
 
-/* Details */
+/* Horizontal table scroll */
+.table-scroll {
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+/* ----------------------------- */
+/* Details blocks                */
+/* ----------------------------- */
+
+/* Collapsible sections */
 details {
-  background: white;
+  background: var(--vm-card);
   border: 1px solid var(--vm-border);
   border-radius: 12px;
   padding: 0.9rem 1rem;
   margin: 1rem 0;
 }
 
+/* Collapsible title */
 summary {
   cursor: pointer;
   font-weight: 700;
   color: var(--vm-blue);
 }
 
-/* Code blocks */
+/* ----------------------------- */
+/* Code blocks                   */
+/* ----------------------------- */
+
+/* Rounded code blocks */
 pre.text,
 pre.sourceCode,
 pre {
   border-radius: 12px;
 }
 
-/* Responsive */
+/* ----------------------------- */
+/* Responsive layout             */
+/* ----------------------------- */
+
+/* Tablet layout */
 @media (max-width: 900px) {
   .hero {
-    padding: 2rem 1.2rem;
-    border-radius: 16px;
+    padding: 1.6rem;
+    margin-top: 1.5rem;
+    border-radius: 20px;
+  }
+
+  .hero-inner {
+    grid-template-columns: 1fr;
+    gap: 1.8rem;
+    text-align: center;
+  }
+
+  .hero-content {
+    max-width: none;
+  }
+
+  .hero-actions,
+  .badge-row {
+    justify-content: center;
+  }
+
+  .hero-logo-panel {
+    min-height: auto;
+    padding: 1.4rem;
+  }
+
+  .hero-logo,
+  .hero-logo img {
+    width: min(100%, 360px);
   }
 
   .card-grid,
@@ -317,22 +648,103 @@ pre {
   }
 }
 
+/* Mobile layout */
 @media (max-width: 560px) {
+  .hero {
+    padding: 1.2rem;
+    border-radius: 18px;
+  }
+
+  .hero-title {
+    font-size: clamp(2.3rem, 14vw, 3.2rem);
+  }
+
+  .hero .lead {
+    font-size: 1rem;
+  }
+
+  .hero-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .btn-vm {
+    width: 100%;
+  }
+
   .workflow-grid {
     grid-template-columns: 1fr;
   }
 }
 
-/* Table managment */
-.table-scroll {
-  overflow-x: auto;
-  max-width: 100%;
+/* ----------------------------- */
+/* Download cards                */
+/* ----------------------------- */
+
+/* Download card header */
+.download-card-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.9rem;
 }
 
-/* Image center */
-.hero-logo img {
+/* Zenodo logo inside download card */
+.download-logo {
+  width: 82px;
+  height: auto;
   display: block;
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 1rem;
+}
+
+/* Main download title */
+.download-title {
+  color: var(--vm-blue);
+  font-size: 1.1rem;
+  font-weight: 850;
+  line-height: 1.2;
+}
+
+/* Release status label */
+.download-status {
+  display: inline-flex;
+  margin-top: 0.35rem;
+  padding: 0.26rem 0.55rem;
+  border-radius: 999px;
+  background: #f0f5f9;
+  border: 1px solid var(--vm-border);
+  color: var(--vm-muted);
+  font-size: 0.82rem;
+  font-weight: 650;
+}
+
+/* Space above the Zenodo download button */
+.download-action {
+  margin-top: 1.2rem;
+}
+
+/* Changelog panel */
+.changelog-panel {
+  max-height: 520px;
+  overflow-y: auto;
+}
+
+/* Hide duplicated changelog title if CHANGELOG.md starts with "# Changelog" */
+.changelog-panel h1:first-child {
+  display: none;
+}
+
+/* Changelog version titles */
+.changelog-panel h2 {
+  margin-top: 1.2rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--vm-border);
+  color: var(--vm-blue);
+  font-size: 1.15rem;
+}
+
+/* First visible changelog version */
+.changelog-panel h2:first-of-type {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
 }

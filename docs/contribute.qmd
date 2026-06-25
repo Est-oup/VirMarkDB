@@ -1,14 +1,12 @@
 ---
-title: "Contribute"
-description: "How to report issues, add genomes or proteins, and correct taxonomy"
+title: ""
+description: ""
 page-layout: full
 ---
 
-# Contribute
+Contributions to VirMarkDB are welcome through GitHub issues and pull requests, including marker corrections, genome or protein additions, taxonomy updates, and documentation improvements.
 
-Contributions, corrections and suggestions are welcome via the GitHub issue tracker and pull requests.
-
-## Issue tracker
+# Issue tracker
 
 Open an [issue](https://github.com/Est-oup/VirMarkDB/issues) for:
 
@@ -19,7 +17,7 @@ Open an [issue](https://github.com/Est-oup/VirMarkDB/issues) for:
 - documentation corrections.
 
 
-## Pull request workflow
+# Pull request workflow
 
 1. Open an issue describing the proposed change.
 2. Fork the repository.
@@ -28,7 +26,7 @@ Open an [issue](https://github.com/Est-oup/VirMarkDB/issues) for:
 5. Check metadata consistency (see checklist below).
 6. Open a pull request referencing the issue.
 
-## Adding reference proteins
+# Adding reference proteins
 
 When proposing a new marker-protein reference, provide:
 
@@ -40,7 +38,7 @@ When proposing a new marker-protein reference, provide:
 | `taxonomy` | ICTV-compatible taxonomy when possible |
 | `reason` | Why this sequence should be added |
 
-## Adding reference genomes
+# Adding reference genomes
 
 When proposing a new reference genome, provide:
 
@@ -53,7 +51,7 @@ When proposing a new reference genome, provide:
 | `source` | Source database or publication |
 | `reason` | Why this genome should be added |
 
-## Metadata consistency checklist
+# Metadata consistency checklist
 
 Before opening a pull request:
 

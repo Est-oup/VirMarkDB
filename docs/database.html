@@ -84,8 +84,8 @@ ul.task-list li input[type="checkbox"] {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="./index.html" class="navbar-brand navbar-brand-logo">
-    <img src="./assets/logo_virmark.png" alt="VirMarkDB logo" class="navbar-logo light-content">
-    <img src="./assets/logo_virmark.png" alt="VirMarkDB logo" class="navbar-logo dark-content">
+    <img src="./assets/logo_virmark_blank.png" alt="VirMarkDB logo" class="navbar-logo light-content">
+    <img src="./assets/logo_virmark_blank.png" alt="VirMarkDB logo" class="navbar-logo dark-content">
     </a>
     <a class="navbar-brand" href="./index.html">
     <span class="navbar-title">VirMarkDB</span>
@@ -111,7 +111,7 @@ ul.task-list li input[type="checkbox"] {
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./releases.html"> 
-<span class="menu-text">Releases</span></a>
+<span class="menu-text">Download &amp; Releases</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./analysis.html"> 
@@ -140,20 +140,11 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#database-content" id="toc-database-content" class="nav-link active" data-scroll-target="#database-content">Database content</a>
-  <ul class="collapse">
-  <li><a href="#taxonomic-scope" id="toc-taxonomic-scope" class="nav-link" data-scroll-target="#taxonomic-scope">Taxonomic scope</a></li>
+  <li><a href="#taxonomic-scope" id="toc-taxonomic-scope" class="nav-link active" data-scroll-target="#taxonomic-scope">Taxonomic scope</a></li>
   <li><a href="#marker-genes" id="toc-marker-genes" class="nav-link" data-scroll-target="#marker-genes">Marker genes</a></li>
   <li><a href="#lineage-specific-markers-and-hmm-profiles" id="toc-lineage-specific-markers-and-hmm-profiles" class="nav-link" data-scroll-target="#lineage-specific-markers-and-hmm-profiles">Lineage-specific markers and HMM profiles</a></li>
-  <li><a href="#output-files-and-formats" id="toc-output-files-and-formats" class="nav-link" data-scroll-target="#output-files-and-formats">Output files and formats</a>
-  <ul class="collapse">
-  <li><a href="#release-archive-structure" id="toc-release-archive-structure" class="nav-link" data-scroll-target="#release-archive-structure">Release archive structure</a></li>
-  <li><a href="#markers" id="toc-markers" class="nav-link" data-scroll-target="#markers">markers/</a></li>
-  <li><a href="#virus_informations" id="toc-virus_informations" class="nav-link" data-scroll-target="#virus_informations">virus_informations/</a></li>
-  <li><a href="#export_format" id="toc-export_format" class="nav-link" data-scroll-target="#export_format">export_format/</a></li>
-  </ul></li>
+  <li><a href="#output-files-and-formats" id="toc-output-files-and-formats" class="nav-link" data-scroll-target="#output-files-and-formats">Output files and formats</a></li>
   <li><a href="#coverage-statistics" id="toc-coverage-statistics" class="nav-link" data-scroll-target="#coverage-statistics">Coverage statistics</a></li>
-  </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/Est-oup/VirMarkDB/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li><li><a href="https://github.com/Est-oup/VirMarkDB/blob/main/database.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div></nav>
 </nav>
@@ -188,11 +179,13 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="database-content" class="level1">
-<h1>Database content</h1>
-<p>VirMarkDB is a curated reference database of viral marker-gene sequences. The current release covers <strong>Nucleocytoviricota</strong> within <strong>Bamfordvirae</strong>, with taxonomy derived from the <strong>ICTV Virus Metadata Resource (VMR_MSL41.v1.20260320)</strong>.</p>
 <section id="taxonomic-scope" class="level2">
 <h2 class="anchored" data-anchor-id="taxonomic-scope">Taxonomic scope</h2>
+<div class="vm-section">
+<p>VirMarkDB is a curated reference database of viral marker-gene sequences. The current release covers <strong>Nucleocytoviricota</strong> within <strong>Bamfordvirae</strong>, with taxonomy derived from the <strong>ICTV Virus Metadata Resource (<a href="https://ictv.global/sites/default/files/VMR/VMR_MSL41.v1.20260320.xlsx">VMR_MSL41.v1.20260320</a>)</strong>.</p>
+<div class="text-center">
+<p><a href="https://ictv.global/"><img src="assets/ictv_logo.png" class="img-fluid" alt="ICTV logo" width="120"></a></p>
+</div>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -211,14 +204,16 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 <tr class="odd">
 <td>Source</td>
-<td>ICTV VMR_MSL41.v1.20260320</td>
+<td><a href="https://ictv.global/">ICTV</a> <a href="https://ictv.global/sites/default/files/VMR/VMR_MSL41.v1.20260320.xlsx">VMR_MSL41.v1.20260320</a></td>
 </tr>
 </tbody>
 </table>
 <p>Taxonomy from Kingdom to Species is derived from the ICTV VMR. Manual genome additions follow the same taxonomy fields.</p>
+</div>
 </section>
 <section id="marker-genes" class="level2">
 <h2 class="anchored" data-anchor-id="marker-genes">Marker genes</h2>
+<div class="vm-section">
 <p>The current release includes eight conserved marker genes for Nucleocytoviricota.</p>
 <div class="marker-list">
 <p><span class="marker">majorcapsid</span> <span class="marker">dnapol</span> <span class="marker">atpase</span> <span class="marker">primase</span> <span class="marker">rnapol1</span> <span class="marker">rnapol2</span> <span class="marker">tf2s</span> <span class="marker">vltf3</span></p>
@@ -265,18 +260,24 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 </tbody>
 </table>
+</div>
 </section>
 <section id="lineage-specific-markers-and-hmm-profiles" class="level2">
 <h2 class="anchored" data-anchor-id="lineage-specific-markers-and-hmm-profiles">Lineage-specific markers and HMM profiles</h2>
+<div class="vm-section">
 <p>Some viral marker genes are too divergent to be represented by a single <strong>HMM profile</strong> across all viral lineages. In addition, not all <strong>marker genes</strong> are relevant for all taxonomic groups. For this reason, <strong>VirMarkDB</strong> uses marker groups to associate <strong>marker genes</strong> with specific viral lineages and <strong>dedicated HMM profiles</strong>.</p>
 <p>Each marker group links: 1. a marker gene; 2. a viral lineage or taxonomic group; 3. a reference protein set; 4. the HMM profile built from this reference set.</p>
 <p>More details on <a href="./workflow.html">Workflow</a> page.</p>
 <p>This structure allows <strong>VirMarkDB</strong> to build separate HMM profiles for divergent lineages while keeping a common marker-gene framework across the database.</p>
+</div>
 </section>
 <section id="output-files-and-formats" class="level2">
 <h2 class="anchored" data-anchor-id="output-files-and-formats">Output files and formats</h2>
-<section id="release-archive-structure" class="level3">
-<h3 class="anchored" data-anchor-id="release-archive-structure">Release archive structure</h3>
+<div class="vm-section">
+<div class="vm-subsection">
+<div class="vm-subtitle">
+Release archive structure
+</div>
 <p>The public release is distributed as a versioned archive. See <a href="./releases.html">Releases</a> for download links.</p>
 <pre class="text"><code>VirMarkDB_vX.Y.Z/
 ├── markers/
@@ -285,11 +286,13 @@ ul.task-list li input[type="checkbox"] {
 ├── CITATION.cff
 ├── LICENSE
 └── CHANGELOG.md</code></pre>
-</section>
-<section id="markers" class="level3">
-<h3 class="anchored" data-anchor-id="markers">markers/</h3>
+</div>
+<div class="vm-subsection">
+<div class="vm-subtitle">
+Markers
+</div>
 <p>Organised by taxonomic group and marker:</p>
-<pre class="text"><code>markers/&lt;group_id&gt;/&lt;marker</code></pre>
+<pre class="text"><code>markers/&lt;group_id&gt;/&lt;marker&gt;/</code></pre>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 50%">
@@ -318,7 +321,7 @@ ul.task-list li input[type="checkbox"] {
 </table>
 <p><strong>Protein FASTA header</strong></p>
 <pre><code>&gt;orf_name marker Kingdom;Phylum;Class;Order;Family;Genus;Species</code></pre>
-<p><strong>ORF description table — main columns</strong></p>
+<p><strong>ORF description table</strong></p>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 62%">
@@ -365,9 +368,11 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 </tbody>
 </table>
-</section>
-<section id="virus_informations" class="level3">
-<h3 class="anchored" data-anchor-id="virus_informations">virus_informations/</h3>
+</div>
+<div class="vm-subsection">
+<div class="vm-subtitle">
+Virus_informations
+</div>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 50%">
@@ -390,37 +395,12 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 </tbody>
 </table>
-</section>
-<section id="export_format" class="level3">
-<h3 class="anchored" data-anchor-id="export_format">export_format/</h3>
-<p>Tool-specific exports derived from the curated marker outputs.</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 50%">
-<col style="width: 50%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Folder</th>
-<th>Content</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>vsearch/</code></td>
-<td>FASTA files with simplified headers and a taxonomy table, compatible with <code>vsearch --usearch_global</code></td>
-</tr>
-<tr class="even">
-<td><code>dada2/</code></td>
-<td>Training FASTA files formatted for DADA2 taxonomy-assignment functions</td>
-</tr>
-</tbody>
-</table>
-<p>See <a href="usage.qmd">Usage</a> for example commands.</p>
-</section>
+</div>
+</div>
 </section>
 <section id="coverage-statistics" class="level2">
 <h2 class="anchored" data-anchor-id="coverage-statistics">Coverage statistics</h2>
+<div class="vm-section">
 <p>The table below shows the number of viral genomes represented per family and marker group in the current release.</p>
 <details open="">
 <summary>
@@ -645,9 +625,9 @@ Important
 <p>Missing values do not automatically indicate true biological absence. They may reflect incomplete genome sequences, marker divergence, ORF prediction limits or filtering thresholds. See <a href="./about.html#notes-and-limitations">About — limitations</a> for details.</p>
 </div>
 </div>
+</div>
 
 
-</section>
 </section>
 
 <a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
@@ -1060,7 +1040,7 @@ Important
 <footer class="footer">
   <div class="nav-footer">
     <div class="nav-footer-left">
-<p>VirMarkDB — curated viral marker database</p>
+<p>VirMarkDB - viral marker database</p>
 </div>   
     <div class="nav-footer-center">
       &nbsp;

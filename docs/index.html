@@ -84,8 +84,8 @@ ul.task-list li input[type="checkbox"] {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="./index.html" class="navbar-brand navbar-brand-logo">
-    <img src="./assets/logo_virmark.png" alt="VirMarkDB logo" class="navbar-logo light-content">
-    <img src="./assets/logo_virmark.png" alt="VirMarkDB logo" class="navbar-logo dark-content">
+    <img src="./assets/logo_virmark_blank.png" alt="VirMarkDB logo" class="navbar-logo light-content">
+    <img src="./assets/logo_virmark_blank.png" alt="VirMarkDB logo" class="navbar-logo dark-content">
     </a>
     <a class="navbar-brand" href="./index.html">
     <span class="navbar-title">VirMarkDB</span>
@@ -111,7 +111,7 @@ ul.task-list li input[type="checkbox"] {
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./releases.html"> 
-<span class="menu-text">Releases</span></a>
+<span class="menu-text">Download &amp; Releases</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./analysis.html"> 
@@ -146,22 +146,29 @@ ul.task-list li input[type="checkbox"] {
 
 
 <div class="hero">
-<div class="hero-logo">
-<p><img src="assets/logo_virmark_blank.png" class="img-fluid" width="800"></p>
+<div class="hero-inner">
+<div class="hero-logo-panel">
+<p><img src="assets/logo_virmark_blank.png" alt="VirMarkDB logo" class="hero-logo"></p>
 </div>
+<div class="hero-content">
+<p class="eyebrow">
+Viral marker-gene reference database
+</p>
 <p class="lead">
-VirMarkDB is a curated reference database of viral marker-gene sequences for <strong><em>Nucleocytoviricota</em></strong> within <strong><em>Bamfordvirae</em></strong>. It provides protein and nucleotide FASTA files, HMM profiles, marker-based phylogeny and marker detection workflows.
+VirMarkDB is a curated reference database providing protein sequences of viral marker genes for <em>Nucleocytoviricota</em> within <em>Bamfordvirae</em>.
 </p>
 <div class="hero-actions">
-<p><a class="btn-vm primary" href="releases.html">Download</a> <a class="btn-vm secondary" href="database.html">Database</a> <a class="btn-vm secondary" href="workflow.html">Workflow</a></p>
+<p><a class="btn-vm secondary" href="database.html">Database</a> <a class="btn-vm secondary" href="workflow.html">Workflow</a> <a class="btn-vm primary" href="releases.html">Download</a></p>
+</div>
+</div>
 </div>
 <div class="badge-row">
-<p><span class="vm-badge"><em>Bamfordvirae</em></span> <span class="vm-badge"><em>Nucleocytoviricota</em></span> <span class="vm-badge">8 marker genes</span> <span class="vm-badge">15 viral families</span> <span class="vm-badge">225 genomes</span></p>
+<p><span class="vm-badge vm-badge-taxon"><em>Nucleocytoviricota</em></span> <span class="vm-badge">Major capsid protein</span> <span class="vm-badge">DNA polymerase B</span> <span class="vm-badge">Packaging ATPase</span> <span class="vm-badge">Primase</span> <span class="vm-badge">RNA polymerase subunit 1 &amp; 2</span> <span class="vm-badge">Transcription factor S-II</span> <span class="vm-badge">Viral late transcription factor 3</span></p>
 </div>
 </div>
 <section id="current-snapshot" class="level2">
 <h2 class="anchored" data-anchor-id="current-snapshot">Current snapshot</h2>
-<div class="card-grid">
+<div class="card-grid snapshot-grid">
 <div class="vm-card">
 <div class="metric">
 8
@@ -184,14 +191,6 @@ viral families
 </div>
 <div class="metric-label">
 incorporated genomes
-</div>
-</div>
-<div class="vm-card">
-<div class="metric">
-8
-</div>
-<div class="metric-label">
-marker groups (current release)
 </div>
 </div>
 </div>
@@ -223,7 +222,7 @@ marker groups (current release)
 <td>Coverage tables and figures generated from the current release</td>
 </tr>
 <tr class="odd">
-<td><a href="./releases.html">Releases</a></td>
+<td><a href="./releases.html">Download &amp; Releases</a></td>
 <td>Downloadable archives, checksums, changelog and versioning policy</td>
 </tr>
 <tr class="even">
