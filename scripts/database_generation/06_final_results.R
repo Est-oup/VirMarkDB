@@ -279,6 +279,3 @@ for (i in seq_len(nrow(targets))) {
     width = 60
   )
 }
-
-# Export database in specific tools format
-source("scripts/utils/export_format_database.R")
