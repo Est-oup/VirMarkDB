@@ -12,11 +12,11 @@ creds <- read_lines("input/ncbi.creds")
 options(entrez_email = creds[1])
 options(entrez_key   = creds[2])
 
-# Load manifest and filter out private genomes
-genomes <- read_tsv(manifest, show_col_types = FALSE) %>%
-  filter(Source != "PRIVATE")
-
 # Function to download genomes
+# Log failed downloads
+log_file <- str_c(outdir, "/ncbi_download_failures.tsv")
+if (!file.exists(log_file)) {write_lines("virus_id\tncbi_id\terror", log_file)}
+
 download_genome <- function(virus_id) {
   outfile <- file.path(outdir, paste0(virus_id, ".fna"))
 
