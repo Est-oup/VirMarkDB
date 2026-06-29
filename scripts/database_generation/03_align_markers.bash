@@ -5,7 +5,7 @@ module load mafft/7.525
 IN="output/references_protein"
 OUT1="output/hmm/aln"
 
-mkdir -p "$OUT1" "$OUT2"
+mkdir -p "$OUT1"
 
 for fasta in "$IN"/*.fasta; do
   stem="$(basename "$fasta" .fasta)"
