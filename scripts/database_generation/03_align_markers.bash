@@ -4,7 +4,6 @@ module load mafft/7.525
 
 IN="output/references_protein"
 OUT1="output/hmm/aln"
-OUT2="output/hmm/aln_filt"
 
 mkdir -p "$OUT1" "$OUT2"
 
@@ -17,4 +16,3 @@ done
 
 echo "OK"
 echo "MAFFT alignments : $OUT1"
-echo "trimAl filtered  : $OUT2"
