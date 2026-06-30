@@ -1,22 +1,13 @@
 ---
 title: "Files & formats"
-description: "Release archive structure, file formats and column descriptions"
-page-layout: full
+meta-description: "Release archive structure, FASTA headers, TSV columns and tool-specific exports"
 ---
 
-# Files & formats
+This page is the single reference for the structure and contents of a VirMarkDB release archive. For download links, see [Releases](releases.qmd).
 
-The final database is generated locally in:
+## Archive structure
 
-```text
-output/VirMarkDB/
 ```
-
-For public use, the curated release is distributed as a versioned archive through Zenodo. See the [Releases](releases.qmd) page for download links.
-
-## Release archive structure
-
-```text
 VirMarkDB_vX.Y.Z/
 ├── markers/
 ├── virus_informations/
@@ -26,15 +17,9 @@ VirMarkDB_vX.Y.Z/
 └── CHANGELOG.md
 ```
 
-## markers/
+## Markers
 
-Marker files are organised by taxonomic group and marker name:
-
-```text
-markers/<group_id>/<marker>/
-```
-
-Each folder contains the retained ORFs for one marker group:
+Organised by taxonomic group and marker: `markers/<group_id>/<marker>/`
 
 | File | Description |
 |---|---|
@@ -44,64 +29,30 @@ Each folder contains the retained ORFs for one marker group:
 
 ### Protein FASTA header
 
-```text
+```
 >orf_name marker Kingdom;Phylum;Class;Order;Family;Genus;Species
 ```
 
-Example:
-
-```text
->AF012825.2_156 atpase Bamfordvirae;Nucleocytoviricota;...;Species_name
-```
-
-### Nucleotide FASTA header
-
-Same structure as the protein header. Headers link directly to the corresponding protein sequence.
-
-### ORF description table columns
+### ORF description table
 
 | Column | Description |
 |---|---|
-| `orf_name` | ORF identifier from Prodigal output |
-| `virus_id` | Genome identifier matched to the manifest |
-| `group_id` | Taxonomic group used for the marker group |
+| `orf_name` | ORF identifier from Prodigal |
+| `virus_id` | Genome identifier |
 | `marker` | Marker name |
 | `copy_rank` | Rank among hits for the same genome and marker group |
 | `evalue` | HMMER e-value |
 | `score` | HMMER bit score |
-| `best_score` | Best HMMER score for this genome and marker group |
-| `score_ratio` | ORF score / best score |
-| `target_length_aa` | Predicted ORF length in amino acids |
-| `best_orf_length` | Best-ranked ORF length for this genome and marker group |
-| `length_ratio` | ORF length / best ORF length |
-| `position_start` | ORF start coordinate from Prodigal |
-| `position_end` | ORF end coordinate from Prodigal |
-| `Species` | ICTV species name |
-| `Virus_names` | Virus name from the ICTV VMR |
+| `score_ratio` | ORF score / best score for this genome × marker group |
+| `length_ratio` | ORF length / best ORF length for this genome × marker group |
 
-The first-ranked ORF is always retained. Additional ORFs are retained only when they pass the score and length ratio thresholds. See [Workflow — hit selection](workflow.qmd#hit-selection) for thresholds.
-
-## virus_informations/
+## Virus informations
 
 | File | Description |
 |---|---|
-| `virus_compo_taxo.tsv` | Wide-format table: one row per genome, one column per marker group. ORF names separated by semicolons when multiple copies are retained. |
-| `virus_metadata.tsv` | Genome-level metadata: `virus_id`, `ICTV_ID`, `Virus_names`, abbreviated names, host source, origin source, taxonomy from Kingdom to Species. |
+| `virus_compo_taxo.tsv` | Wide-format table: one row per genome, one column per marker group |
+| `virus_metadata.tsv` | Genome-level metadata: identifiers, virus names, host source, taxonomy |
 
-Example structure of `virus_compo_taxo.tsv`:
-
-```text
-virus_id | ICTV_ID | Virus_names | atpase_nucleocytoviricota_orf_names | dnapol_nucleocytoviricota_orf_names | ...
-```
-
-## Files excluded from public releases
-
-The following files must not be included in public releases:
-
-```text
-input/ncbi.creds
-temporary files
-local logs
-large raw external databases
-cluster-specific configuration files
-```
+::: {.callout-note}
+For the conceptual definition of a marker group, see [Database](database.qmd#why-marker-groups-exist). For how `mapfile.tsv` drives the pipeline, see [Workflow](workflow.qmd#marker-group-configuration).
+:::

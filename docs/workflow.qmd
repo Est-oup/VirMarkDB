@@ -1,320 +1,109 @@
 ---
-title: ""
-description: "Database generation."
-page-layout: full
+title: "Workflow"
+meta-description: "How VirMarkDB is generated, from raw genomes to curated marker profiles"
 ---
-
-
-# Workflow overview
 
 VirMarkDB documents how the database is generated, how marker-specific HMM profiles are built and applied, and how the database is refined through benchmark-guided detection of missing or underrepresented diversity.
 
-
-```{=html}
-<div class="workflow-figure">
-  <img src="assets/workflow.excalidraw.png" alt="VirMarkDB workflow overview">
-</div>
-```
+![VirMarkDB workflow overview](assets/workflow.excalidraw.png)
 
 ## Input and provenance
 
-::: {.vm-section}
-
 ### ICTV resources
 
-The initial genome manifest and associated taxonomy are derived from the ICTV Virus Metadata Resource [VMR_MSL41.v1.20260320](https://ictv.global/sites/default/files/VMR/VMR_MSL41.v1.20260320.xlsx), released on 2026-03-20.
-
-The VMR provides virus names, ICTV identifiers, taxonomy from Kingdom to Species, GenBank accession information, genome composition, and host-source metadata.
-
-::: {.text-center}
-[![](assets/ictv_logo.png){fig-alt="ICTV logo" width="120"}](https://ictv.global/)
-:::
-
+The initial genome manifest and taxonomy come from the ICTV Virus Metadata Resource [VMR_MSL41.v1.20260320](https://ictv.global/sites/default/files/VMR/VMR_MSL41.v1.20260320.xlsx) (released 2026-03-20), providing virus names, ICTV identifiers, full taxonomy, GenBank accessions, genome composition, and host-source metadata.
 
 ### Additional genome inputs
 
-Manually added genomes are listed in:
-
-```text
-input/manual_genomes_ncbi.tsv
-```
-
-The table below is rendered from `input/manual_genomes_ncbi.tsv` when the file is available at render time.
+Manually added genomes (not yet covered by the ICTV VMR) are listed in `input/manual_genomes_ncbi.tsv` and merged using the same taxonomy fields.
 
 <details>
-<summary>Show <code>input/manual_genomes_ncbi.tsv</code></summary>
+<summary>Show <code>input/manual_genomes_ncbi.tsv</code> (excerpt)</summary>
 
-```{r}
-#| echo: false
-#| warning: false
-#| results: asis
-
-manual_genomes_file <- file.path("..", "input", "manual_genomes_ncbi.tsv")
-
-if (file.exists(manual_genomes_file)) {
-  manual_genomes <- read.delim(
-    manual_genomes_file,
-    sep = "\t",
-    check.names = FALSE,
-    stringsAsFactors = FALSE
-  )
-
-  cat('<div class="table-scroll">')
-  cat(knitr::kable(manual_genomes, format = "html", escape = TRUE))
-  cat("</div>")
-} else {
-  cat(
-    '<p><strong>File not found.</strong><br>',
-    'Expected path: <code>../input/manual_genomes_ncbi.tsv</code>.</p>'
-  )
-}
-```
+| virus_id | Family | Genus | Species | Source | Virus_names_abrv | Host_source |
+|---|---|---|---|---|---|---|
+| NC_075136 | Allomimiviridae | Oceanusvirus | O. kaneohense | MANUAL_NCBI | TsV1 | algae |
+| PP728251 | Phycodnaviridae | Prasinovirus | P. micromonas polaris | MANUAL_NCBI | MpoV-46T | algae |
+| NC_076895 | Yaraviridae | Yaravirus | Y. brasiliensis | MANUAL_NCBI | BHMG | protists |
 
 </details>
 
 ### Marker-group configuration
 
-The workflow uses `input/mapfile.tsv` to define which marker genes are processed for each taxonomic scope.
-
-Each row in this file defines one **marker group**, corresponding to the association between:
-
-1. one marker gene;
-2. one taxonomic scope;
-3. one reference protein set;
-4. one HMM profile to build and apply.
-
-This file is used during reference preparation, HMM construction, and HMM search to ensure that each genome is searched only against the marker profiles relevant to its taxonomic scope.
+`input/mapfile.tsv` is the single source of truth for which marker genes are processed against which taxonomic scopes. Each row defines one **marker group**: a marker gene, a taxonomic scope, a reference protein set, and the HMM profile built from it. The pipeline uses this file at every stage: reference preparation, HMM construction, and HMM search. So each genome is only searched against the profiles relevant to its taxonomic scope.
 
 <details>
 <summary>Show <code>input/mapfile.tsv</code></summary>
 
-```{r}
-#| echo: false
-#| warning: false
-#| results: asis
-
-mapfile_path <- file.path("..", "input", "mapfile.tsv")
-
-if (file.exists(mapfile_path)) {
-  mapfile <- read.delim(
-    mapfile_path,
-    sep = "\t",
-    check.names = FALSE,
-    stringsAsFactors = FALSE
-  )
-
-  cat('<div class="table-scroll">')
-  cat(knitr::kable(mapfile, format = "html", escape = TRUE))
-  cat("</div>")
-} else {
-  cat(
-    '<p><strong>File not found.</strong><br>',
-    'Expected path: <code>../input/mapfile.tsv</code>.</p>'
-  )
-}
-```
+| group_id | taxo_rank | taxo_value | marker | marker_group_id |
+|---|---|---|---|---|
+| nucleocytoviricota | Phylum | Nucleocytoviricota | majorcapsid | majorcapsid_nucleocytoviricota |
+| nucleocytoviricota | Phylum | Nucleocytoviricota | dnapol | dnapol_nucleocytoviricota |
+| nucleocytoviricota | Phylum | Nucleocytoviricota | atpase | atpase_nucleocytoviricota |
+| nucleocytoviricota | Phylum | Nucleocytoviricota | primase | primase_nucleocytoviricota |
+| nucleocytoviricota | Phylum | Nucleocytoviricota | rnapol1 | rnapol1_nucleocytoviricota |
+| nucleocytoviricota | Phylum | Nucleocytoviricota | rnapol2 | rnapol2_nucleocytoviricota |
+| nucleocytoviricota | Phylum | Nucleocytoviricota | tf2s | tf2s_nucleocytoviricota |
+| nucleocytoviricota | Phylum | Nucleocytoviricota | vltf3 | vltf3_nucleocytoviricota |
 
 </details>
 
-
-### Taxon-specific marker gene detection
-
-During database construction, each taxonomic group is handled separately. For example, *Nucleocytoviricota* are processed as a distinct taxonomic scope, with their own selected marker genes and their own marker-specific reference protein sets.
-
-This design allows **VirMarkDB** to build taxon-aware HMM profiles. Instead of forcing highly divergent viral lineages into a single broad marker model, each marker group receives its own alignment and its own HMM profile.
-
-This configuration is reported in:
-
-```text
-input/mapfile.tsv
-```
-
-This configuration is reported in `input/mapfile.tsv`, each row defines one **marker group**, corresponding to the association between:
-
-1. one marker gene;
-2. one taxonomic scope;
-3. one reference protein set;
-4. one HMM profile to be built and searched.
-
-<details>
-<summary>Show <code>input/mapfile.tsv</code></summary>
-
-```{r}
-#| echo: false
-#| results: asis
-
-mapfile_path <- file.path("..", "input", "mapfile.tsv")
-
-if (file.exists(mapfile_path)) {
-  mapfile <- read.delim(
-    mapfile_path,
-    sep = "\t",
-    check.names = FALSE,
-    stringsAsFactors = FALSE
-  )
-
-  cat('<div class="table-scroll">')
-  cat(knitr::kable(mapfile, format = "html", escape = TRUE))
-  cat("</div>")
-} else {
-  cat(
-    '<p><strong>File not found.</strong><br>',
-    'Expected path: <code>../input/mapfile.tsv</code>.</p>'
-  )
-}
-```
-
-</details>
-
-The rationale for splitting a marker across multiple marker groups is sequence divergence. For example, `majorcapsid` proteins from Poxviridae and Mimiviridae can be too divergent for a single HMM profile to cover both lineages reliably. Defining separate marker-group rows allows each lineage to be represented by a profile calibrated on lineage-specific reference sequences.
-
-During the HMM search step, `genome_marker_map.tsv` is used to determine which genomes fall within each marker group's taxonomic scope and therefore which HMM profiles must be applied to each genome.
+During HMM search, `genome_marker_map.tsv` resolves which genomes fall within each marker group's taxonomic scope, and therefore which profiles apply to which genome. The conceptual rationale for splitting markers this way is covered in [Database → Why marker groups exist](database.qmd#why-marker-groups-exist).
 
 ### HMM profile resources
 
-Marker HMM profiles are built from marker-group-specific reference protein sets stored in:
-
-```text
-output/references_protein/
-```
-
-Reference proteins come from three source types:
+Marker HMM profiles are built from marker-group-specific reference protein sets stored in `output/references_protein/`, sourced from three places:
 
 | Source type | Description |
 |---|---|
 | Published reference datasets | Initial conserved NCLDV marker-protein reference set |
 | Manual curation | Added when a marker was missing or poorly represented |
 | Benchmark-guided additions | Added after benchmark analysis to improve marker coverage |
-:::
 
-## General workflow
+## Pipeline
 
-::: {.vm-section}
-```{=html}
-<div class="workflow-grid">
-  <div class="workflow-step">
-    <span class="num">1</span>
-    <h3>ORF prediction</h3>
-    <p>ORFs are predicted from each genome using Prodigal in metagenomic mode.</p>
-  </div>
-  <div class="workflow-step">
-    <span class="num">2</span>
-    <h3>Alignment</h3>
-    <p>Marker-group reference proteins are aligned with MAFFT.</p>
-  </div>
-  <div class="workflow-step">
-    <span class="num">3</span>
-    <h3>HMM profiles</h3>
-    <p>Alignments are converted into HMM profiles with HMMER <code>hmmbuild</code>.</p>
-  </div>
-  <div class="workflow-step">
-    <span class="num">4</span>
-    <h3>HMM search</h3>
-    <p>ORF proteomes are searched with <code>hmmsearch</code> against marker-group profiles.</p>
-  </div>
-  <div class="workflow-step">
-    <span class="num">5</span>
-    <h3>Hit selection</h3>
-    <p>Best-ranked hits and credible additional copies are retained.</p>
-  </div>
-</div>
-```
-:::
+::: {.pipeline-steps}
 
-## ORF prediction
+**1 · ORF prediction**: ORFs are predicted from each genome with Prodigal in metagenomic mode (`prodigal -p meta`). Script: `02_prodigal.bash`
 
-::: {.vm-section}
-ORFs are predicted from each genome using Prodigal in metagenomic mode:
+**2 · Alignment**: Marker-group reference proteins are aligned with MAFFT (`mafft --ep 0 --genafpair`). Script: `03_align_markers.bash`
 
-```bash
-prodigal -p meta
-```
+**3 · HMM profile construction**: Alignments are converted to HMM profiles with HMMER `hmmbuild`. Script: `04_hmmbuild.bash`
 
-Script: `scripts/database_generation/02_prodigal.bash`
-:::
+**4 · HMM search**: Predicted ORF proteomes are searched with `hmmsearch` against the marker-group profiles assigned via `genome_marker_map.tsv`. Script: `05_hmmsearch.bash`
 
-## Reference alignment and HMM construction
-
-::: {.vm-section}
-Reference proteins are aligned with MAFFT:
-
-```bash
-mafft --ep 0 --genafpair
-```
-
-Script: `scripts/database_generation/03_align_markers.bash`
-
-Alignments are converted into HMM profiles with HMMER `hmmbuild`:
-
-```bash
-hmmbuild <output.hmm> <alignment.fasta>
-```
-
-Script: `scripts/database_generation/04_hmmbuild.bash`
-:::
-
-## HMM search
-
-::: {.vm-section}
-Predicted ORF proteomes are searched with `hmmsearch`.
-
-Each genome is searched only against the marker-group profiles assigned to its taxonomic scope through: `genome_marker_map.tsv`
-
-Script: `scripts/database_generation/05_hmmsearch.bash`
-
-:::
-
-## Hit selection
-
-::: {.vm-section}
-For each genome × marker-group combination, HMM hits are ranked by increasing e-value and then by decreasing bit score.
-
-The best-ranked hit is always retained. Additional hits are kept only when they are close to the best hit in both score and length.
-
-Script:
-
-```text
-scripts/database_generation/06_final_results.R
-```
+**5 · Hit selection**: For each genome × marker-group pair, hits are ranked by increasing e-value then decreasing bit score. The best-ranked hit is always kept; additional hits are kept only if close to the best in both score and length. Script: `06_final_results.R`
 
 | Filter | Threshold |
-|---|---:|
-| Score ratio relative to the best hit | ≥ 0.80 |
-| Length ratio relative to the best hit | ≥ 0.80 |
+|---|---|
+| Score ratio relative to best hit | ≥ 0.80 |
+| Length ratio relative to best hit | ≥ 0.80 |
+
 :::
 
-## Quality check 
+## Quality check
 
-::: {.vm-section}
-VirMarkDB is evaluated against a broader Bamfordvirae protein pool extracted from a local NCBI NR database.
+VirMarkDB is benchmarked against a broader *Bamfordvirae* protein pool extracted from a local NCBI NR database, to detect marker diversity missing or underrepresented in the current release.
 
-The objective of this check is to detect marker diversity that is missing or underrepresented in the current release.
-
-<details>
-<summary>Benchmark steps</summary>
+![](assets/workflow_qc.excalidraw.png)
 
 | Step | Description | Script |
-|---:|---|---|
-| 1 | Extract a Bamfordvirae protein pool from NR and split it by marker using title-based filters. | `scripts/benchmarking/07_scrap_viral_protein_ncbi.bash` |
-| 2 | Self-align each marker pool to identify isolated or suspicious sequences. | `scripts/benchmarking/08_align_pool_vs_pool.bash` |
-| 3 | Analyse self-alignments and filter likely misannotated proteins. | `scripts/benchmarking/09_results_align_pool_vs_pool.R` |
-| 4 | Compare the filtered pool against the current VirMarkDB marker database. | `scripts/benchmarking/10_align_pool_VirMarkDB.bash` |
-| 5 | Identify proteins not covered by the current VirMarkDB release. | `scripts/benchmarking/11_analyse_results_align_pool_VirMarkDB.R` |
-| 6 | Cluster missing proteins with CD-HIT to reduce redundancy. | `scripts/benchmarking/12_clusterise_missing_prot.bash` |
-
-</details>
-:::
+|---|---|---|
+| 1 | Extract a Bamfordvirae protein pool from NR, split by marker via title-based filters | `07_scrap_viral_protein_ncbi.bash` |
+| 2 | Self-align each marker pool to flag isolated/suspicious sequences | `08_align_pool_vs_pool.bash` |
+| 3 | Analyse self-alignments, filter likely misannotated proteins | `09_results_align_pool_vs_pool.R` |
+| 4 | Compare filtered pool against current VirMarkDB | `10_align_pool_VirMarkDB.bash` |
+| 5 | Identify proteins not covered by the current release | `11_analyse_results_align_pool_VirMarkDB.R` |
+| 6 | Cluster missing proteins with CD-HIT to reduce redundancy | `12_clusterise_missing_prot.bash` |
 
 ## Software versions
 
-::: {.vm-section}
 | Tool | Version |
 |---|---|
-| R | 4.5.2 |
+| R | 4.4.1 |
 | Prodigal | 2.6.3 |
 | MAFFT | 7.525 |
 | HMMER | 3.3.2 |
 | BLAST+ | 2.16.0 |
 | MMseqs2 | 15.6f452 |
 | CD-HIT | 4.8.1 |
-:::

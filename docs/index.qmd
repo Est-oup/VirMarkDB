@@ -1,77 +1,78 @@
 ---
-title: ""
-description: "Reference database of viral marker-gene sequences"
+title: "VirMarkDB"
+meta-description: "Reference database of viral marker-gene sequences"
 page-layout: full
-toc: false
 ---
 
-::: {.hero}
+::: {.hero-banner}
 
-<div class="hero-inner">
+![](assets/logo_virmark.png){fig-align="center" width=400px}
 
-<div class="hero-logo-panel">
-<img src="assets/logo_virmark_blank.png" alt="VirMarkDB logo" class="hero-logo">
-</div>
+**A curated reference database of viral marker-gene sequences for *Nucleocytoviricota* within *Bamfordvirae***
 
-<div class="hero-content">
-<p class="eyebrow">Viral marker-gene reference database</p>
+VirMarkDB provides taxon-aware HMM profiles and curated protein/nucleotide sequences for eight conserved marker genes, built from ICTV-derived taxonomy.
 
-<p class="lead">
-VirMarkDB is a curated reference database providing protein sequences of viral marker genes for <em>Nucleocytoviricota</em> within <em>Bamfordvirae</em>.
-</p>
-
-<div class="hero-actions">
-<a class="btn-vm secondary" href="database.html">Database</a>
-<a class="btn-vm secondary" href="workflow.html">Workflow</a>
-<a class="btn-vm primary" href="releases.html">Download</a>
-</div>
-</div>
-
-</div>
-
-<div class="badge-row">
-<span class="vm-badge vm-badge-taxon"><em>Nucleocytoviricota</em></span>
-<span class="vm-badge">Major capsid protein</span>
-<span class="vm-badge">DNA polymerase B</span>
-<span class="vm-badge">Packaging ATPase</span>
-<span class="vm-badge">Primase</span>
-<span class="vm-badge">RNA polymerase subunit 1 & 2</span>
-<span class="vm-badge">Transcription factor S-II</span>
-<span class="vm-badge">Viral late transcription factor 3</span>
-</div>
-
+[Explore the database](database.qmd){.btn-action} [See the workflow](workflow.qmd){.btn-action} [Download](releases.qmd){.btn-action}
 
 :::
 
-## Current snapshot
+## At a glance
 
-::: {.card-grid .snapshot-grid}
+::: {.snapshot-grid}
 
-::: {.vm-card}
-<div class="metric">8</div>
-<div class="metric-label">marker genes</div>
+::: {.snapshot-card}
+### 8
+marker genes
 :::
 
-::: {.vm-card}
-<div class="metric">15</div>
-<div class="metric-label">viral families</div>
+::: {.snapshot-card}
+### 15
+viral families
 :::
 
-::: {.vm-card}
-<div class="metric">225</div>
-<div class="metric-label">incorporated genomes</div>
+::: {.snapshot-card}
+### 225
+incorporated genomes
 :::
 
 :::
 
-## Documentation map
+## Where to go next
 
-| Page | Content |
-|---|---|
-| [Database](database.qmd) | Taxonomic scope, marker genes, marker groups, taxon-aware HMM strategy, coverage table |
-| [Workflow](workflow.qmd) | Input sources, ORF prediction, HMM construction, HMM search, hit selection, benchmark-guided refinement |
-| [Files & formats](files-formats.qmd) | Release archive structure, FASTA headers, TSV column descriptions, tool-specific exports |
-| [Analyses](analysis.qmd) | Coverage tables and figures generated from the current release |
-| [Download & Releases](releases.qmd) | Downloadable archives, checksums, changelog and versioning policy |
-| [Contribute](contribute.qmd) | How to report issues, add genomes or proteins, correct taxonomy |
-| [About](about.qmd) | Citation, license, references, known limitations |
+::: {.nav-grid}
+
+::: {.nav-card}
+### [Database](database.qmd)
+Taxonomic scope, the eight marker genes, and the marker-group concept.
+:::
+
+::: {.nav-card}
+### [Workflow](workflow.qmd)
+How the database is built: ORF prediction, HMM construction, hit selection.
+:::
+
+::: {.nav-card}
+### [Files & formats](files-formats.qmd)
+Release archive structure.
+:::
+
+::: {.nav-card}
+### [Analyses](analysis.qmd)
+Coverage statistics and figures for the current release.
+:::
+
+::: {.nav-card}
+### [Download & Releases](releases.qmd)
+Versioned archives, checksums, changelog.
+:::
+
+::: {.nav-card}
+### [Contribute](contribute.qmd)
+Report issues, add genomes or proteins, correct taxonomy.
+:::
+
+:::
+
+---
+
+*VirMarkDB — viral marker database*

@@ -1,103 +1,66 @@
 ---
-title: "Database analyses"
-page-layout: full
-execute:
-  warning: false
-  message: false
+title: "Analyses"
+meta-description: "Coverage statistics and figures for the current VirMarkDB release"
 ---
 
-This page summarizes the current VirMarkDB release and provides visual checks of marker coverage across viral families.
-
-```{r}
-#| echo: false
-
-coverage_file <- "data/marker_coverage.tsv"
-coverage <- read.delim(coverage_file, check.names = FALSE)
-marker_cols <- setdiff(names(coverage), "Family")
-family_coverage <- coverage[coverage$Family != "Total genomes", ]
-coverage_matrix <- as.matrix(family_coverage[, marker_cols])
-rownames(coverage_matrix) <- family_coverage$Family
-```
+This page is the single reference for coverage numbers and figures. For the underlying concepts, see [Database](database.qmd); for how the data was generated, see [Workflow](workflow.qmd).
 
 ## Release summary
 
-```{r}
-#| echo: false
+::: {.snapshot-grid}
 
-n_markers <- length(marker_cols)
-n_families <- nrow(family_coverage)
-marker_totals <- as.numeric(coverage[coverage$Family == "Total genomes", marker_cols])
-max_marker_total <- max(marker_totals, na.rm = TRUE)
-mean_marker_total <- round(mean(marker_totals, na.rm = TRUE), 1)
-```
-
-::: {.card-grid}
-::: {.vm-card}
-<div class="metric">`r n_markers`</div>
-<div class="metric-label">marker genes</div>
+::: {.snapshot-card}
+### 8
+marker genes
 :::
 
-::: {.vm-card}
-<div class="metric">`r n_families`</div>
-<div class="metric-label">viral families</div>
+::: {.snapshot-card}
+### 15
+viral families
 :::
 
-::: {.vm-card}
-<div class="metric">`r max_marker_total`</div>
-<div class="metric-label">maximum genomes for one marker</div>
+::: {.snapshot-card}
+### 216
+maximum genomes for one marker
 :::
+
 :::
 
 ## Genome representation by marker
 
-```{r, fig.width=8, fig.height=4}
-#| echo: false
-
-barplot(
-  marker_totals,
-  names.arg = marker_cols,
-  las = 2,
-  ylab = "Number of genomes",
-  main = "Genome representation by marker"
-)
-```
+![](analysis_files/figure-html/unnamed-chunk-3-1.png)
 
 ## Coverage heatmap
 
-```{r, fig.width=8, fig.height=7}
-#| echo: false
-
-mat <- coverage_matrix
-mat_plot <- t(mat[nrow(mat):1, , drop = FALSE])
-par(mar = c(7, 10, 3, 2))
-image(
-  x = seq_len(ncol(mat_plot)),
-  y = seq_len(nrow(mat_plot)),
-  z = t(mat_plot),
-  axes = FALSE,
-  xlab = "Family",
-  ylab = "Marker",
-  main = "Marker coverage across viral families"
-)
-axis(1, at = seq_len(ncol(mat_plot)), labels = rev(rownames(mat)), las = 2, cex.axis = 0.7)
-axis(2, at = seq_len(nrow(mat_plot)), labels = colnames(mat), las = 2, cex.axis = 0.8)
-box()
-```
+![](analysis_files/figure-html/unnamed-chunk-4-1.png)
 
 ## Marker coverage by family
 
-```{r}
-#| echo: false
-
-knitr::kable(coverage, align = c("l", rep("r", length(marker_cols))))
-```
+| Family | atpase | dnapol | majorcapsid | primase | rnapol1 | rnapol2 | tf2s | vltf3 |
+|---|---|---|---|---|---|---|---|---|
+| Allomimiviridae | 4 | 5 | 3 | 5 | 4 | 5 | 4 | 5 |
+| Ascoviridae | 5 | 6 | 6 | 5 | 5 | 5 | 5 | 5 |
+| Asfarviridae | 20 | 20 | 20 | 20 | 20 | 20 | 20 | 20 |
+| Hydriviridae | 0 | 1 | 1 | 1 | 1 | 1 | 1 | 1 |
+| Iridoviridae | 52 | 52 | 55 | 52 | 52 | 52 | 47 | 52 |
+| Mamonoviridae | 2 | 2 | 2 | 2 | 0 | 0 | 2 | 2 |
+| Marseilleviridae | 4 | 4 | 4 | 5 | 3 | 3 | 4 | 4 |
+| Mesomimiviridae | 6 | 6 | 6 | 6 | 6 | 6 | 6 | 6 |
+| Mimiviridae | 20 | 20 | 20 | 20 | 20 | 20 | 20 | 20 |
+| Orpheoviridae | 0 | 1 | 1 | 1 | 1 | 1 | 1 | 1 |
+| Phycodnaviridae | 29 | 30 | 29 | 30 | 1 | 1 | 26 | 29 |
+| Pithoviridae | 0 | 13 | 13 | 13 | 13 | 13 | 13 | 13 |
+| Poxviridae | 52 | 54 | 21 | 49 | 53 | 53 | 45 | 2 |
+| Schizomimiviridae | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 |
+| Yaraviridae | 2 | 0 | 2 | 0 | 0 | 0 | 0 | 0 |
+| **Total genomes** | **198** | **216** | **185** | **211** | **181** | **182** | **196** | **162** |
 
 ::: {.callout-important}
-Missing values in the coverage table do not automatically indicate true biological absence. See [About - limitations](about.qmd#notes-and-limitations).
+Missing values do not automatically indicate true biological absence. They may reflect incomplete genome sequences, marker divergence, ORF prediction limits, or filtering thresholds. See [About → Notes and limitations](about.qmd#notes-and-limitations).
 :::
 
 ## Phylogenetic diversity
 
-A phylogenetic tree was generated from a concatenated alignment of the eight marker genes. Individual marker alignments were produced with MAFFT, trimmed with TrimAl, concatenated, and used for tree inference with IQ-TREE. Only viruses with at least five retained markers were included in this analysis.
+A phylogenetic tree was generated from a concatenated alignment of the eight marker genes: individual marker alignments produced with MAFFT, trimmed with TrimAl, concatenated, and used for tree inference with IQ-TREE. Only viruses with at least five retained markers were included.
 
 ![VirMarkDB phylogenetic tree based on concatenated marker-gene alignments](data/tree_five_markers.png)

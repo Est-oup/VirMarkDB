@@ -1,43 +1,16 @@
 ---
-title: ""
-description: "Download VirMarkDB, checksums, changelog and versioning policy"
-page-layout: full
+title: "Download & Releases"
+meta-description: "Download VirMarkDB, checksums, changelog and versioning policy"
 ---
+
 ## Download
 
+**Complete release archive**  *not yet deposited*
 
-::: {.download-card .primary-download}
-
-::: {.download-card-header}
-
-![](assets/zenodo_logo.png){fig-alt="Zenodo logo" .download-logo}
-
-::: {.download-card-meta}
-
-**Complete release archive**
-
-::: {.download-status}
-Not yet deposited
-:::
-
-:::
-
-:::
-
-All curated marker sequences, metadata tables, tool-compatible exports, citation file, license and changelog will be distributed as a single versioned archive.
-
-`VirMarkDB_vX.Y.Z.tar.gz`
-
-::: {.download-action}
-[Download from Zenodo](https://zenodo.org/records/XXXXXXX){.btn-vm .primary}
-:::
+[Download from Zenodo](https://zenodo.org/records/XXXXXXX){.btn-action }
 
 
-:::
-
-
-# Releases
-::: {.vm-section}
+All curated marker sequences, metadata tables, citation file, license and changelog are distributed as a single versioned archive: `VirMarkDB_vX.Y.Z.tar.gz`
 
 ::: {.callout-warning}
 No public release has been deposited yet. This page will be updated with download links, checksums and a DOI when the first archive is deposited on Zenodo.
@@ -45,30 +18,13 @@ No public release has been deposited yet. This page will be updated with downloa
 
 ## Current release
 
-::: {.card-grid}
-::: {.vm-card}
-### Version
+**Version:**  *(not yet deposited)*
 
-<div class="metric">—</div>
-<div class="metric-label">not yet deposited</div>
-:::
-
-::: {.vm-card}
-### Distribution
-
-The complete release will be distributed as a single versioned archive on Zenodo.
-
-```text
-VirMarkDB_vX.Y.Z.tar.gz
-```
-:::
-:::
-
-:::
+**Distribution:** the complete release will be distributed as a single versioned archive on Zenodo: `VirMarkDB_vX.Y.Z.tar.gz`
 
 ## Archive contents
 
-For a description of each file and folder in the release archive, see [Files & formats](files-formats.qmd).
+For a description of every file and folder in the release archive, see [Files & formats](files-formats.qmd).
 
 ## Checksums
 
@@ -78,21 +34,23 @@ For a description of each file and folder in the release archive, see [Files & f
 
 ## Changelog
 
-::: {.vm-section}
-
 **Previous releases**
 
 | Version | Date | DOI | Notes |
 |---|---|---|---|
 | — | — | — | No previous releases |
 
+### v0.1.0 - 2026-05-06
 
-::: {.vm-section .changelog-panel}
+**Added:**
 
-{{< include ../CHANGELOG.md >}}
+- Initial release of VirMarkDB.
 
-:::
-:::
+**Changed:** none
+
+**Fixed:** none
+
+**Removed:** none
 
 ## Versioning policy
 
@@ -101,4 +59,3 @@ For a description of each file and folder in the release archive, see [Files & f
 | New marker group or major restructuring | Major | `v1.0.0` → `v2.0.0` |
 | Added genomes, proteins or improved coverage | Minor | `v1.0.0` → `v1.1.0` |
 | Documentation or small metadata corrections | Patch | `v1.0.0` → `v1.0.1` |
-
