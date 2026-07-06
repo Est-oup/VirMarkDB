@@ -8,6 +8,7 @@ website:
   site-url: "https://est-oup.github.io/VirMarkDB/"
   repo-url: "https://github.com/Est-oup/VirMarkDB"
   repo-actions: [issue, source]
+  favicon: assets/logo_virmark_blank.png
 
   navbar:
     logo: assets/logo_virmark_blank.png
