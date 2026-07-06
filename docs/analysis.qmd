@@ -10,31 +10,31 @@ This page is the single reference for coverage numbers and figures. For the unde
 ::: {.snapshot-grid}
 
 ::: {.snapshot-card}
-### 8
+### 3
+viral groups
+:::
+
+::: {.snapshot-card}
+### 10
 marker genes
 :::
 
 ::: {.snapshot-card}
-### 15
-viral families
-:::
-
-::: {.snapshot-card}
-### 216
-maximum genomes for one marker
+### 8,605
+incorporated genomes
 :::
 
 :::
 
-## Genome representation by marker
+## Giant viruses — Nucleocytoviricota
+
+224 genomes across 15 families, targeted with eight marker genes.
 
 ![](analysis_files/figure-html/unnamed-chunk-3-1.png)
 
-## Coverage heatmap
-
 ![](analysis_files/figure-html/unnamed-chunk-4-1.png)
 
-## Marker coverage by family
+### Marker coverage by family
 
 | Family | atpase | dnapol | majorcapsid | primase | rnapol1 | rnapol2 | tf2s | vltf3 |
 |---|---|---|---|---|---|---|---|---|
@@ -44,23 +44,212 @@ maximum genomes for one marker
 | Hydriviridae | 0 | 1 | 1 | 1 | 1 | 1 | 1 | 1 |
 | Iridoviridae | 52 | 52 | 55 | 52 | 52 | 52 | 47 | 52 |
 | Mamonoviridae | 2 | 2 | 2 | 2 | 0 | 0 | 2 | 2 |
-| Marseilleviridae | 4 | 4 | 4 | 5 | 3 | 3 | 4 | 4 |
+| Marseilleviridae | 4 | 4 | 4 | 4 | 3 | 3 | 4 | 4 |
 | Mesomimiviridae | 6 | 6 | 6 | 6 | 6 | 6 | 6 | 6 |
 | Mimiviridae | 20 | 20 | 20 | 20 | 20 | 20 | 20 | 20 |
 | Orpheoviridae | 0 | 1 | 1 | 1 | 1 | 1 | 1 | 1 |
 | Phycodnaviridae | 29 | 30 | 29 | 30 | 1 | 1 | 26 | 29 |
 | Pithoviridae | 0 | 13 | 13 | 13 | 13 | 13 | 13 | 13 |
-| Poxviridae | 52 | 54 | 21 | 49 | 53 | 53 | 45 | 2 |
+| Poxviridae | 52 | 54 | 14 | 49 | 53 | 53 | 44 | 2 |
 | Schizomimiviridae | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 |
 | Yaraviridae | 2 | 0 | 2 | 0 | 0 | 0 | 0 | 0 |
-| **Total genomes** | **198** | **216** | **185** | **211** | **181** | **182** | **196** | **162** |
+| **Total genomes** | **198** | **216** | **178** | **210** | **181** | **182** | **195** | **162** |
 
 ::: {.callout-important}
 Missing values do not automatically indicate true biological absence. They may reflect incomplete genome sequences, marker divergence, ORF prediction limits, or filtering thresholds. See [About → Notes and limitations](about.qmd#notes-and-limitations).
 :::
 
-## Phylogenetic diversity
+### Phylogenetic diversity
 
-A phylogenetic tree was generated from a concatenated alignment of the eight marker genes: individual marker alignments produced with MAFFT, trimmed with TrimAl, concatenated, and used for tree inference with IQ-TREE. Only viruses with at least five retained markers were included.
+A phylogenetic tree was generated from a concatenated alignment of the eight giant-virus marker genes: individual marker alignments produced with MAFFT, trimmed with TrimAl, concatenated, and used for tree inference with IQ-TREE. Only viruses with at least five retained markers were included.
 
 ![VirMarkDB phylogenetic tree based on concatenated marker-gene alignments](data/tree_five_markers.png)
+
+## Phages — Uroviricota (g23)
+
+431 genomes across 9 families (plus unclassified entries), targeted with a single marker group, `g23_uroviricota`, covering the whole phylum.
+
+### Marker coverage by family
+
+| Family | g23 detected | N genomes |
+|---|---|---|
+| Straboviridae | 231 | 231 |
+| Kyanoviridae | 66 | 66 |
+| Ackermannviridae | 63 | 63 |
+| Unclassified | 30 | 30 |
+| Connertonviridae | 19 | 19 |
+| Pootjesviridae | 11 | 11 |
+| Lakviridae | 7 | 7 |
+| Molycolviridae | 2 | 2 |
+| Arenbergviridae | 1 | 1 |
+| Epsomviridae | 1 | 1 |
+| **Total genomes** | **431** | **431** |
+
+## RNA viruses — Orthornavirae (RdRp)
+
+7,950 genomes across 137 families and five phyla, targeted with the `rdrp` marker.
+
+### Marker coverage by phylum
+
+| Phylum | N genomes | rdrp detected |
+|---|---|---|
+| Lenarviricota | 2,872 | 2,872 |
+| Negarnaviricota | 1,955 | 1,955 |
+| Pisuviricota | 1,759 | 1,759 |
+| Kitrinoviricota | 1,013 | 1,013 |
+| Duplornaviricota | 333 | 333 |
+| Unclassified | 18 | 18 |
+| **Total genomes** | **7,950** | **7,950** |
+
+### Marker coverage by family (full breakdown)
+
+| Phylum | Family | rdrp detected | N genomes |
+|---|---|---|---|
+| **Lenarviricota** | | | |
+| | Steitzviridae | 1289 | 1289 |
+| | Fiersviridae | 828 | 828 |
+| | Atkinsviridae | 262 | 262 |
+| | Botourmiaviridae | 160 | 160 |
+| | Mitoviridae | 105 | 105 |
+| | Solspiviridae | 101 | 101 |
+| | Blumeviridae | 38 | 38 |
+| | Splipalmiviridae | 32 | 32 |
+| | Ourmiaviridae | 26 | 26 |
+| | Duinviridae | 12 | 12 |
+| | Unclassified | 11 | 11 |
+| | Rhizouliviridae | 6 | 6 |
+| | Narnaviridae | 2 | 2 |
+| **Negarnaviricota** | | | |
+| | Rhabdoviridae | 627 | 627 |
+| | Phenuiviridae | 239 | 239 |
+| | Peribunyaviridae | 201 | 201 |
+| | Paramyxoviridae | 154 | 154 |
+| | Arenaviridae | 86 | 86 |
+| | Hantaviridae | 79 | 79 |
+| | Mymonaviridae | 74 | 74 |
+| | Nairoviridae | 72 | 72 |
+| | Lispiviridae | 51 | 51 |
+| | Chuviridae | 44 | 44 |
+| | Tospoviridae | 35 | 35 |
+| | Phasmaviridae | 34 | 34 |
+| | Fimoviridae | 33 | 33 |
+| | Nyamiviridae | 30 | 30 |
+| | Xinmoviridae | 30 | 30 |
+| | Bornaviridae | 27 | 27 |
+| | Orthomyxoviridae | 22 | 22 |
+| | Aspiviridae | 20 | 20 |
+| | Filoviridae | 18 | 18 |
+| | Artoviridae | 14 | 14 |
+| | Aliusviridae | 12 | 12 |
+| | Leishbuviridae | 11 | 11 |
+| | Qinviridae | 8 | 8 |
+| | Konkoviridae | 7 | 7 |
+| | Discoviridae | 7 | 7 |
+| | Pneumoviridae | 5 | 5 |
+| | Cruliviridae | 4 | 4 |
+| | Yueviridae | 2 | 2 |
+| | Tulasviridae | 2 | 2 |
+| | Sunviridae | 1 | 1 |
+| | Natareviridae | 1 | 1 |
+| | Wupedeviridae | 1 | 1 |
+| | Amnoonviridae | 1 | 1 |
+| | Myriaviridae | 1 | 1 |
+| | Mypoviridae | 1 | 1 |
+| | Crepuscuviridae | 1 | 1 |
+| **Pisuviricota** | | | |
+| | Picornaviridae | 572 | 572 |
+| | Potyviridae | 283 | 283 |
+| | Secoviridae | 206 | 206 |
+| | Solemoviridae | 149 | 149 |
+| | Partitiviridae | 70 | 70 |
+| | Hypoviridae | 61 | 61 |
+| | Coronaviridae | 59 | 59 |
+| | Fusariviridae | 53 | 53 |
+| | Polymycoviridae | 32 | 32 |
+| | Astroviridae | 30 | 30 |
+| | Caliciviridae | 29 | 29 |
+| | Arteriviridae | 23 | 23 |
+| | Amalgaviridae | 23 | 23 |
+| | Tobaniviridae | 22 | 22 |
+| | Marnaviridae | 20 | 20 |
+| | Iflaviridae | 16 | 16 |
+| | Dicistroviridae | 16 | 16 |
+| | Parahypoviridae | 15 | 15 |
+| | Polycipiviridae | 15 | 15 |
+| | Mesoniviridae | 14 | 14 |
+| | Yadokariviridae | 13 | 13 |
+| | Curvulaviridae | 8 | 8 |
+| | Picobirnaviridae | 5 | 5 |
+| | Roniviridae | 4 | 4 |
+| | Euroniviridae | 3 | 3 |
+| | Solinviviridae | 2 | 2 |
+| | Hadakaviridae | 2 | 2 |
+| | Cremegaviridae | 2 | 2 |
+| | Potyliviridae | 2 | 2 |
+| | Alvernaviridae | 1 | 1 |
+| | Soropartitiviridae | 1 | 1 |
+| | Abyssoviridae | 1 | 1 |
+| | Noraviridae | 1 | 1 |
+| | Nanhypoviridae | 1 | 1 |
+| | Olifoviridae | 1 | 1 |
+| | Gresnaviridae | 1 | 1 |
+| | Nanghoshaviridae | 1 | 1 |
+| | Medioniviridae | 1 | 1 |
+| | Barnaviridae | 1 | 1 |
+| **Kitrinoviricota** | | | |
+| | Betaflexiviridae | 151 | 151 |
+| | Bromoviridae | 105 | 105 |
+| | Tombusviridae | 99 | 99 |
+| | Flaviviridae | 88 | 88 |
+| | Closteroviridae | 86 | 86 |
+| | Alphaflexiviridae | 74 | 74 |
+| | Virgaviridae | 58 | 58 |
+| | Togaviridae | 53 | 53 |
+| | Hepaciviridae | 48 | 48 |
+| | Kitaviridae | 43 | 43 |
+| | Ambiguiviridae | 42 | 42 |
+| | Endornaviridae | 31 | 31 |
+| | Hepeviridae | 25 | 25 |
+| | Pestiviridae | 25 | 25 |
+| | Tymoviridae | 25 | 25 |
+| | Nodaviridae | 18 | 18 |
+| | Tobaliviridae | 9 | 9 |
+| | Mycoalphaviridae | 7 | 7 |
+| | Benyviridae | 5 | 5 |
+| | Gammaflexiviridae | 4 | 4 |
+| | Mayoviridae | 4 | 4 |
+| | Matonaviridae | 4 | 4 |
+| | Deltaflexiviridae | 4 | 4 |
+| | Alphatetraviridae | 3 | 3 |
+| | Sinhaliviridae | 2 | 2 |
+| **Duplornaviricota** | | | |
+| | Spinareoviridae | 50 | 50 |
+| | Sedoreoviridae | 47 | 47 |
+| | Pseudototiviridae | 46 | 46 |
+| | Chrysoviridae | 39 | 39 |
+| | Orthototiviridae | 32 | 32 |
+| | Fusagraviridae | 20 | 20 |
+| | Inseviridae | 16 | 16 |
+| | Spiciviridae | 13 | 13 |
+| | Artiviridae | 9 | 9 |
+| | Cystoviridae | 9 | 9 |
+| | Botybirnaviridae | 9 | 9 |
+| | Lebotiviridae | 8 | 8 |
+| | Ootiviridae | 7 | 7 |
+| | Alternaviridae | 5 | 5 |
+| | Megabirnaviridae | 5 | 5 |
+| | Quadriviridae | 5 | 5 |
+| | Phlegiviridae | 4 | 4 |
+| | Pistolviridae | 4 | 4 |
+| | Megatotiviridae | 2 | 2 |
+| | Giardiaviridae | 1 | 1 |
+| | Yadonushiviridae | 1 | 1 |
+| | Monocitiviridae | 1 | 1 |
+| **Unclassified** | | | |
+| | Birnaviridae | 16 | 16 |
+| | Permutotetraviridae | 2 | 2 |
+| **Total genomes** | | **7,950** | **7,950** |
+
+::: {.callout-note}
+`rdrp` detection is at 100% across every phylum and family: genomes are only retained in this group if an RdRp hit was found, so absence would mean the genome is not in the database rather than a missing marker.
+:::

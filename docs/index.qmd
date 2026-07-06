@@ -8,9 +8,9 @@ page-layout: full
 
 ![](assets/logo_virmark.png){fig-align="center" width=400px}
 
-**A curated reference database of viral marker-gene sequences for *Nucleocytoviricota* within *Bamfordvirae***
+**A curated reference database of viral marker-gene sequences for giant viruses, phages and RNA viruses**
 
-VirMarkDB provides taxon-aware HMM profiles and curated protein/nucleotide sequences for eight conserved marker genes, built from ICTV-derived taxonomy.
+VirMarkDB provides protein/nucleotide sequences for ten conserved marker genes across three viral groups: giant viruses (*Nucleocytoviricota*), phages (*Uroviricota*) and RNA viruses (*Orthornavirae*), built from ICTV-derived taxonomy.
 
 [Explore the database](database.qmd){.btn-action} [See the workflow](workflow.qmd){.btn-action} [Download](releases.qmd){.btn-action}
 
@@ -21,17 +21,17 @@ VirMarkDB provides taxon-aware HMM profiles and curated protein/nucleotide seque
 ::: {.snapshot-grid}
 
 ::: {.snapshot-card}
-### 8
+### 3
+viral groups
+:::
+
+::: {.snapshot-card}
+### 10
 marker genes
 :::
 
 ::: {.snapshot-card}
-### 15
-viral families
-:::
-
-::: {.snapshot-card}
-### 225
+### 8,605
 incorporated genomes
 :::
 
@@ -43,7 +43,7 @@ incorporated genomes
 
 ::: {.nav-card}
 ### [Database](database.qmd)
-Taxonomic scope, the eight marker genes, and the marker-group concept.
+Taxonomic scope, the ten marker genes, and the marker-group concept.
 :::
 
 ::: {.nav-card}

@@ -195,12 +195,25 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>VirMarkDB documents how the database is generated, how marker-specific HMM profiles are built and applied, and how the database is refined through benchmark-guided detection of missing or underrepresented diversity.</p>
+<p>VirMarkDB documents how the database is generated, how marker-specific HMM profiles are built and applied, and how the database is refined through benchmark-guided detection of missing or underrepresented diversity. The same pipeline is applied uniformly across the three viral groups currently covered — giant viruses, phages, and RNA viruses — each genome being searched only against the marker-group profiles relevant to its taxonomic scope.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="assets/workflow.excalidraw.png" class="img-fluid figure-img"></p>
 <figcaption>VirMarkDB workflow overview</figcaption>
 </figure>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This pipeline runs identically for all viral groups. The branching point is <code>mapfile.tsv</code>: it assigns each marker gene to a taxonomic scope (<em>Nucleocytoviricota</em>, <em>Uroviricota</em>, or <em>Orthornavirae</em>), and uses that scope to route each genome to only the HMM profiles relevant to it. The diagram above should be read as running per scope, not globaly.</p>
+</div>
 </div>
 <section id="input-and-provenance" class="level2">
 <h2 class="anchored" data-anchor-id="input-and-provenance">Input and provenance</h2>
@@ -349,6 +362,20 @@ Show <code>input/mapfile.tsv</code>
 <td>vltf3</td>
 <td>vltf3_nucleocytoviricota</td>
 </tr>
+<tr class="odd">
+<td>uroviricota</td>
+<td>Phylum</td>
+<td>Uroviricota</td>
+<td>g23</td>
+<td>g23_uroviricota</td>
+</tr>
+<tr class="even">
+<td>orthornavirae</td>
+<td>Kingdom</td>
+<td>Orthornavirae</td>
+<td>rdrp</td>
+<td>rdrp_orthornavirae</td>
+</tr>
 </tbody>
 </table>
 </details>
@@ -476,7 +503,7 @@ Show <code>input/mapfile.tsv</code>
 <tbody>
 <tr class="odd">
 <td>R</td>
-<td>4.4.1</td>
+<td>4.5.2</td>
 </tr>
 <tr class="even">
 <td>Prodigal</td>

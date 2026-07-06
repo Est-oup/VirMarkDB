@@ -3,5 +3,6 @@ input/ncbi_taxonomy
 output
 *out
 *.json
-docs/*qmd
+docs/*.qmd
 docs/.Rhistory
+docs/.quarto*

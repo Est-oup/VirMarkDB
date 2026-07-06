@@ -3,9 +3,13 @@ title: "Workflow"
 meta-description: "How VirMarkDB is generated, from raw genomes to curated marker profiles"
 ---
 
-VirMarkDB documents how the database is generated, how marker-specific HMM profiles are built and applied, and how the database is refined through benchmark-guided detection of missing or underrepresented diversity.
+VirMarkDB documents how the database is generated, how marker-specific HMM profiles are built and applied, and how the database is refined through benchmark-guided detection of missing or underrepresented diversity. The same pipeline is applied uniformly across the three viral groups currently covered — giant viruses, phages, and RNA viruses — each genome being searched only against the marker-group profiles relevant to its taxonomic scope.
 
 ![VirMarkDB workflow overview](assets/workflow.excalidraw.png)
+
+::: {.callout-note}
+This pipeline runs identically for all viral groups. The branching point is `mapfile.tsv`: it assigns each marker gene to a taxonomic scope (*Nucleocytoviricota*, *Uroviricota*, or *Orthornavirae*), and uses that scope to route each genome to only the HMM profiles relevant to it. The diagram above should be read as running per scope, not globaly.
+:::
 
 ## Input and provenance
 
@@ -45,6 +49,8 @@ Manually added genomes (not yet covered by the ICTV VMR) are listed in `input/ma
 | nucleocytoviricota | Phylum | Nucleocytoviricota | rnapol2 | rnapol2_nucleocytoviricota |
 | nucleocytoviricota | Phylum | Nucleocytoviricota | tf2s | tf2s_nucleocytoviricota |
 | nucleocytoviricota | Phylum | Nucleocytoviricota | vltf3 | vltf3_nucleocytoviricota |
+| uroviricota | Phylum | Uroviricota | g23 | g23_uroviricota |
+| orthornavirae | Kingdom | Orthornavirae | rdrp | rdrp_orthornavirae |
 
 </details>
 
@@ -100,7 +106,7 @@ VirMarkDB is benchmarked against a broader *Bamfordvirae* protein pool extracted
 
 | Tool | Version |
 |---|---|
-| R | 4.4.1 |
+| R | 4.5.2 |
 | Prodigal | 2.6.3 |
 | MAFFT | 7.525 |
 | HMMER | 3.3.2 |
