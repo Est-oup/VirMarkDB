@@ -6,7 +6,7 @@
 
 
 
-**VirMarkDB** is a reference database providing protein sequences of viral marker genes for *Nucleocytoviricota* within *Bamfordvirae*.
+**VirMarkDB** is a reference database providing protein sequences of viral marker genes for three viral groups: giant viruses (*Nucleocytoviricota*), phages (*Uroviricota*, via `g23`), and RNA viruses (*Orthornavirae*, via `rdrp`).
 
 It is designed for marker detection, marker-based phylogeny, and taxonomic assignment workflows using curated viral marker-gene references.
 
@@ -42,7 +42,7 @@ Until the first public release is available, this repository should be considere
 
 Citation metadata are provided in [`CITATION.cff`](CITATION.cff).
 
-Estoup P, Henry N, Corre E, Baudoux A-C. 2026. *VirMarkDB: a curated reference database of viral marker-gene protein sequences for Nucleocytoviricota*. Version 1.0.0. Zenodo. https://doi.org/10.5281/zenodo.0000000
+Estoup P, Henry N, Corre E, Baudoux A-C. 2026. *VirMarkDB: a curated reference database of viral marker-gene protein sequences for giant viruses, phages and RNA viruses*. Version 1.0.0. Zenodo. https://doi.org/10.5281/zenodo.0000000
 
 ## License
 
