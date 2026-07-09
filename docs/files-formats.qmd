@@ -1,0 +1,58 @@
+---
+title: "Files & formats"
+meta-description: "Release archive structure, FASTA headers, TSV columns and tool-specific exports"
+---
+
+This page is the single reference for the structure and contents of a VirMarkDB release archive. For download links, see [Releases](releases.qmd).
+
+## Archive structure
+
+```
+VirMarkDB_vX.Y.Z/
+├── markers/
+├── virus_informations/
+├── README.md
+├── CITATION.cff
+├── LICENSE
+└── CHANGELOG.md
+```
+
+## Markers
+
+Organised by taxonomic group and marker: `markers/<group_id>/<marker>/`
+
+| File | Description |
+|---|---|
+| `<marker_group_id>_protein.fasta` | Protein sequences of the retained ORFs |
+| `<marker_group_id>_nucleotide.fasta` | Nucleotide sequences of the retained ORFs |
+| `<marker_group_id>_virus_orf_description.tsv` | Per-ORF table with HMM hit metrics and virus metadata |
+
+### Protein FASTA header
+
+```
+>orf_name marker Kingdom;Phylum;Class;Order;Family;Genus;Species
+```
+
+### ORF description table
+
+| Column | Description |
+|---|---|
+| `orf_name` | ORF identifier from Prodigal |
+| `virus_id` | Genome identifier |
+| `marker` | Marker name |
+| `copy_rank` | Rank among hits for the same genome and marker group |
+| `evalue` | HMMER e-value |
+| `score` | HMMER bit score |
+| `score_ratio` | ORF score / best score for this genome × marker group |
+| `length_ratio` | ORF length / best ORF length for this genome × marker group |
+
+## Virus informations
+
+| File | Description |
+|---|---|
+| `virus_compo_taxo.tsv` | Wide-format table: one row per genome, one column per marker group |
+| `virus_metadata.tsv` | Genome-level metadata: identifiers, virus names, host source, taxonomy |
+
+::: {.callout-note}
+For the conceptual definition of a marker group, see [Database](database.qmd#why-marker-groups-exist). For how `mapfile.tsv` drives the pipeline, see [Workflow](workflow.qmd#marker-group-configuration).
+:::
