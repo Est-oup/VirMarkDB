@@ -45,11 +45,16 @@ ictv <- readxl::read_excel(dest, sheet = 2) %>%
   select(
     virus_id, taxo_cols, Virus_names, Virus_names_abrv, Host_source, ICTV_ID
   ) %>%
-  separate_rows(virus_id, sep = "; ") %>%
+  separate_rows(virus_id, sep = "\\s*;\\s*") %>%
   mutate(
-    Source = "ICTV",
-    virus_id = str_replace(virus_id, "^partial: (.+)$", "\\1_partial")
-  ) 
+    Source = "ICTV"
+  ) %>%
+  filter(!str_detect(virus_id, "\\(\\d+\\.\\d+\\)")) %>%
+  mutate(
+    virus_id = virus_id %>%
+      str_replace("^partial\\s*:\\s*(.+)$", "\\1_partial") %>%
+      str_remove("^.*:\\s*")
+  )
 
 # Load manual genomes on NCBI
 manual_ncbi <- if (file.exists(manual_gen_ncbi)) {

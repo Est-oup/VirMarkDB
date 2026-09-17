@@ -6,3 +6,5 @@ output
 docs/*.qmd
 docs/.Rhistory
 docs/.quarto*
+.gitignore
+mains.bash
