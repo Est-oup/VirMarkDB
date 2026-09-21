@@ -5,7 +5,7 @@
     module load r/4.5.2
     Rscript scripts/database_generation/01_generate_manifest.R
     # Search ORF in viral genomes
-    bash scripts/database_generation/02_prodigal.bash
+    bash scripts/database_generation/02_generate_proteins.bash
     
     # Generate HMM profile from references protein
         # Make an alignment of references sequences
