@@ -97,6 +97,23 @@ genomes %>%
     }
   }
 
+# Add genome type information from marker map
+genomes$genome_type <- NA_character_
+
+genome_type_map <- marker_map %>%
+  distinct(taxo_rank, taxo_value, genome_type)
+
+for(i in seq_len(nrow(genome_type_map))){
+
+  rank <- genome_type_map$taxo_rank[i]
+  value <- genome_type_map$taxo_value[i]
+  type <- genome_type_map$genome_type[i]
+
+  genomes$genome_type[
+    genomes[[rank]] == value
+  ] <- type
+}
+
 # Export manifest
 write_tsv(genomes, out_tsv)
 
