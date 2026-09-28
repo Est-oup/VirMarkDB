@@ -3,60 +3,41 @@
 module load prodigal/2.6.3
 module load emboss/6.6.0
 
-
-MANIFEST="output/config/manifest_genomes.tsv"
 GENOME_DIR="output/genomes"
 OUT_DIR="output/proteins"
+MANIFEST="output/config/manifest_genomes.tsv"
 
 mkdir -p "$OUT_DIR"
 
-awk 'NR>1' "$MANIFEST" | while IFS=$'\t' read -r virus_id Kingdom Phylum Class Order Family Genus Species Virus_names Virus_names_abrv Host_source ICTV_ID Source genome_type
-do
+for genome in "$GENOME_DIR"/*.fna; do
+    id=$(basename "$genome" .fna)
+    genome_type=$(awk -v id="$id" '$1 == id {print $NF; exit}' "$MANIFEST")
 
-    genome="${GENOME_DIR}/${virus_id}.fna"
-    protein_out="${OUT_DIR}/${virus_id}.faa"
+    if [[ "$genome_type" == "DNA" ]]; then
+        faa="$OUT_DIR/${id}.faa"
+        fna="$OUT_DIR/${id}.fna"
+        gff="$OUT_DIR/${id}.gff"
 
-    if [[ ! -f "$genome" ]]; then
-        echo "Missing genome: $genome"
-        continue
+        if [[ -s "$faa" && -s "$fna" && -s "$gff" ]]; then
+            echo "[SKIP] Already done: $id"
+            continue
+        fi
+
+        echo "[DNA] Prodigal: $id"
+        prodigal -i "$genome" -a "$faa" -d "$fna" -f gff -o "$gff" -p meta
+
+    elif [[ "$genome_type" == "RNA" ]]; then
+        faa="$OUT_DIR/${id}.faa"
+
+        if [[ -s "$faa" ]]; then
+            echo "[SKIP] Already done: $id"
+            continue
+        fi
+
+        echo "[RNA] Transeq: $id"
+        transeq -sequence "$genome" -frame 6 -outseq "$faa" -auto
+
+    else
+        echo "[ERROR] Unknown genome type for $id: $genome_type" >&2
     fi
-
-    if [[ -s "$protein_out" ]]; then
-        echo "Already done: $virus_id"
-        continue
-    fi
-
-    case "$genome_type" in
-
-        DNA)
-
-            echo "[DNA] Prodigal : $virus_id"
-
-            prodigal \
-                -i "$genome" \
-                -a "$protein_out" \
-                -p meta
-
-            ;;
-
-        RNA)
-
-            echo "[RNA] Transeq : $virus_id"
-
-            transeq \
-                -sequence "$genome" \
-                -frame 6 \
-                -outseq "$protein_out" \
-                -auto
-
-            ;;
-
-        *)
-
-            echo "Unknown genome type: $virus_id -> $genome_type"
-
-            ;;
-
-    esac
-
 done
