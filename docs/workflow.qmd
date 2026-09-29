@@ -3,7 +3,7 @@ title: "Workflow"
 meta-description: "How VirMarkDB is generated, from raw genomes to curated marker profiles"
 ---
 
-VirMarkDB documents how the database is generated, how marker-specific HMM profiles are built and applied, and how the database is refined through benchmark-guided detection of missing or underrepresented diversity. The same pipeline is applied uniformly across the three viral groups currently covered — giant viruses, phages, and RNA viruses — each genome being searched only against the marker-group profiles relevant to its taxonomic scope.
+VirMarkDB documents how the database is generated, how marker-specific HMM profiles are built and applied, and how the database is refined through assessment-guided detection of missing or underrepresented diversity. The same pipeline is applied uniformly across the three viral groups currently covered — giant viruses, phages, and RNA viruses — each genome being searched only against the marker-group profiles relevant to its taxonomic scope.
 
 ![VirMarkDB workflow overview](assets/virmarkdb_workflow_sub.png)
 
@@ -64,7 +64,7 @@ Marker HMM profiles are built from marker-group-specific reference protein sets 
 |---|---|
 | Published reference datasets | Initial conserved NCLDV marker-protein reference set |
 | Manual curation | Added when a marker was missing or poorly represented |
-| Benchmark-guided additions | Added after benchmark analysis to improve marker coverage |
+| Assessment-guided additions | Added after assessment analysis to improve marker coverage |
 
 ## Pipeline
 
@@ -89,7 +89,7 @@ Marker HMM profiles are built from marker-group-specific reference protein sets 
 
 ## Quality check
 
-VirMarkDB is benchmarked against a broader *Bamfordvirae* protein pool extracted from a local NCBI NR database, to detect marker diversity missing or underrepresented in the current release.
+VirMarkDB is assessed against a broader *Bamfordvirae* protein pool extracted from a local NCBI NR database, to detect marker diversity missing or underrepresented in the current release.
 
 ![](docs/assets/virmarkdb_workflow.png)
 

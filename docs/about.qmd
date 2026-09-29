@@ -52,6 +52,6 @@ Use the GitHub issue tracker for questions, corrections, missing taxa, suspiciou
 
 **Missing value interpretation.** `NA` or zero values in marker presence tables mean *not detected or not retained under the current workflow and thresholds*, not confirmed biological absence.
 
-**Benchmark filtering.** The benchmark-guided refinement strategy is empirical, designed as a practical way to clean large external protein pools before coverage assessment. It is not a formal validation.
+**Assessment filtering.** The assessment-guided refinement strategy is empirical, designed as a practical way to clean large external protein pools before coverage assessment. It is not a formal validation.
 
 **Current taxonomic scope.** The database currently covers three viral groups: giant viruses (Nucleocytoviricota), phages (Uroviricota, via `g23`), and RNA viruses (Orthornavirae, via `rdrp`). Additional viral groups will be added as suitable marker references and genome mappings become available.

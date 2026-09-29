@@ -4,11 +4,9 @@
 #SBATCH --cpus-per-task=50
 #SBATCH --output=make_bench_pool.out
 
-set -euo pipefail
-
 module load blast/2.16.0
 
-OUTDIR="output/benchmark/pool_protein/pool_protein_raw"
+OUTDIR="output/assessment/pool_protein/pool_protein_raw"
 METADIR="${OUTDIR}/metadata"
 
 mkdir -p "$OUTDIR" "$METADIR"

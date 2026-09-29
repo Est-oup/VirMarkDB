@@ -6,11 +6,11 @@
 
 module load mmseqs2/15.6f452
 
-mkdir -p output/benchmark/alignment_VirMarkDB_pool/alignment/tmp
+mkdir -p output/assessment/alignment_VirMarkDB_pool/alignment/tmp
 
 VirMarkDB_db="output/VirMarkDB/markers"
-pool_dir="output/benchmark/pool_protein/pool_protein_filt"
-out_dir="output/benchmark/alignment_VirMarkDB_pool/alignment"
+pool_dir="output/assessment/pool_protein/pool_protein_filt"
+out_dir="output/assessment/alignment_VirMarkDB_pool/alignment"
 
 for ref in "$VirMarkDB_db"/*/*/*_protein.fasta; do
     full_name=$(basename "$ref" _protein.fasta)
@@ -25,7 +25,7 @@ for ref in "$VirMarkDB_db"/*/*/*_protein.fasta; do
         "$query" \
         "$ref" \
         "${out_dir}/${full_name}.m8" \
-        output/benchmark/alignment_VirMarkDB_pool/alignment/tmp \
+        output/assessment/alignment_VirMarkDB_pool/alignment/tmp \
         --threads 50
 done
 

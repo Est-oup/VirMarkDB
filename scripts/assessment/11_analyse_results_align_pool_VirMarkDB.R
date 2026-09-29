@@ -1,11 +1,11 @@
 library(tidyverse)
 library(patchwork)
 
-ncbi_dir <- "output/benchmark/pool_protein/pool_protein_filt"
-hits_dir <- "output/benchmark/alignment_VirMarkDB_pool/alignment"
-out_dir  <- "output/benchmark/alignment_VirMarkDB_pool/bench_results"
-missing_prot_path <- "output/benchmark/alignment_VirMarkDB_pool/missing_prot"
-hits_prot_path <- "output/benchmark/alignment_VirMarkDB_pool/hits_prot"
+ncbi_dir <- "output/assessment/pool_protein/pool_protein_filt"
+hits_dir <- "output/assessment/alignment_VirMarkDB_pool/alignment"
+out_dir  <- "output/assessment/alignment_VirMarkDB_pool/bench_results"
+missing_prot_path <- "output/assessment/alignment_VirMarkDB_pool/missing_prot"
+hits_prot_path <- "output/assessment/alignment_VirMarkDB_pool/hits_prot"
 
 dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
 dir.create(missing_prot_path, recursive = TRUE, showWarnings = FALSE)
