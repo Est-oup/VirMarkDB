@@ -8,7 +8,7 @@ VirMarkDB documents how the database is generated, how marker-specific HMM profi
 ![VirMarkDB workflow overview](assets/virmarkdb_workflow_sub.png)
 
 ::: {.callout-note}
-This pipeline runs identically for all viral groups. The branching point is `mapfile.tsv`: it assigns each marker gene to a taxonomic scope (*Nucleocytoviricota*, *Uroviricota*, or *Orthornavirae*), and uses that scope to route each genome to only the HMM profiles relevant to it. The diagram above should be read as running per scope, not globaly.
+This pipeline runs identically for all viral groups. The branching point is `mapfile.tsv`: it assigns each marker gene to a taxonomic scope (*Nucleocytoviricota*, *Pantevenvirales*, or *Orthornavirae*), and uses that scope to route each genome to only the HMM profiles relevant to it. The diagram above should be read as running per scope, not globaly.
 :::
 
 ## Input and provenance
@@ -49,7 +49,7 @@ Manually added genomes (not yet covered by the ICTV VMR) are listed in `input/ma
 | nucleocytoviricota | Phylum | Nucleocytoviricota | rnapol2 | rnapol2_nucleocytoviricota |
 | nucleocytoviricota | Phylum | Nucleocytoviricota | tf2s | tf2s_nucleocytoviricota |
 | nucleocytoviricota | Phylum | Nucleocytoviricota | vltf3 | vltf3_nucleocytoviricota |
-| uroviricota | Phylum | Uroviricota | g23 | g23_uroviricota |
+| Pantevenvirales | Phylum | Pantevenvirales | g23 | g23_Pantevenvirales |
 | orthornavirae | Kingdom | Orthornavirae | rdrp | rdrp_orthornavirae |
 
 </details>
