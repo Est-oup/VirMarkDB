@@ -8,3 +8,6 @@ docs/.Rhistory
 docs/.quarto*
 .gitignore
 mains.bash
+scripts/utils/RNA_protein_integrity.R
+test.fasta
+.gitignore
