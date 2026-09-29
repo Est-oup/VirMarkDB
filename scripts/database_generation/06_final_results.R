@@ -165,11 +165,14 @@ manifest <- manifest %>%
   mutate(virus_id_cut = str_remove(virus_id, "_partial"))
 
 
-# Keep best hit + probable extra copies
+# Keep best hit + probable extra copies (except for RdRp)
 selected_orfs <- tblout_ranked %>%
   left_join(marker_map, by = "marker_group_id") %>%
-  filter(copy_rank == 1 | (score_ratio >= score_threshold_multicopy &
-                           length_ratio >= length_threshold_multicopy)) %>%
+  filter(
+    (marker_group_id == "rdrp_orthornavirae" & copy_rank == 1) |
+    (marker_group_id != "rdrp_orthornavirae" &
+       (copy_rank == 1 | (score_ratio >= score_threshold_multicopy & length_ratio >= length_threshold_multicopy)))
+  ) %>%
   left_join(manifest, by = "virus_id_cut")
 
 
