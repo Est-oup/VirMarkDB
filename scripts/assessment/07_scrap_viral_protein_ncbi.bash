@@ -8,11 +8,16 @@ module load blast/2.16.0
 
 OUTDIR="output/assessment/pool_protein/pool_protein_raw"
 METADIR="${OUTDIR}/metadata"
+TAXDB_DIR="output/assessment/ncbi_taxonomy_config"
 
-mkdir -p "$OUTDIR" "$METADIR"
+mkdir -p "$OUTDIR" "$METADIR" "$TAXDB_DIR"
 
-# Local NCBI taxonomy database
-LOCAL_TAXDB_DIR="input/ncbi_taxonomy"
+if [[ ! -s "$TAXDB_DIR/taxonomy4blast.sqlite3" ]]; then
+  echo "Downloading current NCBI BLAST taxonomy database..."
+  wget -q -O "$TAXDB_DIR/taxdb.tar.gz" https://ftp.ncbi.nlm.nih.gov/blast/db/taxdb.tar.gz
+  tar -xzf "$TAXDB_DIR/taxdb.tar.gz" -C "$TAXDB_DIR"
+  rm "$TAXDB_DIR/taxdb.tar.gz"
+fi
 
 # Shared NR database
 SHARED_NR_DIR="/shared/bank/nr/nr_2025-07-20/blast"
