@@ -148,7 +148,7 @@ fetch_marker "rdrp_orthornavirae" "orthornavirae" \
   'RNA-dependent RNA polymerase|RNA-directed RNA polymerase|RNA-dependent RNA-directed RNA polymerase|RdRp|RDRP|large polymerase protein|polymerase protein L|RNA polymerase L' \
   250 3500
 
-# Uroviricota marker
+# Pantevenvirales marker
 fetch_marker "g23_pantevenvirales" "pantevenvirales" \
   '(^|[^A-Za-z0-9])(gp23|g23)([^A-Za-z0-9]|$)|gene 23 protein|major capsid protein|capsid protein gp23|T4-like major capsid protein|T-even major capsid protein' \
   250 900
