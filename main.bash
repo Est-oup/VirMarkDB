@@ -20,7 +20,7 @@
 
 
 
-# Quality check     
+# VirMarkDB assessment   
     # Generate a pool of potentential protein from ncbi
         # Load bamford protein from the local nr database of bamfordvirae
         sbatch scripts/assessment/07_scrap_viral_protein_ncbi.bash

@@ -3,8 +3,7 @@ input/ncbi_taxonomy
 output
 *out
 *.json
-docs/*.qmd
-docs/.Rhistory
-docs/.quarto*
+# docs/*.qmd
+# docs/.Rhistory
+# docs/.quarto*
 .gitignore
-mains.bash
