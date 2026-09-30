@@ -49,7 +49,7 @@ Manually added genomes (not yet covered by the ICTV VMR) are listed in `input/ma
 | nucleocytoviricota | Phylum | Nucleocytoviricota | rnapol2 | rnapol2_nucleocytoviricota |
 | nucleocytoviricota | Phylum | Nucleocytoviricota | tf2s | tf2s_nucleocytoviricota |
 | nucleocytoviricota | Phylum | Nucleocytoviricota | vltf3 | vltf3_nucleocytoviricota |
-| Pantevenvirales | Phylum | Pantevenvirales | g23 | g23_Pantevenvirales |
+| pantevenvirales | Order | Pantevenvirales | g23 | g23_Pantevenvirales |
 | orthornavirae | Kingdom | Orthornavirae | rdrp | rdrp_orthornavirae |
 
 </details>
@@ -87,15 +87,15 @@ Marker HMM profiles are built from marker-group-specific reference protein sets 
 
 :::
 
-## Quality check
+## VirMarkDB assessment
 
-VirMarkDB is assessed against a broader *Bamfordvirae* protein pool extracted from a local NCBI NR database, to detect marker diversity missing or underrepresented in the current release.
+VirMarkDB is assessed against broader viral protein pools extracted from a local NCBI NR database to identify marker diversity missing or underrepresented in the current release.
 
 ![](docs/assets/virmarkdb_workflow.png)
 
 | Step | Description | Script |
 |---|---|---|
-| 1 | Extract a Bamfordvirae protein pool from NR, split by marker via title-based filters | `07_scrap_viral_protein_ncbi.bash` |
+| 1 | Extract viral protein pools from NR, split by marker via title-based filters | `07_scrap_viral_protein_ncbi.bash` |
 | 2 | Self-align each marker pool to flag isolated/suspicious sequences | `08_align_pool_vs_pool.bash` |
 | 3 | Analyse self-alignments, filter likely misannotated proteins | `09_results_align_pool_vs_pool.R` |
 | 4 | Compare filtered pool against current VirMarkDB | `10_align_pool_VirMarkDB.bash` |

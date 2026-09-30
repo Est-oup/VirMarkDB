@@ -20,7 +20,7 @@ marker genes
 :::
 
 ::: {.snapshot-card}
-### 8,605
+### 8,416
 incorporated genomes
 :::
 
