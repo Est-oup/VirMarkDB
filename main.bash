@@ -37,3 +37,6 @@
         Rscript scripts/assessment/11_analyse_results_align_pool_VirMarkDB.R
         # Clusterise missing protein 
         bash scripts/assessment/12_clusterise_missing_prot.bash
+    
+    # General statistics
+    Rscript scripts/assessment/13_summary_satistics.R
