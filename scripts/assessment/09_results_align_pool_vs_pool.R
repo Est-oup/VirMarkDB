@@ -1,8 +1,8 @@
 library(tidyverse)
 
-path_blast <- "output/benchmark/pool_protein/auto_alignment/blast"
-out <- "output/benchmark/pool_protein/auto_alignment/blast/analysis"
-pool_clean <- "output/benchmark/pool_protein/pool_protein_filt"
+path_blast <- "output/assessment/pool_protein/auto_alignment/blast"
+out <- "output/assessment/pool_protein/auto_alignment/blast/analysis"
+pool_clean <- "output/assessment/pool_protein/pool_protein_filt"
 
 if (!dir.exists(out)){dir.create(out)}
 if (!dir.exists(pool_clean)){dir.create(pool_clean)}
@@ -92,7 +92,7 @@ filter_prot <- function(marker, path_blast, pool_clean) {
   cat("Total number of isolate prot :", length(unique(aln2$query))- length(queries_with_good_alignments), "\n")
 
   # filter out bad prot 
-  pool <- "output/benchmark/pool_protein/pool_protein_raw"
+  pool <- "output/assessment/pool_protein/pool_protein_raw"
 
   prot <- Biostrings::readAAStringSet(str_c(pool,"/",marker,".fasta"))
 
@@ -107,7 +107,7 @@ filter_prot <- function(marker, path_blast, pool_clean) {
 }
 
 # Launch
-markers <- sub("\\.fasta$", "", list.files("output/benchmark/pool_protein/pool_protein_raw", pattern = "\\.fasta$", full.names = FALSE))
+markers <- sub("\\.fasta$", "", list.files("output/assessment/pool_protein/pool_protein_raw", pattern = "\\.fasta$", full.names = FALSE))
 
 lapply(markers, function(marker) analyse_res(marker, path_blast, out))
 print("analyse results OK")

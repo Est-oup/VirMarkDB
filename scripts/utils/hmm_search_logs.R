@@ -95,7 +95,7 @@ write_lines(
 )
 
 # Family x marker barplot
-marker_order <- c(  "atpase",  "dnapol",  "majorcapsid",  "primase",  "rnapol1",  "rnapol2",  "tf2s",  "vltf3")
+marker_order <- c(  "atpase",  "dnapol",  "majorcapsid",  "primase",  "rnapol1",  "rnapol2",  "tf2s",  "vltf3","rdrp", "g23")
 marker_colors <- c(atpase= "#4E79A7",dnapol= "#F28E2B",majorcapsid= "#59A14F",primase= "#E15759",rnapol1= "#B07AA1",rnapol2= "#9C755F",tf2s= "#76B7B2",vltf3= "#EDC948")
 
 p_family_marker_summary  <- selected_orfs_log %>%

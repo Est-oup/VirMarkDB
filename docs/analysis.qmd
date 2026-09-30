@@ -20,7 +20,7 @@ marker genes
 :::
 
 ::: {.snapshot-card}
-### 8,605
+### 8,416
 incorporated genomes
 :::
 
@@ -65,9 +65,9 @@ A phylogenetic tree was generated from a concatenated alignment of the eight gia
 
 ![VirMarkDB phylogenetic tree based on concatenated marker-gene alignments](data/tree_five_markers.png)
 
-## Phages — Uroviricota (g23)
+## Phages — Pantevenvirales (g23)
 
-431 genomes across 9 families (plus unclassified entries), targeted with a single marker group, `g23_uroviricota`, covering the whole phylum.
+431 genomes across 9 families (plus unclassified entries), targeted with a single marker group, `g23_Pantevenvirales`, covering the whole phylum.
 
 ### Marker coverage by family
 
