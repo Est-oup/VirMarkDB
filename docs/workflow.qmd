@@ -91,7 +91,7 @@ Marker HMM profiles are built from marker-group-specific reference protein sets 
 
 VirMarkDB is assessed against broader viral protein pools extracted from a local NCBI NR database to identify marker diversity missing or underrepresented in the current release.
 
-![VirMarkDB workflow complete](assets/virmarkdb_workflow.png)
+![VirMarkDB workflow complete](assets/virmarkdb_workflow.svg)
 
 | Step | Description | Script |
 |---|---|---|
